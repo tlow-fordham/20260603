@@ -1,3 +1,31 @@
+# Model-7468 GenAI Selling Points for CBB — Early Engagement Meeting Minutes
+
+**Date:** 06/09/2026
+**Time:** 10:00 to 11:00 AM PT
+**Model:** Model-7468 GenAI Selling Points for CBB
+**Meeting Type:** Weekly Early Engagement
+**Distribution:** Model Owner, Business Line, Model Risk Officer, Model Risk Governance, Validation Team
+
+---
+
+## Attendees
+
+**Validation Team (MRM AI COE):**
+- Jordan Low (Project Lead)
+- Jinjun Tong
+- Aditi Pandey
+
+**Model Owner / Model Development:**
+- Bhavya Reddy (Model Owner)
+- Carl Huang (Model Developer)
+- Arunkumar Ramalingam (Model User)
+- Sylvia Su (Engineering Lead, Carl's manager)
+
+**Other invitees on distribution:**
+- Damien Traore (MRG, absent)
+- Madhavi Ashili (MRG, absent)
+
+---
 
 ## Tracker Logistics
 
@@ -67,7 +95,7 @@ Carl suggested providing an annual sampling of 20 of the 172 selling points show
 
 Jinjun clarified the two dimensions: if the cache is static with no changes, SME review of the existing selling points and proof of correct retrieval may be sufficient. If new selling points are generated or real-time generation is enabled, that would be a different scope requiring a Targeted Scope Validation.
 
-Jordan raised the broader point that business or regulatory conditions may change over time, such as new restrictions on product features or pricing disclosures, and that because the model relies on pre-generated and cached selling points, those outputs could become outdated or misaligned with current business policies even if the cache itself has not changed. This is also relevant to the model's classification: if all outputs are permanently cached with no further generation, there is an argument that this no longer functions as a generative AI model requiring ongoing validation. Conversely, if the model owner continues to generate new outputs over time (new products, new segments, KB updates), the generative component remains active and ongoing monitoring is warranted. Carl and Bhavya agreed that annual SME review of the cached selling points could address this.
+Jordan raised the broader point that business or regulatory conditions may change over time, such as new restrictions on product features or pricing disclosures, and that because the model relies on pre-generated and cached selling points, those outputs could become outdated or misaligned with current business policies even if the cache itself has not changed. Carl and Bhavya agreed that annual SME review of the cached selling points could address this. Bhavya also confirmed that any future generation of new selling points (new products, new segments, knowledge base updates) will go through the change management process, which the group agreed would require a Targeted Scope Validation.
 
 Bhavya committed that any updates to selling points or changes to the knowledge base materials will include SME review. Bhavya was uncertain about conducting end-user surveys of bankers and deferred that to Arunkumar.
 
@@ -99,3 +127,68 @@ Jordan reiterated that 06/19 is the target for the Initial Validation kickoff an
 - Bhavya Reddy to schedule a demo session for Jordan (Carl and Arunkumar to present). Target: week of 06/16/2026.
 - Jordan Low to send a list of Validation team members who need tracker edit access. Target: 06/09/2026.
 - Jordan Low to add a tracker item for ongoing monitoring logging needs. Target: 06/10/2026.
+
+---
+
+## Negative Feedback Handling (Recommendation Rejection)
+
+Carl explained the rejection workflow for recommendations. When a banker provides negative feedback (rejection) on a recommendation, the system retains the rejection in the database with a rejected status. That recommendation will no longer appear for that specific customer ID. The selling point associated with the rejected recommendation is also suppressed for that customer, though the same selling point may still be served to other customers if their context maps to the same product. Jordan confirmed: the rejection is per-customer, not global. If two customers share the same customer context and are both recommended the same product, a rejection by one customer does not affect the other.
+
+---
+
+## UAT Access Provisioned
+
+Carl shared UAT environment entitlements for Jordan and Jinjun during the meeting. Once the access requests are submitted, Carl will approve them. BCRM access to be coordinated through Bhavya separately.
+
+---
+
+## Next Meeting
+
+The next session is scheduled for Monday, 06/15/2026 (demo session organized by Bhavya). The twice-weekly sync cadence (Tuesdays and Thursdays) will begin the following week.
+
+---
+
+---
+
+## MRM Internal Takeaways
+
+Internal validation team working notes. Not for external distribution.
+
+### What was resolved
+
+- Tracker edit access granted during the meeting. No longer need to send copies by email.
+- Data access path clarified: api_transactions and feedback via Data Lake (Arun provisioning), individual DB tables via DBA elevated access, no assembled files from production.
+- Read-only UAT DB access being provisioned today.
+- Bhavya acknowledged the PA1 feedback description does not match the implementation and needs updating. Recommendation feedback only, no selling point feedback, no 1-5 rating.
+- Carl confirmed no 422 errors on the feedback endpoint via Datadog/ServiceNow monitoring.
+- Carl acknowledged the OpenAPI spec is not maintained and committed to updating it.
+- Bhavya committed to annual SME review of cached selling points and SME review for any new additions or KB changes.
+- June 19 code freeze confirmed by Bhavya. No changes planned for current scope.
+
+### Agreed Validation position (per Mehdi)
+
+If the MO intends to keep the cached selling points unchanged over time, the model owner must explicitly justify this static behavior in the monitoring plan. Any additions, updates, or changes to the cached content would require additional validation and may trigger change management requirements.
+
+### What was NOT resolved
+
+- Carl ran the SELECT DISTINCT query on screen. Results showed only recommendation feedback in the database. No selling point feedback rows exist. The singular vs plural code mismatch is moot since no selling point feedback has been submitted.
+- The ongoing monitoring logging question was deferred to a new tracker item. Jinjun's position is clear (first-line obligation to have production data audit-ready), but the engineering team's position is that the current Data Lake access covers it. This will likely surface as a monitoring plan documentation gap.
+- Selling point feedback is confirmed out of scope for August rollout. Arunkumar's banker outreach feedback indicates bankers resist additional input. The PA1 risk mitigation language does not match the implementation. Decision needed on how to document this in the IV: observation, finding, or restriction on future scope.
+- End-user survey for annual monitoring: Bhavya uncertain, deferred to Arunkumar. Not committed.
+
+### Key observations
+
+- Sylvia's tone was significantly more collaborative than her emails. She acknowledged the terminology correction, offered the demo, and facilitated access provisioning in real time. The "defense vs attack" framing from Carl is worth noting but was delivered in a non-confrontational way.
+- Carl stated tables can be individually accessed on production but cannot be joined. This is a key constraint for any future data request — we will receive individual table exports, not assembled views.
+- Arunkumar is the key contact for Data Lake access. Chris's team manages the Data Warehouse.
+- Bhavya confirmed a 1-2 year product roadmap (deposit products, credit cards). Each addition will go through change management. This confirms the frozen cache approach will generate repeated Targeted Scope Validations, which reinforces the value of establishing a monitoring-based governance path now.
+- Carl's statement that the OpenAPI spec is not maintained and that teams use Confluence is a documentation transparency observation. The API contract document does not match the implementation. This should be noted in the IV.
+
+### Immediate priorities
+
+- Confirm tracker edit access is working for the full team. Send names today.
+- Follow up on the SELECT DISTINCT query results — did Carl show singular or plural values?
+- Add the ongoing monitoring logging item to the tracker.
+- Review the updated Implementation and Monitoring Plan documents that Bhavya sent back.
+- Prepare for the demo session — use it to verify the end-to-end workflow and confirm what bankers actually see.
+- Decide with Jinjun how to frame the selling point feedback gap in the IV: the PA committed to it in three separate answers, the model supports it, BCRM does not send it, and the MO confirms it is out of scope for full rollout.
