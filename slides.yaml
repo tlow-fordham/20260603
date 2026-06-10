@@ -1,89 +1,101 @@
-"Section","Clarifying instruction","Priority","Complexity to implement (MD/MO)","Complexity to assess (Validation)","Notes"
-"7.1 Outcome Analysis","The data used for testing should be documented in Section 5.1. In this section, document an appropriate array of tests that are performed to evidence the model's efficacy for its intended use.","high","3","3","Core efficacy evidence; required before kickoff."
-"7.1 Outcome Analysis","Testing may include a combination of business metrics, automated testing, LLM-as-a-judge, or human review.","N/A","-","-","Clarifies acceptable test types; not a separate deliverable."
-"7.1 Outcome Analysis","For each test, include a description of the test, the purpose of the test, and the testing procedures.","medium","2","2","Results evidence the work (High); the description/purpose/procedure can be obtained or inferred after kickoff, and Validation can interpret."
-"7.1 Outcome Analysis","If the model has undergone a pilot, describe the pilot usage and scope.","medium","2","1","If a pilot was conducted; N/A otherwise."
-"7.1 Outcome Analysis","If both automated and human testing were utilized, specify the methods to recalibrate the automatic evaluation to align with human reviews.","medium","2","2","Only if both methods used; supports LLM-judge to SME alignment."
-"7.1 Outcome Analysis","Human Testing refers to the testing or evaluation performed by Subject Matter Experts (SMEs).","N/A","-","-","Definition; no deliverable."
-"7.1 Outcome Analysis","Define the metrics used for human evaluation (e.g., context relevancy, answer relevancy, faithfulness, answer accuracy) rating criteria and rubrics (e.g., Yes or No values, scores from 1-5, etc.).","medium","2","2","If SME testing used; for low risk focus on accuracy metrics."
-"7.1 Outcome Analysis","Testing data should be documented in Section 5.1 but can be repeated here as necessary to provide clarity for each testing dataset on the sampling methodology, sample size, and the input or output data that are used in the evaluation, such as query, response, retrieved context, source KB article IDs or ground truth.","medium","2","2","Depends on the sample: a small or unrepresentative sample raises this toward High. May reference 5.1."
-"7.1 Outcome Analysis","Automated Testing refers to the testing that uses statistical calculations or LLM-as-a-judge to assess LLM output, rather than human judgement.","N/A","-","-","Definition; no deliverable."
-"7.1 Outcome Analysis","Provide the name of software or packages used for automated testing.","medium","1","1","If automated testing used."
-"7.1 Outcome Analysis","List all of the automatically computed performance metrics used to measure GenAI's output accuracy and relevancy.
-• For example, for summarization use cases, accuracy of GenAI responses can be measured by statistical metrics like Exact Match, ROUGE, BLEU, and BertScore.
-• LLM-as-a-judge can be used to evaluate correctness if ground truth is available, and can also be used to evaluate context relevancy, answer relevancy, faithfulness, and completeness, etc. with or without the ground truth.
-• For each statistical metric computed by automatic evaluation, specify its computation logic/formula.
-• For custom LLM-as-a-judge metrics, specify the range of values, evaluation rubrics, and the custom prompt.
-• If multiple metrics are reported, highlight which metrics are prioritized as the most important in the evaluation conclusion.","medium","3","3","If automated testing used; metrics are the efficacy evidence."
-"7.1 Outcome Analysis","For RAG, document testing methodology for retrieval metrics like precision@k, recall@k, MRR@k, query-document relevance score, and retrieval failure rate, if available.","low","3","3","RAG only; N/A if not RAG. Intermediate diagnostic, not required at low risk: a wrong retrieval already surfaces in end-to-end correctness grading. Only relevant separately if end-to-end correctness is not otherwise evaluated."
-"7.1 Outcome Analysis","For Agentic AI frameworks, document testing methodology for evaluating intermediate components in the AI agent framework by testing each agent module separately (e.g., planning success rate and optimality, memory retention accuracy and memory pruning effectiveness, reflection quality, and tool selection accuracy). For multi-agent frameworks, document approach for testing agent coordination and communication efficiency.","Low (agentic) / N/A (non-agentic)","5 (agentic)","4 (agentic)","Non-agentic (in scope): N/A. Proposal classes agentic AI as high complexity on the full cycle; Low retained provisionally for a low-risk agentic model pending approval."
-"7.1 Outcome Analysis","For continuous target predictions, common metrics such as adjusted R-square, RMSE, MAE and MAPE should be computed and reported.","medium","2","2","Only if a continuous-target component exists; N/A otherwise."
-"7.1 Outcome Analysis","For classification models, metrics for assessing model discrimination and rank-ordering ability are important. Common metrics such as KS statistic, Gini coefficient, and ROC/Precision-Recall AUC curves should be computed and reported.","medium","2","2","Only if a classification component exists; N/A otherwise."
-"7.1 Outcome Analysis","Document the results of each test from box 1 above and summarize with tables and charts when possible.","high","2","2","Results are the evidence; required."
-"7.1 Outcome Analysis","In the cases where automated testing was conducted on a larger dataset than SME review, provide an assessment on the level of alignment between the automated testing with the SME evaluation.","medium","2","2","Only when automated ran on a larger sample than SME."
-"7.1 Outcome Analysis","Include the applicable business metrics and results from backtesting or pilot if applicable (e.g., average handling time, issue resolution rate, customer satisfaction rating, churn rate, etc.).","medium","2","2","If a pilot/backtest ran; more relevant for customer-facing models."
-"7.1 Outcome Analysis","If the model is developed by segments (based on customer profile, business domain, etc.), or if segment/cluster labels are available in the metadata, provide performance testing results on different clusters or segments.","medium","3","2","If segments exist; raise to High where a pooled number hides a weak sub-population; N/A if no segments."
-"7.1 Outcome Analysis","For custom built LLM or fined tuned model, document results across the various development partitions/samples (such as training, in-time holdout, out-of-time testing, segmentations, query types, document categories, and use case scenarios).","N/A","-","-","Custom/fine-tuned only, which is uncommon at low risk (vendor foundation models are used as-is) - N/A in the typical case. Even when fine-tuned, assess via end-to-end outcomes rather than requiring per-partition training results."
-"7.1 Outcome Analysis","Include an interpretation and conclusion for each test, with proper explanation/justification of any anomalies or performance degradation observed between data partitions/samples.","medium","2","2","Validation can interpret the results; the results themselves are the High item. Can be obtained or refined after kickoff."
-"7.1 Outcome Analysis","Provide the overall LLM application-level performance results on the corresponding use case, which reflects the combined performance of all components such as foundation LLM, RAG, and fine-tuning.","high","3","2","Headline metric: combined end-to-end performance."
-"7.1 Outcome Analysis","If the model includes upstream models as inputs, and no impact assessment was performed, provide explicit justification for its exclusion.","low","1","1","Only if upstream models feed inputs; justified exclusion acceptable; N/A otherwise."
-"7.1 Outcome Analysis","U.S. Bank performance testing is often conducted via a batch retrospective study (i.e., ""retro study"") or via live production system testing. Specify how the test was conducted.","medium","2","1","Specify retro vs live; applies to vendor and US Bank-data testing."
-"7.1 Outcome Analysis","Outcome analysis should include performance assessment on U.S. Bank data, for instance, the performance evaluation based on actual queries (if available) from U.S. Bank users/customers and U.S. Bank KB articles. (Refer to Section 5.1 for the discussion on testing data).","high","3","3","Must evidence performance on US Bank data and intended use."
-"7.1 Outcome Analysis","If testing specifically on U.S. Bank data is not relevant or was not possible, ensure sufficient justification is provided. Document any differences between the vendor's test conditions and U.S. Bank's production environment that may impact performance.","medium","2","2","Only if US Bank-data testing not possible."
-"7.2 Guardrail Testing","Hallucination Detection Testing: If applicable, document testing of guardrail effectiveness in detecting and blocking hallucinated responses, particularly for out-of-domain queries and edge cases.","medium","3","3","Not in the streamline waiver; relevant wherever the model generates user-visible content."
-"7.2 Guardrail Testing","Toxicity Testing: If applicable, document testing of guardrails against toxic, harmful or unethical input or output, such as using an LLM as a toxicity checker or BERT-based toxicity detector models.","low","3","2","Not required at low risk per streamline. Customer-facing (esp. voice) tests regardless."
-"7.2 Guardrail Testing","Adversarial Testing: If applicable, document adversarial testing of guardrails against prompt injection, jail breaking or data exfiltration attempts that trick the LLM into revealing confidential, proprietary, or sensitive data (such as training data, system prompts, or PII).","low","4","4","Not required at low risk. Exposure-driven; low-risk models are typically internal. Elevate for customer-facing exposure."
-"7.2 Guardrail Testing","For each of the test above, If applicable, document red teaming procedures and scope, attack datasets used (such as MIT AI Risk Repository or ETAQ), automated testing toolkits employed (such as Garak or Adversarial Robustness Toolbox (ART)), and manual expert testing coverage.","low","4","3","Applies if red teaming conducted; low at low risk."
-"7.2 Guardrail Testing","If red teaming/adversarial testing was conducted on guardrails, report:
-• Total number of test attempts by risk category (hallucination, toxicity, adversarial attacks).
-• Number of attempts that successfully bypassed guardrails.
-• Types of successful bypasses and their severity/impact.","low","2","2","Only if red teaming conducted; low at low risk."
-"7.2 Guardrail Testing","If backtesting or pilot query testing was conducted on guardrails, report:
-• Total number of legitimate business queries or answers tested.
-• Number of legitimate queries or answers incorrectly blocked.
-• Number of harmful/inappropriate/inaccurate queries or outputs that by passed guardrails.","medium","2","2","If guardrail backtesting/pilot conducted; false-positive and false-negative rates."
-"7.2 Guardrail Testing","If applicable, document patterns in failures (e.g. severity level and category breakdown such as prompt injection, jailbreaking, data exfiltration attempts, etc.), common false positives affecting user experience, and edge cases requiring human escalation. If customized unsafe classes were created for guardrail models such as LlamaGuard, describe the definitions used.","low","3","2","Detailed guardrail failure analysis; not required at low risk; custom-class part N/A if none."
-"7.2 Guardrail Testing","If applicable, document the balance between safety strictness and system utility, and risk-based thresholds where stricter controls are applied for high-stakes use cases.","low","2","2","High-stakes thresholds less relevant at low risk."
-"7.2 Guardrail Testing","For vendor models, document the performance of vendor-provided safety features (such as AWS Bedrock Guardrails or Azure AI Content Safety).","medium","2","2","If vendor safety features are used; document their performance."
-"7.3 Benchmarking","State the benchmark(s) used and how/why the benchmark was chosen.","N/A","-","-","If benchmarking was performed, a short description of the benchmark choice is welcomed."
-"7.3 Benchmarking","If the model being developed is replacing an existing model, or is a model upgrade/ redevelopment, the incumbent model should be one of the benchmarks.","High (replacement/upgrade) / N/A (new model)","3","2","Mandatory benchmark only for a replacement/upgrade (incl. foundation LLM major upgrade); demonstrate equal or improved performance. N/A for a new model."
-"7.3 Benchmarking","If benchmarking was not possible or was not performed, include a statement explaining why. For some models, benchmarks may be desirable, but not available given the specificity of a given model; as benchmarks are developed, they should be incorporated into the model development and testing.","medium","1","1","At low risk, the justification for omission is the expected deliverable."
-"7.3 Benchmarking","Consider benchmarking GenAI Models against:
-• Other LLM vendors/versions (e.g. GPT-4 vs Gemini).
-• Different model frameworks (e.g. RAG vs fine-tuning).
-• Human performance baselines for the same queries/tasks.
-• Simplified version of methods (e.g., using plain RAG as benchmark if the primary model utilizes Agentic RAG, creating a reflection-free agent, etc.).
-• Traditional NLP models such as BERT, T5, etc","N/A","-","-","Options list; not a deliverable."
-"7.3 Benchmarking","For fine-tuned models, if the LLM application performance has been benchmarked against alternative solutions, such as foundation models or RAG solutions, provide the performance comparison results to justify the fine-tuning approach.","N/A","-","-","Fine-tuned only, uncommon at low risk - N/A in the typical case. Benchmarking is also not required at low risk."
-"7.3 Benchmarking","If possible, use identical test datasets with comprehensive coverage (as described in 5.1) for fair comparison.","N/A","-","-","If benchmarking was performed, identical test datasets are preferred for fair comparison."
-"7.3 Benchmarking","If a comparable model for the same purpose is not available, consider comparing model outcomes against alternative benchmarks, such as:
-• comparing model performance on U.S. Bank data against vendor results measured at the consortium level;
-• existing business rules or manual processes;
-• industry benchmark data or industry generic models;
-• judgmental estimates from SMEs.","N/A","-","-","Options list; not a deliverable."
-"7.3 Benchmarking","If the model is not a replacement model and no industry or internal benchmark exists, it is acceptable to exclude benchmarking, but this limitation should be documented and appropriately justified.","N/A","-","-","Confirms benchmarking may be excluded; justification deliverable is in the row above."
-"7.3 Benchmarking","Provide quantitative results including accuracy, relevance and other performance metrics from the benchmark comparison.","N/A","-","-","If benchmarking was performed, a short summary of results is welcomed."
-"7.3 Benchmarking","Document any trade-offs between performance and resources (e.g. higher accuracy might come at higher cost or long processing time).","N/A","-","-","If benchmarking was performed, a short description of trade-offs is welcomed."
-"7.3 Benchmarking","Provide commentary on the performance between the benchmark results and the implication, if any, for the selected model.","N/A","-","-","If benchmarking was performed, a short interpretation is welcomed."
-"7.3 Benchmarking","Explain whether any differences between the data, model structure and/or assumptions of the benchmark model compared to the selected model impact model performance or interpretations of the results.","N/A","-","-","If benchmarking was performed, a short explanation is welcomed."
-"7.4 Sensitivity and Robustness","According to OCC 2011-12, page 13, ""Where appropriate to the particular model, banks should employ sensitivity analysis in model development and validation to check the impact of small changes in inputs and parameter values on model outputs to make sure they fall within an expected range. Unexpectedly large changes in outputs in response to small changes in inputs can indicate an unstable model. Varying several inputs simultaneously as part of sensitivity analysis can provide evidence of unexpected interactions, particularly if the interactions are complex and not intuitively clear. Banks benefit from conducting model stress testing to check performance over a wide range of inputs and parameter values, including extreme values, to verify that the model is robust. Such testing helps establish the boundaries of model performance by identifying the acceptable range of inputs as well as conditions under which the model may become unstable or inaccurate.""","N/A","-","-","Regulatory context; no deliverable."
-"7.4 Sensitivity and Robustness","To summarize, the general goal of sensitivity and robustness testing is to understand the model's behavior, including:
-1. How robust and intuitive a model is under large changes,
-2. How stable a model is under small changes, and
-3. What potential model weaknesses, or risks, may exist for a given use.","N/A","-","-","Clarifies testing goals; no deliverable."
-"7.4 Sensitivity and Robustness","This type of testing is generally applicable to all model types to varying degrees, including classification/scoring models and proprietary vendor models. However, the type of testing performed and the scope of testing, will be driven by the model purpose, use and methodology. Moreover, sensitivity and robustness testing may sometimes overlap with other methods of performance/stability testing or, in the case of AI/ML models, with explainability testing. If testing results were already captured in a different section, they do need repeated here; simply include a statement summarizing how sensitivity and robustness was tested and in what sections the results can be found.","low","1","1","If captured elsewhere, a summary pointer suffices."
-"7.4 Sensitivity and Robustness","Evaluating the relationship between model inputs and outputs, including sensitivity to small or large changes in input values (e.g., checking impacts of small/large changes in input data on the GenAI outputs; such changes can be made by rephrasing queries for models for chatbot models, modifying original documents for summarization models, etc.)","low","3","3","A small well-designed perturbation sample is acceptable."
-"7.4 Sensitivity and Robustness","Evaluating the model's stability or performance across or within meaningful segments like products, portfolios, channels, risk segments, geography, etc.","low","3","2","Segment performance is covered in the 7.1 segment row."
-"7.4 Sensitivity and Robustness","Evaluating a model's ability to handle noise in underlying unstructured data (e.g., for image processing, simulating various levels of light intensity and image rotation; for an OCR model, assessing a model's ability to distinguish between ""O"" and ""0"").","low","3","2","N/A for text-only models (image/OCR specific)."
-"7.4 Sensitivity and Robustness","The rigor of testing should be commensurate with the level of model risk.","N/A","-","-","Principle; no deliverable."
-"7.4 Sensitivity and Robustness","Focus on performing and presenting analysis that is appropriate and significant for the type and purpose of the model being evaluated. If a form of sensitivity analysis (such as shocking input variables) is not applicable, consider if another form of analysis would be more relevant. Note that some model forms/purposes have standard testing that will be expected. Include interpretation and business justification of the results, especially for any behaviors that are not intuitive or stable.","low","2","2","A small well-designed sample is acceptable."
-"7.4 Sensitivity and Robustness","For GenAI applications, provide any sensitivity or robustness testing results to show the consistency of output.","low","3","3","A small well-designed sample is acceptable."
-"7.4 Sensitivity and Robustness","Sensitivity testing includes but is not limited to: how the GenAI model's response will differ when the same query or semantically similar query (e.g., using synonyms, rephrasing, adding punctuation noise or emojis, applying keyboard proximity errors, using alternative tones, etc.) is entered into the model. For example, retrieval overlap, similarity scores or LLM pair-wise evaluator can be used to determine the difference of the outputs under such perturbation.","low","3","3","A small well-designed perturbation sample is acceptable."
-"7.4 Sensitivity and Robustness","Robustness testing includes but is not limited to: how the response can maintain coherence over long contexts (e.g., tracking the right information after 10 turns of conversation), and how the model responds when user changes topic in the mid-way of conversation.","Low / Medium (multi-turn conversational)","3","3","Raise to Medium for multi-turn conversational models, where coherence over many turns and clean topic-change handling are core to the use case."
-"7.4 Sensitivity and Robustness","Certain forms of sensitivity analysis may not be possible due to proprietary information. However, for some black-box vendor models, sensitivity analysis (and benchmarking) may be important to understanding the model's behavior and ensuring that the model is constructed/ implemented as intended.","low","2","2","For a black-box vendor model, a high-level behavioral check can help confirm intended implementation."
-"7.4 Sensitivity and Robustness","Sensitivity testing can be carried out by the vendor or by internal team members and is typically conducted at high level, with a focus on identifying impact from key features or understanding model behavior across meaningful segments.","N/A","-","-","Clarifies who/how; no deliverable."
-"7.4 Sensitivity and Robustness","Ensure proper justification is included if sensitivity testing is omitted.","medium","1","1","At low risk, the omission justification is the expected deliverable."
-"7.5 Explainability","Document data provenance and traceability mechanisms to ensure outputs can be traced back to their source documents, and describe how provenance is displayed to users, if applicable.","medium","2","2","Provenance often native to RAG. Raise to High where outputs feed customer-facing statements and provenance is the only error catch."
-"7.5 Explainability","For RAG techniques, explainability analysis includes but is not limited to: tracing each sentence or paragraph back to its originating context chunk (i.e., provenance analysis).","medium","2","2","RAG only; N/A if not RAG."
-"7.5 Explainability","For AI Agent techniques, explainability analysis includes but is not limited to: reasoning behind tool usage during intermediate steps, such as intermediate reasoning steps in VRL.","Low (agentic) / N/A (non-agentic)","3 (agentic)","3 (agentic)","Non-agentic (in scope): N/A. Low retained provisionally for a low-risk agentic model pending approval."
-"7.5 Explainability","Describe the process for SMEs to flag concerning patterns in their review of this explainability output.","medium","1","1","SME escalation process; low effort."
+
+## Tracker Logistics
+
+Sylvia confirmed the centralized tracker is owned by Bhavya as product manager. Jordan initially did not have edit access and had prepared a copy with Validation's responses. During the meeting, Carl updated the sharing settings to allow editable access. Jordan confirmed access is working and will send a list of Validation team members who need edit access after the meeting.
+
+Sylvia acknowledged the terminology correction: the reviewing team is MRM AI COE Validation, not MRG.
+
+---
+
+## Documentation Status
+
+Bhavya confirmed that the Implementation and Model Monitoring Plan documents have been updated to address all of Mehdi's comments from 06/04 and were sent back. The Model Development Document is the only remaining document and will be sent out this week. Bhavya indicated she needs engineering support for the development document working sessions. Jordan offered to schedule dedicated working sessions for the development document, noting that some comments (dates, risk ratings from Archer) may not require engineering involvement.
+
+---
+
+## Tracker Item Walkthrough
+
+### ISS1 (Free Plan) and ISS2 (Upfront Costs) — No further questions
+
+Jordan confirmed no further questions on ISS1. For ISS2, Jordan asked Bhavya for the Jira ticket ID for the phrasing update so Validation can track it. Bhavya agreed to add it to the tracker.
+
+### ISS3 (Rebranding / SME Review) — In progress
+
+Bhavya confirmed the SME review of the Elavon-branded cache is in progress. She is working with the product lead to identify who will complete the review. The tracker category was changed from "Engineering" to "Business" since this is an MO action, not an engineering action.
+
+### ISS4 (is_approved Column) — No further questions
+
+Jordan confirmed no further questions but reiterated the suggestion to use the is_approved field once SME review is completed. Deferred to a future discussion on monitoring.
+
+### ISS5 and ISS8 (Production Logs and Data Retention) — Extended discussion
+
+This was the most extensively discussed topic. Three categories of data access were clarified:
+
+Easily accessible: The api_transactions table and feedback table are available via the Azure Data Warehouse / Data Lake. Arunkumar confirmed he can provide access and will send entitlements. Carl confirmed that api_transactions logs every external API interaction, including request payload, response payload, and timestamp for both the recommend and feedback endpoints.
+
+Requires elevated access: Individual production database tables (selling_points, selling_point_components, etc.) can be accessed individually but require elevated access via DBA ticket. Tables cannot be joined on production. Carl reiterated that the data exists but cannot be assembled into a formatted file or downloaded via the UI for security and DLP reasons.
+
+Not available: Server-level logs (full LLM prompts as formatted files) cannot be downloaded from production. Carl stated this is a security restriction determined at the enterprise level, not a team decision.
+
+Sylvia proposed and the group agreed to the following: read-only UAT database access will be provisioned for the Validation team today, and Data Lake access for api_transactions and feedback will be provisioned by Arunkumar. Any additional production data will go through the standard DBA request process.
+
+Jinjun emphasized that production interaction data logging is required under the MRM implementation framework and monitoring plan requirements, and that model owners are expected to have this data prepared for regulatory audit (OCC, FRB, internal audit) with a 24-hour response expectation. Jinjun stated that this is a first-line obligation, not something Validation should need to extract independently.
+
+Carl responded that the API transactions table already captures the interaction data and that the information exists in the database tables, just not in a pre-assembled format. Sylvia proposed moving on and logging an additional tracker item for ongoing monitoring logging needs.
+
+### ISS7 (Feedback) — Major clarification received
+
+Bhavya acknowledged that the PA1 description of feedback (rating between 1 and 5 with text feedback) needs to be updated. The current implementation collects recommendation feedback only via a dropdown with approximately 6 pre-defined options. There is no rating scale and no selling point feedback mechanism in BCRM.
+
+Carl shared his screen and ran the query Validation requested (SELECT DISTINCT feedback_type FROM feedback). Carl confirmed the feedback type filter on the admin UI is a feature that has not been maintained since initial development, similar to the is_approved field.
+
+Arunkumar provided context on the banker experience: bankers have indicated through quarterly outreach sessions that they want minimal input requirements. The recommendation workflow is embedded in their regular BCRM workflow, and introducing additional feedback on selling points would add complexity the bankers have resisted. Arunkumar stated that adding selling point feedback to BCRM would require development cycles, banker training, and coordination with the BCRM team, and confirmed this is not in scope for the August full rollout.
+
+Jordan asked whether there were 422 errors on the feedback endpoint that might indicate failed submissions. Carl stated that monitoring is in place via Datadog and ServiceNow, and no such errors have been observed.
+
+Jordan pointed out the discrepancy between the OpenAPI specification (where feedback_text and feedback_target_id are listed as optional) and the Pydantic model (where both are required). Carl acknowledged the OpenAPI spec is not currently being maintained and that the teams use a Confluence page as the source of truth for the API contract. Carl committed to having an engineer update the OpenAPI spec.
+
+### ISS9 (UI Access) — Being provisioned
+
+Carl will provision lower-environment admin UI access for Jordan today. Bhavya will facilitate BCRM lower-environment access. Production admin UI access is not requested and will not be granted due to write-privilege risk.
+
+### ISS10 (Monitoring Plan) — Discussion on approach
+
+Jordan framed the monitoring question: since the selling points are cached and not changing, what does ongoing monitoring look like?
+
+Carl suggested providing an annual sampling of 20 of the 172 selling points showing expected versus actual retrieval results to prove the cache is functioning correctly.
+
+Jinjun clarified the two dimensions: if the cache is static with no changes, SME review of the existing selling points and proof of correct retrieval may be sufficient. If new selling points are generated or real-time generation is enabled, that would be a different scope requiring a Targeted Scope Validation.
+
+Jordan raised the broader point that business or regulatory conditions may change over time, such as new restrictions on product features or pricing disclosures, and that because the model relies on pre-generated and cached selling points, those outputs could become outdated or misaligned with current business policies even if the cache itself has not changed. This is also relevant to the model's classification: if all outputs are permanently cached with no further generation, there is an argument that this no longer functions as a generative AI model requiring ongoing validation. Conversely, if the model owner continues to generate new outputs over time (new products, new segments, KB updates), the generative component remains active and ongoing monitoring is warranted. Carl and Bhavya agreed that annual SME review of the cached selling points could address this.
+
+Bhavya committed that any updates to selling points or changes to the knowledge base materials will include SME review. Bhavya was uncertain about conducting end-user surveys of bankers and deferred that to Arunkumar.
+
+Jinjun confirmed the group's understanding: if the cache changes, it triggers a change process; if there are no changes, the monitoring is lighter (annual SME review and proof of correct retrieval).
+
+---
+
+## Demo and Application Walkthrough
+
+Sylvia offered to have Carl and Arunkumar provide a demo of the application for Jordan, who joined the project on 06/03. The demo will cover how the application works, how BCRM presents recommendations and selling points to bankers, and how the feedback workflow operates. Bhavya will schedule the demo, potentially on Monday (06/16), prior to the Tuesday sync.
+
+---
+
+## June 19 Kickoff
+
+Jordan reiterated that 06/19 is the target for the Initial Validation kickoff and that all changes should be frozen by that date for the accelerated validation path. Bhavya confirmed that no changes are planned for the current scope and that any additional products (deposit products, credit card products, etc.) will go through the change management process. Bhavya noted the product roadmap includes one to two years of additional product additions.
+
+---
+
+## Action Items
+
+- Carl Huang to provision lower-environment admin UI access for Jordan Low. Target: 06/09/2026.
+- Bhavya Reddy to facilitate BCRM lower-environment access for Jordan Low. Target: 06/09/2026.
+- Arunkumar Ramalingam to provide Data Lake / Data Warehouse access for the Validation team (api_transactions and feedback tables). Target: 06/10/2026.
+- Bhavya Reddy to provide the Jira ticket ID for the upfront cost phrasing update (ISS2). Target: 06/10/2026.
+- Bhavya Reddy to complete the SME review of the Elavon-branded cache and provide sign-off records (ISS3). Target: before 06/19/2026.
+- Bhavya Reddy to send the updated Model Development Document this week. Target: 06/13/2026.
+- Carl Huang to have the OpenAPI spec updated to match the current Pydantic model. Target: TBD.
+- Bhavya Reddy to schedule a demo session for Jordan (Carl and Arunkumar to present). Target: week of 06/16/2026.
+- Jordan Low to send a list of Validation team members who need tracker edit access. Target: 06/09/2026.
+- Jordan Low to add a tracker item for ongoing monitoring logging needs. Target: 06/10/2026.
