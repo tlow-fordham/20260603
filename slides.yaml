@@ -1,55 +1,56 @@
-slide_1:
-  title: "Workshop Q&A Recap: Scope, Timelines, and Change Handling"
-  sections:
-    - header: "Policy Scope"
-      bullets:
-        - "Applies to all models (internal and external) in production or pilot within MRM scope"
-        - "Development and experimentation are out of scope"
-        - "Once validation begins, the model must remain stable"
+slides:
+  - layout: single
+    title: "Workshop Q&A Recap: Scope, Timelines, and Change Handling"
+    sections:
+      - heading: "Policy Scope"
+        bullets:
+          - "Applies to all models (internal and external) in production or pilot within MRM scope"
+          - "Development and experimentation are out of scope"
+          - "Once validation begins, the model must remain stable"
 
-    - header: "Timelines for Material Changes"
-      bullets:
-        - "Provisional Approval for urgent changes: approximately 3 to 4 weeks"
-        - "Full or targeted validation completed within 6 months of PA"
-        - "Providing a complete evidence package upfront (demos, performance testing results, documentation) shortens the review window"
+      - heading: "Timelines for Material Changes"
+        bullets:
+          - "Provisional Approval for urgent changes: approximately 3 to 4 weeks"
+          - "Full or targeted validation completed within 6 months of PA"
+          - "Providing a complete evidence package upfront (demos, performance testing results, documentation) shortens the review window"
 
-    - header: "Change Handling"
-      bullets:
-        - "Grey area: contact MRM/MRG via email or meeting to jointly assess materiality"
-        - "Material: documentation and validation approval before implementation, regardless of rollout scale"
-        - "Immaterial: notify MRM/MRG, submit change EMA, update documentation"
+      - heading: "Change Handling"
+        bullets:
+          - "Grey area: contact MRM/MRG via email or meeting to jointly assess materiality"
+          - "Material: documentation and validation approval before implementation, regardless of rollout scale"
+          - "Immaterial: notify MRM/MRG, submit change EMA, update documentation"
 
-    - header: "Iterative Changes Under PA"
-      bullets:
-        - "Preferred path: PA, then full validation, then change management for subsequent changes"
-        - "Iterating under PA before full validation may be reasonable if the model is still evolving"
-        - "Each successive PA must articulate what changed and why provisional use remains appropriate"
+      - heading: "Iterative Changes Under PA"
+        bullets:
+          - "Preferred path: PA, then full validation, then change management for subsequent changes"
+          - "Iterating under PA before full validation may be reasonable if the model is still evolving"
+          - "Each successive PA must articulate what changed and why provisional use remains appropriate"
 
-slide_2:
-  title: "Workshop Q&A Recap: Evidence, Deployment, and Scoping"
-  sections:
-    - header: "Evidence by Material Change Type"
-      bullets:
-        - "Foundation LLM change: automated before/after testing on intermediate and final outputs; SME review on worst-performing samples with root cause analysis"
-        - "Framework change: end-to-end traces of the changed component; automated and manual testing"
-        - "Augmentation data expansion: retrieval chunks, relevance scores, generated outputs for new data; targeted testing on new KBs"
-        - "Usage or scope change: representative queries and outputs from the new scope; SME review samples"
+  - layout: single
+    title: "Workshop Q&A Recap: Evidence, Deployment, and Scoping"
+    sections:
+      - heading: "Evidence by Material Change Type"
+        bullets:
+          - "Foundation LLM change: automated before/after testing on intermediate and final outputs; SME review on worst-performing samples with root cause analysis"
+          - "Framework change: end-to-end traces of the changed component; automated and manual testing"
+          - "Augmentation data expansion: retrieval chunks, relevance scores, generated outputs for new data; targeted testing on new KBs"
+          - "Usage or scope change: representative queries and outputs from the new scope; SME review samples"
 
-    - header: "Deployment and Production Readiness"
-      bullets:
-        - "Feature flags, canary deployments, smoke tests are first-line decisions, not MRM requirements"
-        - "MRM assesses the documented implementation framework; the model owner builds and maintains it"
+      - heading: "Deployment and Production Readiness"
+        bullets:
+          - "Feature flags, canary deployments, smoke tests are first-line decisions, not MRM requirements"
+          - "MRM assesses the documented implementation framework; the model owner builds and maintains it"
 
-    - header: "Model Scoping"
-      bullets:
-        - "Approximately 90% of GenAI use cases are out of MRM scope"
-        - "Scoping follows the EMG determination process; share specific examples with MRG if the classification seems misaligned"
+      - heading: "Model Scoping"
+        bullets:
+          - "Approximately 90% of GenAI use cases are out of MRM scope"
+          - "Scoping follows the EMG determination process; share specific examples with MRG if the classification seems misaligned"
 
-    - header: "Cross-Program Alignment"
-      bullets:
-        - "MRM and AI governance have different materiality definitions reflecting different purposes"
-        - "MRM is connecting with AI governance to align language where appropriate"
+      - heading: "Cross-Program Alignment"
+        bullets:
+          - "MRM and AI governance have different materiality definitions reflecting different purposes"
+          - "MRM is connecting with AI governance to align language where appropriate"
 
-    - header: "Open"
-      bullets:
-        - "Immaterial change EMA turnaround time: pending MRG input"
+      - heading: "Open"
+        bullets:
+          - "Immaterial change EMA turnaround time: pending MRG input"
