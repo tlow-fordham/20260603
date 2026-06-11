@@ -1,108 +1,55 @@
-## Tracker Logistics
+slide_1:
+  title: "Workshop Q&A Recap: Scope, Timelines, and Change Handling"
+  sections:
+    - header: "Policy Scope"
+      bullets:
+        - "Applies to all models (internal and external) in production or pilot within MRM scope"
+        - "Development and experimentation are out of scope"
+        - "Once validation begins, the model must remain stable"
 
-Sylvia confirmed the centralized tracker is owned by Bhavya as product manager. Jordan initially did not have edit access and had prepared a copy with Validation's responses. During the meeting, Carl updated the sharing settings to allow editable access. Jordan confirmed access is working and will send a list of Validation team members who need edit access after the meeting.
+    - header: "Timelines for Material Changes"
+      bullets:
+        - "Provisional Approval for urgent changes: approximately 3 to 4 weeks"
+        - "Full or targeted validation completed within 6 months of PA"
+        - "Providing a complete evidence package upfront (demos, performance testing results, documentation) shortens the review window"
 
-Sylvia acknowledged the terminology correction: the reviewing team is MRM AI COE Validation, not MRG.
+    - header: "Change Handling"
+      bullets:
+        - "Grey area: contact MRM/MRG via email or meeting to jointly assess materiality"
+        - "Material: documentation and validation approval before implementation, regardless of rollout scale"
+        - "Immaterial: notify MRM/MRG, submit change EMA, update documentation"
 
----
+    - header: "Iterative Changes Under PA"
+      bullets:
+        - "Preferred path: PA, then full validation, then change management for subsequent changes"
+        - "Iterating under PA before full validation may be reasonable if the model is still evolving"
+        - "Each successive PA must articulate what changed and why provisional use remains appropriate"
 
-## Documentation Status
+slide_2:
+  title: "Workshop Q&A Recap: Evidence, Deployment, and Scoping"
+  sections:
+    - header: "Evidence by Material Change Type"
+      bullets:
+        - "Foundation LLM change: automated before/after testing on intermediate and final outputs; SME review on worst-performing samples with root cause analysis"
+        - "Framework change: end-to-end traces of the changed component; automated and manual testing"
+        - "Augmentation data expansion: retrieval chunks, relevance scores, generated outputs for new data; targeted testing on new KBs"
+        - "Usage or scope change: representative queries and outputs from the new scope; SME review samples"
 
-Bhavya confirmed that the Implementation and Model Monitoring Plan documents have been updated to address all of Mehdi's comments from 06/04 and were sent back. The Model Development Document is the only remaining document and will be sent out this week. Bhavya indicated she needs engineering support for the development document working sessions. Jordan offered to schedule dedicated working sessions for the development document, noting that some comments (dates, risk ratings from Archer) may not require engineering involvement.
+    - header: "Deployment and Production Readiness"
+      bullets:
+        - "Feature flags, canary deployments, smoke tests are first-line decisions, not MRM requirements"
+        - "MRM assesses the documented implementation framework; the model owner builds and maintains it"
 
----
+    - header: "Model Scoping"
+      bullets:
+        - "Approximately 90% of GenAI use cases are out of MRM scope"
+        - "Scoping follows the EMG determination process; share specific examples with MRG if the classification seems misaligned"
 
-## Tracker Item Walkthrough
+    - header: "Cross-Program Alignment"
+      bullets:
+        - "MRM and AI governance have different materiality definitions reflecting different purposes"
+        - "MRM is connecting with AI governance to align language where appropriate"
 
-### ISS1 (Free Plan) and ISS2 (Upfront Costs) — No further questions
-
-Jordan confirmed no further questions on ISS1. For ISS2, Jordan asked Bhavya for the Jira ticket ID for the phrasing update so Validation can track it. Bhavya agreed to add it to the tracker.
-
-### ISS3 (Rebranding / SME Review) — In progress
-
-Bhavya confirmed the SME review of the Elavon-branded cache is in progress. She is working with the product lead to identify who will complete the review. The tracker category was changed from "Engineering" to "Business" since this is an MO action, not an engineering action.
-
-### ISS4 (is_approved Column) — No further questions
-
-Jordan confirmed no further questions but reiterated the suggestion to use the is_approved field once SME review is completed. Deferred to a future discussion on monitoring.
-
-### ISS5 and ISS8 (Production Logs and Data Retention) — Extended discussion
-
-This was the most extensively discussed topic. Three categories of data access were clarified:
-
-Easily accessible: The api_transactions table and feedback table are available via the Azure Data Warehouse / Data Lake. Arunkumar confirmed he can provide access and will send entitlements. Carl confirmed that api_transactions logs every external API interaction, including request payload, response payload, and timestamp for both the recommend and feedback endpoints.
-
-Requires elevated access: Individual production database tables (selling_points, selling_point_components, etc.) can be accessed individually but require elevated access via DBA ticket. Tables cannot be joined on production. Carl reiterated that the data exists but cannot be assembled into a formatted file or downloaded via the UI for security and DLP reasons.
-
-Not available: Server-level logs (full LLM prompts as formatted files) cannot be downloaded from production. Carl stated this is a security restriction determined at the enterprise level, not a team decision.
-
-Sylvia proposed and the group agreed to the following: read-only UAT database access will be provisioned for the Validation team today, and Data Lake access for api_transactions and feedback will be provisioned by Arunkumar. Any additional production data will go through the standard DBA request process.
-
-Jinjun emphasized that production interaction data logging is required under the MRM implementation framework and monitoring plan requirements, and that model owners are expected to have this data prepared for regulatory audit (OCC, FRB, internal audit) with a 24-hour response expectation. Jinjun stated that this is a first-line obligation, not something Validation should need to extract independently.
-
-Carl responded that the API transactions table already captures the interaction data and that the information exists in the database tables, just not in a pre-assembled format. Sylvia proposed moving on and logging an additional tracker item for ongoing monitoring logging needs.
-
-### ISS7 (Feedback) — Major clarification received
-
-Bhavya acknowledged that the PA1 description of feedback (rating between 1 and 5 with text feedback) needs to be updated. The current implementation collects recommendation feedback only via a dropdown with approximately 6 pre-defined options. There is no rating scale and no selling point feedback mechanism in BCRM.
-
-Carl shared his screen and ran the query Validation requested (SELECT DISTINCT feedback_type FROM feedback). Carl confirmed the feedback type filter on the admin UI is a feature that has not been maintained since initial development, similar to the is_approved field.
-
-Arunkumar provided context on the banker experience: bankers have indicated through quarterly outreach sessions that they want minimal input requirements. The recommendation workflow is embedded in their regular BCRM workflow, and introducing additional feedback on selling points would add complexity the bankers have resisted. Arunkumar stated that adding selling point feedback to BCRM would require development cycles, banker training, and coordination with the BCRM team, and confirmed this is not in scope for the August full rollout.
-
-Carl also explained the rejection workflow for recommendation feedback. When a banker rejects a recommendation, the system records it as rejected and that recommendation will no longer appear for that specific customer ID. The selling point associated with the rejected recommendation is also suppressed for that customer, though the same selling point may still be served to other customers whose context maps to the same product. The rejection is per-customer, not global.
-
-Jordan asked whether there were 422 errors on the feedback endpoint that might indicate failed submissions. Carl stated that monitoring is in place via Datadog and ServiceNow, and no such errors have been observed.
-
-Jordan pointed out the discrepancy between the OpenAPI specification (where feedback_text and feedback_target_id are listed as optional) and the Pydantic model (where both are required). Carl acknowledged the OpenAPI spec is not currently being maintained and that the teams use a Confluence page as the source of truth for the API contract. Carl committed to having an engineer update the OpenAPI spec.
-
-### ISS9 (UI Access) — Being provisioned
-
-Carl will provision lower-environment admin UI access for Jordan today. Carl shared UAT environment entitlements for Jordan and Jinjun during the meeting; once the access requests are submitted, Carl will approve them. Bhavya will facilitate BCRM lower-environment access separately. Production admin UI access is not requested and will not be granted due to write-privilege risk.
-
-### ISS10 (Monitoring Plan) — Discussion on approach
-
-Jordan framed the monitoring question: since the selling points are cached and not changing, what does ongoing monitoring look like?
-
-Carl suggested providing an annual sampling of 20 of the 172 selling points showing expected versus actual retrieval results to prove the cache is functioning correctly.
-
-Jinjun clarified the two dimensions: if the cache is static with no changes, SME review of the existing selling points and proof of correct retrieval may be sufficient. If new selling points are generated or real-time generation is enabled, that would be a different scope requiring a Targeted Scope Validation.
-
-Jordan raised the broader point that business or regulatory conditions may change over time, such as new restrictions on product features or pricing disclosures, and that because the model relies on pre-generated and cached selling points, those outputs could become outdated or misaligned with current business policies even if the cache itself has not changed. Carl and Bhavya agreed that annual SME review of the cached selling points could address this. Bhavya also confirmed that any future generation of new selling points (new products, new segments, knowledge base updates) will go through the change management process, which the group agreed would require a Targeted Scope Validation.
-
-Bhavya committed that any updates to selling points or changes to the knowledge base materials will include SME review. Bhavya was uncertain about conducting end-user surveys of bankers and deferred that to Arunkumar.
-
-Jinjun confirmed the group's understanding: if the cache changes, it triggers a change process; if there are no changes, the monitoring is lighter (annual SME review and proof of correct retrieval).
-
----
-
-## Demo and Application Walkthrough
-
-Sylvia offered to have Carl and Arunkumar provide a demo of the application for Jordan, who joined the project on 06/03. The demo will cover how the application works, how BCRM presents recommendations and selling points to bankers, and how the feedback workflow operates. Bhavya will schedule the demo, potentially on Monday (06/16), prior to the Tuesday sync.
-
----
-
-## June 19 Kickoff
-
-Jordan reiterated that 06/19 is the target for the Initial Validation kickoff and that all changes should be frozen by that date for the accelerated validation path. Bhavya confirmed that no changes are planned for the current scope and that any additional products (deposit products, credit card products, etc.) will go through the change management process. Bhavya noted the product roadmap includes one to two years of additional product additions.
-
----
-
-## Action Items
-
-- Carl Huang to provision lower-environment admin UI access for Jordan Low. Target: 06/09/2026.
-- Bhavya Reddy to facilitate BCRM lower-environment access for Jordan Low. Target: 06/09/2026.
-- Arunkumar Ramalingam to provide Data Lake / Data Warehouse access for the Validation team (api_transactions and feedback tables). Target: 06/10/2026.
-- Bhavya Reddy to provide the Jira ticket ID for the upfront cost phrasing update (ISS2). Target: 06/10/2026.
-- Bhavya Reddy to complete the SME review of the Elavon-branded cache and provide sign-off records (ISS3). Target: before 06/19/2026.
-- Bhavya Reddy to send the updated Model Development Document this week. Target: 06/13/2026.
-- Carl Huang to have the OpenAPI spec updated to match the current Pydantic model. Target: TBD.
-- Bhavya Reddy to schedule a demo session for Jordan (Carl and Arunkumar to present). Target: week of 06/16/2026.
-- Jordan Low to send a list of Validation team members who need tracker edit access. Target: 06/09/2026.
-- Jordan Low to add a tracker item for ongoing monitoring logging needs. Target: 06/10/2026.
-
----
-
-## Next Meeting
-
-The next session is scheduled for Monday, 06/15/2026 (demo session organized by Bhavya). The twice-weekly sync cadence (Tuesdays and Thursdays) will begin the following week.
+    - header: "Open"
+      bullets:
+        - "Immaterial change EMA turnaround time: pending MRG input"
