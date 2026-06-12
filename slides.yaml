@@ -11,12 +11,14 @@ Existing Validation Scope
 (5) Review the model owner's root cause analysis for samples with low SME ratings.
 
 Streamlined Validation Scope
-(1) Review model owner-provided SME results, evaluate sample composition and representativeness, review rubrics and metric definitions, review distribution of SME ratings, review root cause analysis for low-rated samples.
-(2) SME evaluation requires fewer samples than higher-risk models.
-(3) No reduction in review rigor.
+(1) Assess SME selection criteria and required experience.
+(2) Summarize and evaluate data description, period, sampling method, sample size, scope of selected queries, adequacy of samples, and any bias toward specific business lines or query types.
+(3) Review metric definitions and rubrics (accuracy, relevancy) and flag ambiguities or undefined terms.
+(4) Review distribution of SME rating values across the sample.
+(5) Review the model owner's root cause analysis for samples with low SME ratings.
 
 Reduced Work for Validation
-- No reduction.
+- No reduction. The model owner may provide fewer samples at low risk, but Validation's review activities are unchanged.
 
 
 7.1 Outcome Analysis - Automated Testing
@@ -33,17 +35,16 @@ Existing Validation Scope
 (9) Conduct independent LLM-as-a-judge analysis on areas overlooked or inadequately handled by the model owner, with commentary on accuracy/hallucination risk, retrieval quality, and alignment with user intent.
 
 Streamlined Validation Scope
-(1) Review model owner-provided automated test results, focusing on key metric scores rather than a full spectrum of metrics.
+(1) Summarize and evaluate data description, period, sampling method, sample size.
 (2) Verify metric definitions and computation logic.
-(3) Evaluate metric selection for the use case.
-(4) Evaluate LLM-as-a-judge setup (prompt definitions, rubrics, evaluator LLM selection).
-(5) Assess automated-vs-SME alignment on overlapping samples.
-(6) For RAG, review model owner-provided retrieval metrics but do not independently compute them.
-(7) Review business metrics for alignment with business purpose.
-(8) Do not generate synthetic datasets, run additional model queries, or conduct independent LLM-as-a-judge analysis.
+(3) Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection (same LLM as generator may bias results), and metric values.
+(4) For RAG, review model owner-provided retrieval metrics (MRR@k, precision@k, recall@k).
+(5) Review business metrics for alignment with business purpose.
+(6) Review alignment between automated testing and SME evaluation results.
 
 Reduced Work for Validation
 - No need to generate synthetic test datasets, run additional model queries through the model, or conduct independent LLM-as-a-judge analysis.
+- No need to calculate statistical metrics missed or incorrectly computed by the model owner.
 - If the model owner's testing is insufficient, this supports an unfavorable outcome rather than supplemental independent testing by Validation.
 
 
@@ -53,7 +54,7 @@ Existing Validation Scope
 (1) If the framework includes classification or regression sub-models, review reported discrimination and stability metrics (KS, Gini, AUC, R-squared, RMSE, MAE).
 
 Streamlined Validation Scope
-(1) Unchanged. Review reported metrics if a classification or regression component exists.
+(1) If the framework includes classification or regression sub-models, review reported discrimination and stability metrics (KS, Gini, AUC, R-squared, RMSE, MAE).
 
 Reduced Work for Validation
 - No reduction.
@@ -71,14 +72,16 @@ Existing Validation Scope
 (7) If more than 15 months since development, include consortium monitoring results where possible.
 
 Streamlined Validation Scope
-(1) Review and independently interpret all model owner-provided test results.
+(1) Review and independently interpret all test results.
 (2) Check for anomalies, weak sub-populations, and segment-level degradation.
 (3) Evaluate overall application-level performance on U.S. Bank data.
-(4) For vendor models, review testing methodology and U.S. Bank data representativeness.
-(5) Assess justification if U.S. Bank data testing was not obtained.
+(4) For vendor models, assess whether outcome analysis includes performance on U.S. Bank internal data.
+(5) Evaluate data source, dependent variable definition, and sample construction for internal outcome analysis.
+(6) If U.S. Bank data testing was not obtained, assess justification.
+(7) If more than 15 months since development, include consortium monitoring results where possible.
 
 Reduced Work for Validation
-- No reduction in review depth. The reduction is in independent test generation and execution, not in interpretation or analytical rigor.
+- No reduction. These are review and interpretation activities, not independent testing.
 
 
 7.2 Guardrail Testing
@@ -101,13 +104,12 @@ Streamlined Validation Scope
 (2) Hallucination detection remains in scope and is assessed through outcome analysis (7.1), not as a separate guardrail exercise.
 (3) Review false-positive and false-negative rates if reported by the model owner.
 (4) Review vendor safety feature documentation (e.g., AWS Bedrock Guardrails, Azure AI Content Safety) if applicable.
-(5) Smaller sample sizes are acceptable for non-customer-facing applications or where human review occurs.
-(6) Elevate toxicity/adversarial testing for customer-facing exposure on a case-by-case basis.
-(7) Do not curate an independent guardrail testing dataset or run independent red-teaming analysis.
+(5) Evaluate effectiveness of human-in-the-loop processes if relevant.
 
 Reduced Work for Validation
 - No need to curate an independent guardrail or red-teaming dataset, run independent guardrail tests against the model, or calculate independent blocking metrics.
 - Toxicity testing, adversarial/prompt injection testing, red-teaming procedures, and detailed failure pattern analysis are not required at low risk.
+- Elevate toxicity/adversarial testing for customer-facing exposure on a case-by-case basis.
 
 
 7.3 Benchmarking
@@ -121,9 +123,9 @@ Existing Validation Scope
 (6) Conduct validation-based benchmarking as needed.
 
 Streamlined Validation Scope
-(1) Confirm a justification for omission is documented if benchmarking was not performed.
+(1) If benchmarking was not performed, confirm a justification for omission is documented.
 (2) If the model owner provides benchmarking results voluntarily, accept as supplementary context.
-(3) Exception: for replacement or upgrade models (including foundation LLM major upgrades), review incumbent-vs-new performance comparison (High priority regardless of risk tier).
+(3) For replacement or upgrade models (including foundation LLM major upgrades), review incumbent-vs-new performance comparison.
 
 Reduced Work for Validation
 - No need to review model owner benchmarking results in detail, research industry benchmarks, or conduct validation-based benchmarking.
@@ -146,7 +148,6 @@ Streamlined Validation Scope
 (1) If the model owner provides sensitivity or robustness testing results, review the provided results for reasonableness.
 (2) If sensitivity testing was not performed, confirm a justification for omission is documented.
 (3) For multi-turn conversational models, robustness (coherence over extended conversations, topic-change handling) may be elevated as a Medium-priority model owner deliverable.
-(4) Do not create perturbed inputs, replicate sensitivity results, or design validator-based sensitivity tests.
 
 Reduced Work for Validation
 - No need to create perturbed inputs, replicate the model owner's sensitivity results, generate outputs on perturbed queries, or compute similarity metrics.
@@ -163,10 +164,10 @@ Existing Validation Scope
 (4) Review the SME process for identifying and flagging concerning patterns in explainability output.
 
 Streamlined Validation Scope
-(1) Unchanged. Review model owner-provided provenance documentation, traceability mechanisms, and SME escalation process.
-(2) For RAG, review provenance analysis tracing outputs to context chunks.
-(3) Document sample characteristics.
-(4) No reduction in scope.
+(1) Review data provenance and traceability mechanisms: evaluate how output elements are linked back to source documents and how provenance is presented to users in the interface.
+(2) For RAG, review tracing of responses to originating context chunks.
+(3) Document characteristics of the data sample used for explainability testing, including sample size and selection process.
+(4) Review the SME process for identifying and flagging concerning patterns in explainability output.
 
 Reduced Work for Validation
 - No reduction.
