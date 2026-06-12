@@ -1,56 +1,10 @@
-slides:
-  - layout: single
-    title: "Workshop Q&A Recap: Scope, Timelines, and Change Handling"
-    sections:
-      - heading: "Policy Scope"
-        bullets:
-          - "Applies to all models (internal and external) in production or pilot within MRM scope"
-          - "Development and experimentation are out of scope"
-          - "Once validation begins, the model must remain stable"
-
-      - heading: "Timelines for Material Changes"
-        bullets:
-          - "Provisional Approval for urgent changes: approximately 3 to 4 weeks"
-          - "Full or targeted validation completed within 6 months of PA"
-          - "Providing a complete evidence package upfront (demos, performance testing results, documentation) shortens the review window"
-
-      - heading: "Change Handling"
-        bullets:
-          - "Grey area: contact MRM/MRG via email or meeting to jointly assess materiality"
-          - "Material: documentation and validation approval before implementation, regardless of rollout scale"
-          - "Immaterial: notify MRM/MRG, submit change EMA, update documentation"
-
-      - heading: "Iterative Changes Under PA"
-        bullets:
-          - "Preferred path: PA, then full validation, then change management for subsequent changes"
-          - "Iterating under PA before full validation may be reasonable if the model is still evolving"
-          - "Each successive PA must articulate what changed and why provisional use remains appropriate"
-
-  - layout: single
-    title: "Workshop Q&A Recap: Evidence, Deployment, and Scoping"
-    sections:
-      - heading: "Evidence by Material Change Type"
-        bullets:
-          - "Foundation LLM change: automated before/after testing on intermediate and final outputs; SME review on worst-performing samples with root cause analysis"
-          - "Framework change: end-to-end traces of the changed component; automated and manual testing"
-          - "Augmentation data expansion: retrieval chunks, relevance scores, generated outputs for new data; targeted testing on new KBs"
-          - "Usage or scope change: representative queries and outputs from the new scope; SME review samples"
-
-      - heading: "Deployment and Production Readiness"
-        bullets:
-          - "Feature flags, canary deployments, smoke tests are first-line decisions, not MRM requirements"
-          - "MRM assesses the documented implementation framework; the model owner builds and maintains it"
-
-      - heading: "Model Scoping"
-        bullets:
-          - "Approximately 90% of GenAI use cases are out of MRM scope"
-          - "Scoping follows the EMG determination process; share specific examples with MRG if the classification seems misaligned"
-
-      - heading: "Cross-Program Alignment"
-        bullets:
-          - "MRM and AI governance have different materiality definitions reflecting different purposes"
-          - "MRM is connecting with AI governance to align language where appropriate"
-
-      - heading: "Open"
-        bullets:
-          - "Immaterial change EMA turnaround time: pending MRG input"
+Section,Sub Section,Original Hours Validation Spent,Proposed Hours Validation Spent,Existing Validation Scope,Streamlined Validation Scope
+7.1,Section 7.1 - Outcome Analysis (SME Testing),10,10,"Review of MO's SME testing: assess SME selection criteria and required experience. Summarize and evaluate data description, period, sampling method, sample size, scope of selected queries, adequacy of samples, and any bias toward specific business lines or query types. Review metric definitions and rubrics (accuracy, relevancy) and flag ambiguities or undefined terms (e.g., defining accuracy without clear ground truth). Review distribution of SME rating values across the sample. Review MO's root cause analysis for samples with low SME ratings.","Unchanged. Review MO-provided SME results, evaluate sample composition and representativeness, review rubrics and metric definitions, review distribution of SME ratings, review root cause analysis for low-rated samples. Per the validation template's low/ultra-low guidance, SME evaluation requires fewer samples than higher-risk models."
+7.1,Section 7.1 - Outcome Analysis (Automated Testing),45,25,"Review of MO's automated testing: summarize and evaluate data description, period, sampling method, sample size. Assess strengths and limits of statistical metrics (e.g., ROUGE/BLEU measure n-gram overlap but not semantic similarity; BERTScore provides a fuller picture). Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection (same LLM as generator may bias results), and metric values. For RAG, evaluate retrieval metrics (MRR@k, precision@k, recall@k). Review business metrics for alignment with business purpose. Review alignment between automated testing and SME evaluation results. Validation's independent testing: generate a synthetic dataset (topic modeling, question type distribution). Calculate statistical metrics missed or incorrectly computed by MO. Conduct independent LLM-as-a-judge analysis on areas overlooked or inadequately handled by MO, with commentary on accuracy/hallucination risk, retrieval quality, and alignment with user intent.","Review MO-provided automated test results but focus on MO's key metric scores rather than a full spectrum of metrics, per the validation template's low/ultra-low guidance. Verify metric definitions and computation logic. Evaluate metric selection for the use case. Assess automated-vs-SME alignment on overlapping samples. For RAG, review MO-provided retrieval metrics but do not independently compute them. No independent testing: do not generate synthetic datasets, do not run additional model queries, do not independently compute missed metrics or conduct independent LLM-as-a-judge analysis. If MO's testing is insufficient, this supports an unfavorable outcome rather than supplemental independent testing by Validation."
+7.1,Section 7.1 - Outcome Analysis (Classification/Regression),5,5,"If the framework includes classification or regression sub-models, review reported discrimination and stability metrics (KS, Gini, AUC, R-squared, RMSE, MAE). Assess model performance across development partitions if applicable.","Unchanged. Review reported metrics if a classification or regression component exists. No reduction."
+7.1,Section 7.1 - Outcome Analysis (Results and Vendor),,,Review and independently interpret all test results. Check for anomalies and segment-level degradation. Evaluate overall application-level performance on U.S. Bank data. For vendor models: assess whether outcome analysis includes performance on U.S. Bank internal data. Evaluate data source and sample construction for internal outcome analysis. If U.S. Bank data testing was not obtained, assess justification. If more than 15 months since development, include consortium monitoring results where possible.,"Review MO-provided results and interpret independently. Check for anomalies and segment weaknesses. Evaluate overall application-level performance on U.S. Bank data. For vendor models, review testing methodology and U.S. Bank data representativeness. Assess justification if U.S. Bank data testing was not obtained. Reduction is in independent test generation and execution, not in review depth or analytical rigor."
+7.2,Section 7.2 - Guardrail Testing,25,5,"Review of MO's guardrail testing: assess MO's hallucination testing (whether suitable metrics compare responses against retrieved content, whether blocking criteria are appropriate). Assess MO's toxicity testing (method/language model used, threshold settings). Assess MO's adversarial testing design (whether it covers varied attack styles, threshold settings, aggregation method across attack types). Evaluate outcomes: overall blocking rates, number of adversarial queries, most frequent successful attack types, false-positive rate (legitimate queries wrongly blocked). Review MO examples of false positives or negatives and assess impact. Evaluate HITL effectiveness if relevant. Validation's independent testing: curate an independent guardrail/red-teaming dataset. Specify LLM name/version, dataset descriptions, and attack types. Calculate blocking rates by attack type and business segment. Review bypass samples and evaluate reputation, legal, and cybersecurity impact. Evaluate efficacy of preventing out-of-scope inquiries.","Review MO-provided guardrail testing results and documentation where submitted. Hallucination detection remains in scope and is assessed through outcome analysis (7.1), not as a separate guardrail exercise. Per the validation template's low/ultra-low guidance, smaller sample sizes are acceptable for non-customer-facing applications or where human review occurs. Toxicity testing, adversarial/prompt injection testing, and red-teaming are not required at low risk; elevate for customer-facing exposure. Review false-positive and false-negative rates if reported by MO. No independent testing: do not curate an independent guardrail testing dataset or run independent red-teaming analysis. Review vendor safety feature documentation if applicable."
+7.3,Section 7.3 - Benchmarking,10,0,"Recap MO's benchmarking methodology and results: cross-vendor/cross-version comparisons, cross-framework comparisons, human performance baselines, simplified-method baselines. Qualitatively assess methods and results. Research industry benchmarks and external data for comparable use cases. For replacement/upgrade models, assess whether performance meets or exceeds the incumbent on comparable test data. If benchmarking was excluded, review justification. Conduct validation-based benchmarking as needed.","Do not independently research industry benchmarks, conduct validation-based benchmarking, or evaluate MO benchmark comparisons in detail. If benchmarking was not performed, confirm a justification for omission is documented. At low risk, exclusion is acceptable when the model is not a replacement and no industry or internal benchmark exists. If MO provides benchmarking results voluntarily, accept as supplementary context. Exception: for replacement or upgrade models (including foundation LLM major upgrades), review incumbent-vs-new performance comparison (High priority regardless of risk tier)."
+7.4,Section 7.4 - Sensitivity and Robustness,20,0,"Review MO's sensitivity testing: assess how the model responds to identical or semantically similar queries (rephrasing, synonym substitutions, punctuation noise, typos, tone variations). For RAG, evaluate retrieval overlap metrics (e.g., Jaccard Score for overlap in retrieved articles for similar queries). Review MO's robustness tests: response coherence across long contexts, topic-shift handling. Assess plausibility, stability, and conservation of how outputs respond to sensitivity experiments. Independent testing: replicate MO's sensitivity results. Design and carry out validator-designed sensitivity tests (perturbed inputs, similarity scoring, LLM pairwise evaluation). Vendor models: check monotonicity of output relative to inputs or key risk drivers. If sensitivity testing is not possible, disclose the limitation.","Do not independently create perturbed inputs, replicate MO's sensitivity results, or design validator-based sensitivity tests. Per the validation template's low/ultra-low guidance, independent testing is optional and may not be necessary if the developer's performance testing is sufficient and no additional testing is identified. If MO provides sensitivity or robustness testing results, review the provided results for reasonableness. If sensitivity testing was not performed, confirm a justification for omission is documented. For multi-turn conversational models, robustness (coherence over extended conversations, topic-change handling) may be elevated as a Medium-priority MO deliverable."
+7.5,Section 7.5 - Explainability,5,5,"Review data provenance and traceability mechanisms: evaluate how output elements are linked back to source documents and how provenance is presented to users in the interface. For RAG, review tracing of responses to originating context chunks. Document characteristics of the data sample used for explainability testing, including sample size and selection process. Review the SME process for identifying and flagging concerning patterns in explainability output.","Unchanged. Review MO-provided provenance documentation, traceability mechanisms, and SME escalation process. For RAG, review provenance analysis tracing outputs to context chunks. Document sample characteristics. No reduction in scope."
+,,120,50,,
