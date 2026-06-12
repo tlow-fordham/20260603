@@ -1,173 +1,159 @@
-Section 7 - Validation Scope for Low/Ultra-Low Risk GenAI Models
-
-
-7.1 Outcome Analysis - SME Testing
+7.1 Outcome Analysis - Test Design and Methodology Review
 ---
 Existing Validation Scope
-(1) Assess SME selection criteria and required experience.
-(2) Summarize and evaluate data description, period, sampling method, sample size, scope of selected queries, adequacy of samples, and any bias toward specific business lines or query types.
-(3) Review metric definitions and rubrics (accuracy, relevancy) and flag ambiguities or undefined terms.
-(4) Review distribution of SME rating values across the sample.
-(5) Review the model owner's root cause analysis for samples with low SME ratings.
+(1) Review the overall array of tests performed by the model owner to evidence the model's efficacy for its intended use. Assess whether the test plan covers the necessary dimensions (accuracy, relevancy, faithfulness, retrieval quality where applicable).
+(2) For each test, review the description of the test, the purpose of the test, and the testing procedures. Assess whether the methodology is sound and appropriate for the use case.
+(3) If both automated and human testing were utilized, review the methods used to recalibrate the automatic evaluation to align with human reviews. Assess whether the recalibration approach is valid (e.g., whether the LLM-judge scoring scale maps coherently to SME rubrics, whether the overlap sample is sufficient).
+(4) If the model has undergone a pilot, review pilot usage and scope documentation. Assess whether the pilot population, volume, and duration are sufficient to draw performance conclusions.
 
 Streamlined Validation Scope
-(1) Assess SME selection criteria and required experience.
-(2) Summarize and evaluate data description, period, sampling method, sample size, scope of selected queries, adequacy of samples, and any bias toward specific business lines or query types.
-(3) Review metric definitions and rubrics (accuracy, relevancy) and flag ambiguities or undefined terms.
-(4) Review distribution of SME rating values across the sample.
-(5) Review the model owner's root cause analysis for samples with low SME ratings.
+(1) Review the overall array of tests performed by the model owner to evidence the model's efficacy for its intended use. Assess whether the test plan covers the necessary dimensions.
+(2) For each test, review the description of the test, the purpose of the test, and the testing procedures. Test descriptions and procedures may be obtained or inferred after kickoff if results are available.
+(3) If both automated and human testing were utilized, review the methods used to recalibrate the automatic evaluation to align with human reviews. Assess whether the recalibration approach is valid.
+(4) If the model has undergone a pilot, review pilot usage and scope documentation.
 
 Reduced Work for Validation
-- No reduction. The model owner may provide fewer samples at low risk, but Validation's review activities are unchanged.
+- No reduction. These are review activities that frame the rest of the outcome analysis.
 
 
-7.1 Outcome Analysis - Automated Testing
+7.1 Outcome Analysis - Automated-vs-SME Alignment Assessment
 ---
 Existing Validation Scope
-(1) Summarize and evaluate data description, period, sampling method, sample size.
-(2) Assess strengths and limits of statistical metrics (e.g., ROUGE/BLEU measure n-gram overlap but not semantic similarity; BERTScore provides a fuller picture).
-(3) Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection (same LLM as generator may bias results), and metric values.
-(4) For RAG, evaluate retrieval metrics (MRR@k, precision@k, recall@k).
-(5) Review business metrics for alignment with business purpose.
-(6) Review alignment between automated testing and SME evaluation results.
-(7) Generate a synthetic dataset (topic modeling, question type distribution).
-(8) Calculate statistical metrics missed or incorrectly computed by the model owner.
-(9) Conduct independent LLM-as-a-judge analysis on areas overlooked or inadequately handled by the model owner, with commentary on accuracy/hallucination risk, retrieval quality, and alignment with user intent.
+(1) When automated testing was conducted on a larger dataset than SME review, assess the level of alignment between the automated testing results and the SME evaluation results on the overlapping sample.
+(2) Evaluate whether discrepancies between automated scores and SME ratings indicate a systemic bias in the automated evaluation (e.g., LLM-as-a-judge inflating accuracy scores relative to SME ground truth).
+(3) If alignment is poor, investigate root causes: flawed rubric definitions, different grading scales, evaluator LLM limitations, or insufficient overlap sample size.
 
 Streamlined Validation Scope
-(1) Summarize and evaluate data description, period, sampling method, sample size.
-(2) Verify metric definitions and computation logic.
-(3) Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection (same LLM as generator may bias results), and metric values.
-(4) For RAG, review model owner-provided retrieval metrics (MRR@k, precision@k, recall@k).
-(5) Review business metrics for alignment with business purpose.
-(6) Review alignment between automated testing and SME evaluation results.
+(1) When automated testing was conducted on a larger dataset than SME review, assess the level of alignment between the automated testing results and the SME evaluation results on the overlapping sample.
+(2) Evaluate whether discrepancies between automated scores and SME ratings indicate a systemic bias in the automated evaluation.
+(3) If alignment is poor, investigate root causes: flawed rubric definitions, different grading scales, evaluator LLM limitations, or insufficient overlap sample size.
 
 Reduced Work for Validation
-- No need to generate synthetic test datasets, run additional model queries through the model, or conduct independent LLM-as-a-judge analysis.
-- No need to calculate statistical metrics missed or incorrectly computed by the model owner.
-- If the model owner's testing is insufficient, this supports an unfavorable outcome rather than supplemental independent testing by Validation.
+- No reduction. This is a review and analytical activity, not independent testing.
 
 
-7.1 Outcome Analysis - Classification/Regression
+7.1 Outcome Analysis - Segment and Cluster Performance
 ---
 Existing Validation Scope
-(1) If the framework includes classification or regression sub-models, review reported discrimination and stability metrics (KS, Gini, AUC, R-squared, RMSE, MAE).
+(1) If the model is developed by segments (based on customer profile, business domain, etc.) or if segment/cluster labels are available in the metadata, review performance testing results across different clusters or segments.
+(2) Assess whether pooled aggregate metrics mask weak performance in specific sub-populations (e.g., specific query types, document categories, customer segments, geographies, languages).
+(3) Flag any segments where performance degrades materially below the aggregate and assess the business impact of that degradation.
 
 Streamlined Validation Scope
-(1) If the framework includes classification or regression sub-models, review reported discrimination and stability metrics (KS, Gini, AUC, R-squared, RMSE, MAE).
+(1) If the model is developed by segments or if segment/cluster labels are available in the metadata, review performance testing results across different clusters or segments.
+(2) Assess whether pooled aggregate metrics mask weak performance in specific sub-populations.
+(3) Flag any segments where performance degrades materially below the aggregate and assess the business impact of that degradation.
 
 Reduced Work for Validation
-- No reduction.
+- No reduction. The model owner may provide segment results at a less granular level at low risk, but Validation's review of whatever is provided is unchanged.
 
 
-7.1 Outcome Analysis - Results and Vendor
+7.1 Outcome Analysis - Business and Pilot Metrics
 ---
 Existing Validation Scope
-(1) Review and independently interpret all test results.
-(2) Check for anomalies, weak sub-populations, and segment-level degradation.
-(3) Evaluate overall application-level performance on U.S. Bank data.
-(4) For vendor models, assess whether outcome analysis includes performance on U.S. Bank internal data.
-(5) Evaluate data source, dependent variable definition, and sample construction for internal outcome analysis.
-(6) If U.S. Bank data testing was not obtained, assess justification.
-(7) If more than 15 months since development, include consortium monitoring results where possible.
+(1) Review applicable business metrics and results from backtesting or pilot if applicable (e.g., average handling time, issue resolution rate, customer satisfaction rating, churn rate).
+(2) Assess whether the selection of business metrics is aligned with the model's stated business purpose.
+(3) Review usage analysis: trends in weekly query volumes, median and peak values, distributions of in-scope and out-of-scope queries, and user feedback signals (e.g., thumb-up/thumb-down responses) if available.
 
 Streamlined Validation Scope
-(1) Review and independently interpret all test results.
-(2) Check for anomalies, weak sub-populations, and segment-level degradation.
-(3) Evaluate overall application-level performance on U.S. Bank data.
-(4) For vendor models, assess whether outcome analysis includes performance on U.S. Bank internal data.
-(5) Evaluate data source, dependent variable definition, and sample construction for internal outcome analysis.
-(6) If U.S. Bank data testing was not obtained, assess justification.
-(7) If more than 15 months since development, include consortium monitoring results where possible.
+(1) Review applicable business metrics and results from backtesting or pilot if applicable.
+(2) Assess whether the selection of business metrics is aligned with the model's stated business purpose.
+(3) Review usage analysis if available.
 
 Reduced Work for Validation
-- No reduction. These are review and interpretation activities, not independent testing.
+- No reduction. These are review activities. The model owner may provide less at low risk, but Validation reviews what is provided.
 
 
-7.2 Guardrail Testing
+7.1 Outcome Analysis - Overall Application-Level Performance
 ---
 Existing Validation Scope
-(1) Assess the model owner's hallucination testing (whether suitable metrics compare responses against retrieved content, whether blocking criteria are appropriate).
-(2) Assess toxicity testing (method/language model used, threshold settings).
-(3) Assess adversarial testing design (whether it covers varied attack styles, threshold settings, aggregation method across attack types).
-(4) Evaluate outcomes: overall blocking rates, number of adversarial queries, most frequent successful attack types, false-positive rate (legitimate queries wrongly blocked).
-(5) Review model owner examples of false positives or negatives and assess impact.
-(6) Evaluate effectiveness of human-in-the-loop processes if relevant.
-(7) Curate an independent guardrail/red-teaming dataset.
-(8) Specify LLM name/version, dataset descriptions, and attack types.
-(9) Calculate blocking rates by attack type and business segment.
-(10) Review samples of adversarial queries that bypass guardrails and evaluate potential reputation, legal, and cybersecurity impact.
-(11) Evaluate efficacy of preventing out-of-scope inquiries.
+(1) Review the overall LLM application-level performance results on the corresponding use case, which reflects the combined performance of all components such as foundation LLM, RAG, and fine-tuning.
+(2) Assess whether the headline metric represents end-to-end performance rather than component-level performance only.
+(3) For proprietary vendor models, assess whether performance was tested on U.S. Bank data and whether results are representative of production conditions.
 
 Streamlined Validation Scope
-(1) Review model owner-provided guardrail testing results and documentation where submitted.
-(2) Hallucination detection remains in scope and is assessed through outcome analysis (7.1), not as a separate guardrail exercise.
-(3) Review false-positive and false-negative rates if reported by the model owner.
-(4) Review vendor safety feature documentation (e.g., AWS Bedrock Guardrails, Azure AI Content Safety) if applicable.
-(5) Evaluate effectiveness of human-in-the-loop processes if relevant.
+(1) Review the overall LLM application-level performance results on the corresponding use case.
+(2) Assess whether the headline metric represents end-to-end performance rather than component-level performance only.
+(3) For proprietary vendor models, assess whether performance was tested on U.S. Bank data and whether results are representative of production conditions.
 
 Reduced Work for Validation
-- No need to curate an independent guardrail or red-teaming dataset, run independent guardrail tests against the model, or calculate independent blocking metrics.
-- Toxicity testing, adversarial/prompt injection testing, red-teaming procedures, and detailed failure pattern analysis are not required at low risk.
-- Elevate toxicity/adversarial testing for customer-facing exposure on a case-by-case basis.
+- No reduction. This is the headline performance assessment.
 
 
-7.3 Benchmarking
+7.1 Outcome Analysis - Interpretation and Conclusion
 ---
 Existing Validation Scope
-(1) Recap the model owner's benchmarking methodology and results: cross-vendor/cross-version comparisons, cross-framework comparisons, human performance baselines, simplified-method baselines.
-(2) Qualitatively assess methods and results.
-(3) Research industry benchmarks and external data for comparable use cases.
-(4) For replacement/upgrade models, assess whether performance meets or exceeds the incumbent on comparable test data.
-(5) If benchmarking was excluded, review justification.
-(6) Conduct validation-based benchmarking as needed.
+(1) Review the model owner's interpretation and conclusion for each test, with proper explanation and justification of any anomalies or performance degradation observed.
+(2) Independently interpret the results and assess whether the model owner's conclusions are supported by the evidence.
+(3) Provide Validation's own commentary on performance implications, particularly where the model owner's interpretation is overly optimistic or does not address observed weaknesses.
 
 Streamlined Validation Scope
-(1) If benchmarking was not performed, confirm a justification for omission is documented.
-(2) If the model owner provides benchmarking results voluntarily, accept as supplementary context.
-(3) For replacement or upgrade models (including foundation LLM major upgrades), review incumbent-vs-new performance comparison.
+(1) Review the model owner's interpretation and conclusion for each test, with proper explanation and justification of any anomalies or performance degradation observed.
+(2) Independently interpret the results and assess whether the model owner's conclusions are supported by the evidence.
+(3) Provide Validation's own commentary on performance implications where warranted.
 
 Reduced Work for Validation
-- No need to review model owner benchmarking results in detail, research industry benchmarks, or conduct validation-based benchmarking.
-- At low risk, exclusion of benchmarking is acceptable when the model is not a replacement and no industry or internal benchmark exists.
+- No reduction. Validation's independent interpretation is a core review activity.
 
 
-7.4 Sensitivity and Robustness
+7.1 Outcome Analysis - Upstream Model Impact
 ---
 Existing Validation Scope
-(1) Review the model owner's sensitivity testing: assess how the model responds to identical or semantically similar queries (rephrasing, synonym substitutions, punctuation noise, typos, tone variations).
-(2) For RAG, evaluate retrieval overlap metrics (e.g., Jaccard Score for overlap in retrieved articles for similar queries).
-(3) Review robustness tests: response coherence across long contexts, topic-shift handling.
-(4) Assess plausibility, stability, and conservation of how outputs respond to sensitivity experiments.
-(5) Replicate the model owner's sensitivity results.
-(6) Design and carry out validator-designed sensitivity tests (perturbed inputs, similarity scoring, LLM pairwise evaluation).
-(7) For vendor models, check monotonicity of output relative to inputs or key risk drivers.
-(8) If sensitivity testing is not possible, disclose the limitation.
+(1) If the model includes upstream models as inputs, evaluate the impact of the upstream models on model performance.
+(2) If no impact assessment was performed, review the model owner's justification for its exclusion.
 
 Streamlined Validation Scope
-(1) If the model owner provides sensitivity or robustness testing results, review the provided results for reasonableness.
-(2) If sensitivity testing was not performed, confirm a justification for omission is documented.
-(3) For multi-turn conversational models, robustness (coherence over extended conversations, topic-change handling) may be elevated as a Medium-priority model owner deliverable.
+(1) If the model includes upstream models as inputs, review the model owner's assessment of upstream model impact if provided.
+(2) If no impact assessment was performed, confirm a justification for exclusion is documented.
 
 Reduced Work for Validation
-- No need to create perturbed inputs, replicate the model owner's sensitivity results, generate outputs on perturbed queries, or compute similarity metrics.
-- No need to design or carry out validator-based sensitivity tests.
-- Independent testing is optional and may not be necessary if the developer's performance testing is sufficient.
+- Upstream model impact assessment is Low priority at low risk. Validation reviews if provided but does not require it. A justified exclusion is acceptable.
 
 
-7.5 Explainability
+7.2 Guardrail Testing - Hallucination Detection
 ---
 Existing Validation Scope
-(1) Review data provenance and traceability mechanisms: evaluate how output elements are linked back to source documents and how provenance is presented to users in the interface.
-(2) For RAG, review tracing of responses to originating context chunks.
-(3) Document characteristics of the data sample used for explainability testing, including sample size and selection process.
-(4) Review the SME process for identifying and flagging concerning patterns in explainability output.
+(1) Assess the model owner's hallucination testing methodology: whether suitable metrics are chosen to compare responses against retrieved articles or source content.
+(2) Evaluate whether the criteria for blocking or flagging hallucinated answers are appropriate for the use case.
+(3) Assess the model owner's handling of out-of-domain queries and edge cases where hallucination risk is elevated.
+(4) If Validation performs independent hallucination testing, design test cases targeting known hallucination-prone scenarios (out-of-scope queries, ambiguous queries, queries where source content is thin).
 
 Streamlined Validation Scope
-(1) Review data provenance and traceability mechanisms: evaluate how output elements are linked back to source documents and how provenance is presented to users in the interface.
-(2) For RAG, review tracing of responses to originating context chunks.
-(3) Document characteristics of the data sample used for explainability testing, including sample size and selection process.
-(4) Review the SME process for identifying and flagging concerning patterns in explainability output.
+(1) Hallucination detection remains in scope. Assess the model owner's hallucination testing methodology and whether suitable metrics are chosen.
+(2) Evaluate whether the criteria for blocking or flagging hallucinated answers are appropriate for the use case.
+(3) Assess handling of out-of-domain queries and edge cases where hallucination risk is elevated.
 
 Reduced Work for Validation
-- No reduction.
+- No need to design or run independent hallucination test cases. Validation reviews the model owner's hallucination testing results and assesses hallucination risk through the outcome analysis (7.1) performance results.
+
+
+7.2 Guardrail Testing - Pilot/Backtesting Results
+---
+Existing Validation Scope
+(1) If backtesting or pilot query testing was conducted on guardrails, review total number of legitimate business queries or answers tested.
+(2) Review number of legitimate queries or answers incorrectly blocked (false positives).
+(3) Review number of harmful, inappropriate, or inaccurate queries or outputs that bypassed guardrails (false negatives).
+(4) Assess the balance between false-positive and false-negative rates and the impact on user experience and safety.
+
+Streamlined Validation Scope
+(1) If backtesting or pilot query testing was conducted on guardrails, review false-positive and false-negative rates reported by the model owner.
+(2) Assess the balance between safety strictness and system utility based on the reported rates.
+
+Reduced Work for Validation
+- Validation reviews reported rates rather than conducting independent guardrail backtesting. Smaller sample sizes are acceptable at low risk.
+
+
+7.2 Guardrail Testing - Vendor Safety Features
+---
+Existing Validation Scope
+(1) For vendor models, review the performance documentation of vendor-provided safety features (such as AWS Bedrock Guardrails or Azure AI Content Safety).
+(2) Assess whether the vendor's safety feature configuration (thresholds, categories, custom blocklists) is appropriate for the model's use case.
+(3) Evaluate any gaps between the vendor's safety coverage and the model's specific risk profile.
+
+Streamlined Validation Scope
+(1) For vendor models, review the performance documentation of vendor-provided safety features.
+(2) Assess whether the vendor's safety feature configuration is appropriate for the model's use case.
+(3) Evaluate any gaps between the vendor's safety coverage and the model's specific risk profile.
+
+Reduced Work for Validation
+- No reduction. This is a review activity for vendor models where applicable.
