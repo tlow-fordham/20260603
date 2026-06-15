@@ -1,175 +1,81 @@
-Row,Clarifying Instruction (first words),Existing Validation Scope,Streamlined Validation Scope,Reduced Work for Validation,Validation Template (Nov 2024),Reduction Pct (Validation),Reduction Pct (MD),Original Hours (V),New Hours (V),Original Hours (D),New Hours (D),Notes on reduction/hours
-2,"The data used for testing should be documented...","(1) Review the overall array of tests performed by the model owner to evidence the model's efficacy for its intended use.
-(2) Assess whether the test plan covers the necessary dimensions (accuracy, relevancy, faithfulness, retrieval quality where applicable).
-(3) Evaluate whether the scope of testing is sufficient to evidence the model's efficacy for its intended use.","(1) Review the overall array of tests performed by the model owner to evidence the model's efficacy for its intended use.
-(2) Assess whether the test plan covers the necessary dimensions.
-(3) Evaluate whether the scope of testing is sufficient for the intended use.",No reduction. Core review activity.,Section 8.1 Outcomes Analysis,0%,0%,1,1,5,5,Core review/production; no reduction.
-3,"For each test, include a description of the test...","(1) For each test, review the description, purpose, and testing procedures.
-(2) Assess whether the methodology is sound and appropriate for the use case.","(1) For each test, review the description, purpose, and testing procedures.
-(2) Test descriptions and procedures may be obtained or inferred after kickoff if results are available. (This saves MO time but not validation)",No reduction. Review activity.,Section 8.1 Outcomes Analysis,0%,40%,1,1,5,3,MD documents less detail and may provide descriptions after kickoff (Lever B); Validation review unchanged.
-4,"If the model has undergone a pilot, describe...","(1) If the model has undergone a pilot, review pilot usage and scope documentation.
-(2) Assess whether the pilot population, volume, and duration are sufficient to draw performance conclusions.","(1) If the model has undergone a pilot, review pilot usage and scope documentation.
-(2) Assess whether the pilot scope is sufficient to draw performance conclusions.",No reduction. Review activity if pilot was conducted.,"Section 8.1 Outcomes Analysis; Section 3 Summary of Model and Validation Outcomes",0%,0%,1,1,5,5,No reduction.
-5,"If both automated and human testing were utilized...","(1) Review the methods used to recalibrate the automatic evaluation to align with human reviews.
-(2) Assess whether the recalibration approach is valid (e.g., whether the LLM-judge scoring scale maps coherently to SME rubrics, whether the overlap sample is sufficient).","(1) Review the methods used to recalibrate the automatic evaluation to align with human reviews.
-(2) Assess whether the recalibration approach is valid.",No reduction. Review activity.,Section 8.1 Outcomes Analysis,0%,0%,1,1,5,5,No reduction.
-6,"Define the metrics used for human evaluation...","(1) Review metric definitions and rubrics used for human/SME evaluation (e.g., context relevancy, answer relevancy, faithfulness, answer accuracy).
-(2) Flag any ambiguities or undefined terms in the rubric definitions.
-(3) Assess whether the rating criteria and scales (e.g., Yes/No, 1-5) are appropriate for the use case.","(1) Review metric definitions and rubrics used for human/SME evaluation.
-(2) Flag any ambiguities or undefined terms in the rubric definitions.
-(3) Assess whether the rating criteria and scales are appropriate for the use case.",No reduction.,Section 8.1 Outcomes Analysis,0%,0%,3,3,10,10,No reduction.
-7,"Testing data should be documented in Section 5.1...","(1) Summarize and evaluate data description, period, sampling method, sample size, and scope of selected queries.
-(2) Assess adequacy of samples and any bias in distribution toward specific business lines or query types.
-(3) Evaluate whether the sample is representative across all intended use segments.","(1) Summarize and evaluate data description, period, sampling method, sample size, and scope of selected queries.
-(2) Assess adequacy of samples and any bias in distribution toward specific business lines or query types.
-(3) Evaluate whether the sample is representative across all intended use segments.","No reduction. The model owner may provide fewer samples at low risk, but Validation's review of whatever is provided is unchanged.",Section 8.1 Outcomes Analysis,0%,53%,3,3,15,7,MD provides fewer samples at low risk; Validation review of the provided sample unchanged.
-8,"Provide the name of software or packages...","(1) Review the software or packages used for automated testing.
-(2) Assess whether the tools are appropriate and current for the type of evaluation conducted.","(1) Review the software or packages used for automated testing.
-(2) Note the tools used for documentation purposes.",No reduction. Minor review item.,Section 8.1 Outcomes Analysis,0%,0%,2,2,3,3,Minor item; no reduction.
-9,"List all of the automatically computed performance metrics...","(1) Review all automatically computed performance metrics and their computation logic.
-(2) Assess strengths and limits of statistical metrics (e.g., ROUGE/BLEU measure n-gram overlap but not semantic similarity; BERTScore provides a fuller picture).
-(3) Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection (same LLM as generator may bias results), range of values, and custom prompts.
-(4) Assess which metrics are prioritized as the most important in the evaluation conclusion.","(1) Verify metric definitions and computation logic.
-(2) Assess strengths and limits of selected statistical metrics.
-(3) Evaluate LLM-as-a-judge setup: prompt definitions, rubrics, evaluator LLM selection.
-(4) Focus on key metric scores rather than a full spectrum of metrics.","No need to independently compute or validate all metrics. Focus review on key metrics rather than exhaustive coverage. No need to generate synthetic datasets or run additional model queries.",Section 8.1 Outcomes Analysis,53%,54%,30,14,37,17,"Independent metric computation, synthetic data, and LLM-as-a-judge dropped for Validation; MD focuses on key metrics rather than full spectrum."
-10,"For RAG, document testing methodology for retrieval metrics...","(1) For RAG models, evaluate retrieval metrics (precision@k, recall@k, MRR@k, query-document relevance score, retrieval failure rate).
-(2) Assess whether retrieval metrics are appropriate and complement end-to-end correctness measures.","(1) For RAG models, review MO-provided retrieval metrics if submitted.
-(2) RAG retrieval metrics are intermediate diagnostics and are not required separately at low risk if end-to-end correctness is covered in outcome analysis.","No need to independently compute retrieval metrics. A wrong retrieval already surfaces in end-to-end correctness grading.",Section 8.1 Outcomes Analysis,67%,50%,6,2,10,5,No independent retrieval-metric computation; MD reduced RAG retrieval scope.
-11,"For continuous target predictions, common metrics...","(1) If a continuous-target component exists, review reported metrics (adjusted R-square, RMSE, MAE, MAPE).
-(2) Assess model fit and prediction accuracy.","(1) If a continuous-target component exists, review reported metrics (adjusted R-square, RMSE, MAE, MAPE).
-(2) Assess model fit and prediction accuracy.","No reduction. Conditional review activity; N/A if no continuous-target component.",Section 8.1 Outcomes Analysis,0%,0%,2,2,4,4,Conditional; no reduction where present.
-12,"For classification models, metrics for assessing...","(1) If a classification component exists, review reported discrimination and rank-ordering metrics (KS statistic, Gini coefficient, ROC/Precision-Recall AUC curves).
-(2) Assess discriminatory power and stability.","(1) If a classification component exists, review reported discrimination and rank-ordering metrics (KS statistic, Gini coefficient, ROC/Precision-Recall AUC curves).
-(2) Assess discriminatory power and stability.","No reduction. Conditional review activity; N/A if no classification component.",Section 8.1 Outcomes Analysis,0%,0%,3,3,6,6,Conditional; no reduction where present.
-13,"Document the results of each test from box 1...","(1) Review all documented test results.
-(2) Assess whether results are presented clearly with appropriate tables and charts.
-(3) Verify that results are complete and cover all tests described in the test plan.","(1) Review all documented test results.
-(2) Assess whether results are presented clearly.
-(3) Verify that results are complete and cover all tests described.","No reduction. Core review activity; results are the primary evidence.",Section 8.1 Outcomes Analysis,0%,0%,3,3,5,5,Core results documentation; no reduction.
-14,"In the cases where automated testing was conducted...","(1) Assess the level of alignment between automated testing results and SME evaluation results on the overlapping sample.
-(2) Evaluate whether discrepancies indicate systemic bias in the automated evaluation (e.g., LLM-as-a-judge inflating scores relative to SME ground truth).
-(3) If alignment is poor, investigate root causes: flawed rubric definitions, different grading scales, evaluator LLM limitations, or insufficient overlap sample size.","(1) Assess the level of alignment between automated testing results and SME evaluation results on the overlapping sample.
-(2) Evaluate whether discrepancies indicate systemic bias in the automated evaluation.
-(3) If alignment is poor, investigate root causes: flawed rubric definitions, different grading scales, evaluator LLM limitations, or insufficient overlap sample size.","No reduction. This is a review and analytical activity, not independent testing.",Section 8.1 Outcomes Analysis,0%,0%,4,4,5,5,Analytical review; no reduction.
-15,"Include the applicable business metrics...","(1) Review applicable business metrics and results from backtesting or pilot (e.g., average handling time, issue resolution rate, customer satisfaction rating, churn rate).
-(2) Assess whether the selection of business metrics is aligned with the model's stated business purpose.
-(3) Review usage analysis: trends in weekly query volumes, distributions of in-scope and out-of-scope queries, and user feedback signals if available.","(1) Review applicable business metrics and results from backtesting or pilot if available.
-(2) Assess whether the selection of business metrics is aligned with the model's stated business purpose.
-(3) Review usage analysis if available.","No reduction. Review activity. The model owner may provide less detail at low risk, but Validation reviews what is provided.","Section 8.1 Outcomes Analysis; Section 3 Summary; Section 12 Ongoing Monitoring",0%,0%,0,0,0,0,Effort folded into outcome-analysis buckets; no reduction.
-16,"If the model is developed by segments...","(1) Review performance testing results across different clusters or segments.
-(2) Assess whether pooled aggregate metrics mask weak performance in specific sub-populations (e.g., specific query types, document categories, customer segments, geographies, languages).
-(3) Flag any segments where performance degrades materially below the aggregate and assess business impact.","(1) Review performance testing results across different clusters or segments.
-(2) Assess whether pooled aggregate metrics mask weak performance in specific sub-populations.
-(3) Flag any segments where performance degrades materially below the aggregate and assess business impact.","No reduction. The model owner may provide fewer segment breakdowns at low risk, but Validation reviews what is provided.",Section 8.1 Outcomes Analysis,0%,0%,0,0,0,0,Folded into outcome-analysis buckets; no reduction.
-17,"Include an interpretation and conclusion for each test...","(1) Review the model owner's interpretation and conclusion for each test, with explanation and justification of any anomalies or performance degradation.
-(2) Independently interpret the results and assess whether the model owner's conclusions are supported by the evidence.
-(3) Provide Validation's own commentary on performance implications, particularly where the model owner's interpretation is overly optimistic or does not address observed weaknesses.","(1) Review the model owner's interpretation and conclusion for each test.
-(2) Independently interpret the results and assess whether conclusions are supported by the evidence.
-(3) Provide Validation's own commentary on performance implications where warranted.","No reduction. Validation's independent interpretation is a core review activity.","Section 8.1 Outcomes Analysis; Section 3 Summary of Model and Validation Outcomes",0%,0%,0,0,0,0,Folded; Validation independent interpretation retained.
-18,"Provide the overall LLM application-level performance...","(1) Review the overall LLM application-level performance results reflecting the combined performance of all components (foundation LLM, RAG, fine-tuning).
-(2) Assess whether the headline metric represents end-to-end performance rather than component-level only.","(1) Review the overall LLM application-level performance results reflecting the combined performance of all components.
-(2) Assess whether the headline metric represents end-to-end performance rather than component-level only.","No reduction. This is the headline performance assessment.","Section 8.1 Outcomes Analysis; Section 3 Summary of Model and Validation Outcomes",0%,0%,0,0,0,0,Folded; headline performance retained.
-19,"If the model includes upstream models as inputs...","(1) If the model includes upstream models as inputs, evaluate the impact of the upstream models on model performance.
-(2) If no impact assessment was performed, review the model owner's justification for its exclusion.","(1) If the model includes upstream models as inputs, review the model owner's assessment if provided.
-(2) If no impact assessment was performed, confirm a justification for exclusion is documented.","Upstream model impact assessment is Low priority at low risk. Validation reviews if provided but does not require it. A justified exclusion is acceptable.",Section 8.1 Outcomes Analysis,0%,0%,0,0,0,0,"Low priority; insubstantial, treated as 0."
-20,"For proprietary vendor models, test and evidence...","(1) For vendor models, review how performance testing was conducted (batch retrospective study vs. live production system testing).
-(2) Assess whether the testing methodology is appropriate for the intended use.","(1) For vendor models, review how performance testing was conducted.
-(2) Assess whether the testing methodology is appropriate.",No reduction. Review activity.,Section 8.1 Outcomes Analysis,0%,0%,0,0,0,0,Folded into vendor outcome review; no reduction.
-21,"Outcome analysis should include performance assessment on U.S. Bank data...","(1) Assess whether outcome analysis includes performance assessment on U.S. Bank data (actual queries from U.S. Bank users/customers and U.S. Bank KB articles).
-(2) Evaluate data source, dependent variable definition, and sample construction for internal outcome analysis.","(1) Assess whether outcome analysis includes performance assessment on U.S. Bank data.
-(2) Evaluate data source, dependent variable definition, and sample construction for internal outcome analysis.","No reduction. Must evidence performance on U.S. Bank data and intended use.",Section 8.1 Outcomes Analysis,0%,0%,0,0,0,0,Folded; U.S. Bank data evidence retained.
-22,"If testing specifically on U.S. Bank data is not relevant...","(1) If U.S. Bank data testing was not obtained, assess the justification provided.
-(2) Document any differences between the vendor's test conditions and U.S. Bank's production environment that may impact performance.","(1) If U.S. Bank data testing was not obtained, assess the justification provided.
-(2) Note any differences between vendor test conditions and U.S. Bank production environment.",No reduction. Review activity.,Section 8.1 Outcomes Analysis,0%,0%,0,0,0,0,Folded; no reduction.
-23,"Hallucination Detection Testing: If applicable...","(1) Assess the model owner's hallucination testing methodology: whether suitable metrics are chosen to compare responses against retrieved articles or source content.
-(2) Evaluate whether the criteria for blocking or flagging hallucinated answers are appropriate for the use case.
-(3) Assess handling of out-of-domain queries and edge cases where hallucination risk is elevated.
-(4) If Validation performs independent hallucination testing, design test cases targeting known hallucination-prone scenarios.","(1) Assess the model owner's hallucination testing methodology and whether suitable metrics are chosen.
-(2) Evaluate whether the criteria for blocking or flagging hallucinated answers are appropriate.
-(3) Assess handling of out-of-domain queries and edge cases.
-(4) Hallucination detection is also assessed through outcome analysis (8.1) performance results.","No need to design or run independent hallucination test cases. Validation reviews the model owner's testing results and assesses hallucination risk through outcome analysis.",Section 8.1 Outcomes Analysis,0%,0%,2,2,8,8,Hallucination retained; assessed via outcome analysis.
-24,"Toxicity Testing: If applicable...","(1) Assess model owner's toxicity testing: whether an appropriate method/language model is used, whether threshold settings are appropriate.
-(2) Evaluate test outcomes and blocking rates for toxic content.","(1) Review model owner-provided toxicity testing results if submitted.
-(2) Not required at low risk per streamline; elevate for customer-facing exposure.","Toxicity testing is not required at low risk. No need to curate independent toxicity test datasets or evaluate toxicity thresholds in detail.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,4,0,8,0,Toxicity testing not required at low risk.
-25,"Adversarial Testing: If applicable...","(1) Assess model owner's adversarial testing design: whether it covers varied attack styles (prompt injection, jailbreaking, data exfiltration), whether threshold settings and aggregation methods are appropriate.
-(2) Evaluate test outcomes and bypass rates.","(1) Review model owner-provided adversarial testing results if submitted.
-(2) Not required at low risk; low-risk models are typically internal with lower exposure. Elevate for customer-facing models.","Adversarial testing is not required at low risk. No need to curate independent adversarial test datasets or evaluate attack coverage in detail.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,5,0,10,0,Adversarial testing not required at low risk; elevate for customer-facing.
-26,"For each of the test above, if applicable, document red teaming...","(1) Review red teaming procedures and scope if conducted.
-(2) Assess attack datasets used (e.g., MIT AI Risk Repository, ETAQ), automated testing toolkits (e.g., Garak, ART), and manual expert testing coverage.","(1) Review red teaming documentation if submitted.
-(2) Red teaming is not required at low risk.","Red teaming procedures are not required at low risk. No need to evaluate red teaming scope or toolkits.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,3,0,6,0,Red teaming not required at low risk.
-27,"If red teaming/adversarial testing was conducted on guardrails, report...","(1) Review total number of test attempts by risk category (hallucination, toxicity, adversarial attacks).
-(2) Review number of attempts that successfully bypassed guardrails.
-(3) Assess types of successful bypasses and their severity/impact.","(1) Review reported red teaming metrics if submitted.
-(2) Not required at low risk.","Red teaming results reporting is not required at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,4,0,Red teaming reporting not required at low risk.
-28,"If backtesting or pilot query testing was conducted on guardrails, report...","(1) Review total number of legitimate business queries or answers tested.
-(2) Review number of legitimate queries incorrectly blocked (false positives).
-(3) Review number of harmful/inappropriate/inaccurate outputs that bypassed guardrails (false negatives).
-(4) Assess balance between false-positive and false-negative rates and impact on user experience and safety.","(1) Review false-positive and false-negative rates reported by the model owner.
-(2) Assess the balance between safety strictness and system utility.","Validation reviews reported rates rather than conducting independent guardrail backtesting. Smaller sample sizes acceptable at low risk.",Section 8.1 Outcomes Analysis,0%,67%,2,2,3,1,Validation reviews reported false-positive/negative rates (no reduction); MD guardrail backtest scope reduced.
-29,"If applicable, document patterns in failures...","(1) Review patterns in failures (severity level and category breakdown such as prompt injection, jailbreaking, data exfiltration).
-(2) Assess common false positives affecting user experience.
-(3) Review edge cases requiring human escalation.
-(4) If customized unsafe classes were created (e.g., LlamaGuard), review definitions used.","(1) Review failure pattern documentation if submitted.
-(2) Detailed guardrail failure analysis is not required at low risk.","Detailed guardrail failure pattern analysis is not required at low risk.",Section 8.1 Outcomes Analysis,100%,100%,3,0,3,0,Detailed guardrail failure pattern analysis not required at low risk.
-30,"If applicable, document the balance between safety strictness...","(1) Assess the documented balance between safety strictness and system utility.
-(2) Review risk-based thresholds where stricter controls apply for high-stakes use cases.","(1) Review safety/utility balance documentation if submitted.
-(2) High-stakes thresholds are less relevant at low risk.","Safety strictness vs. utility threshold analysis is not required at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,3,0,2,0,Safety/utility threshold analysis not required at low risk.
-31,"For vendor models, document the performance of vendor-provided safety features...","(1) Review performance documentation of vendor-provided safety features (e.g., AWS Bedrock Guardrails, Azure AI Content Safety).
-(2) Assess whether the vendor's safety feature configuration (thresholds, categories, custom blocklists) is appropriate for the use case.
-(3) Evaluate gaps between vendor safety coverage and the model's risk profile.","(1) Review performance documentation of vendor-provided safety features.
-(2) Assess whether the vendor's safety feature configuration is appropriate for the use case.
-(3) Evaluate gaps between vendor safety coverage and the model's risk profile.",No reduction. Review activity for vendor models where applicable.,Section 8.1 Outcomes Analysis,0%,0%,1,1,1,1,Vendor safety feature review retained.
-32,"If the model being developed is replacing an existing model...","(1) For replacement or upgrade models, assess whether the incumbent model is used as a benchmark.
-(2) Evaluate whether performance meets or exceeds the incumbent on comparable test data.
-(3) For foundation LLM major upgrades, verify equal or improved performance evidence.","(1) For replacement or upgrade models, review incumbent-vs-new performance comparison.
-(2) This remains a High-priority item regardless of risk tier.","No reduction for replacement/upgrade models. N/A for new models.",Section 8.2 Benchmarking Analysis,0%,0%,0,0,0,0,Benchmarking retained only for replacement/upgrade models; N/A for typical low-risk new model.
-33,"If benchmarking was not possible or was not performed...","(1) If benchmarking was not performed, review the justification for omission.
-(2) Assess whether the justification is reasonable given the model's specificity and use case.","(1) Confirm a justification for omission is documented if benchmarking was not performed.
-(2) At low risk, the justification for omission is the expected deliverable.","No need to evaluate the quality of the justification in depth. Confirm documentation exists.",Section 8.2 Benchmarking Analysis,100%,40%,2,0,5,3,Validation no longer reviews benchmarking; MD reduced to documenting justification for omission.
-34,"For fine-tuned models, if the LLM application performance...","(1) For fine-tuned models, review performance comparison results against alternative solutions (foundation models, RAG solutions).
-(2) Assess whether the fine-tuning approach is justified by the comparison.","(1) Review if submitted.
-(2) Fine-tuned models are uncommon at low risk. Benchmarking is not required at low risk.","Not required at low risk. Fine-tuned models are uncommon in the low-risk scope.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-35,"If possible, use identical test datasets...","(1) If benchmarking was performed, assess whether identical test datasets with comprehensive coverage were used for fair comparison.","(1) If benchmarking was performed and identical datasets were used, note for context. Not required at low risk.","Not required at low risk. If benchmarking was performed, accept methodology as supplementary context.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-36,"If the model is not a replacement model and no industry...","(1) For non-replacement models, confirm that the limitation of no available benchmark is documented and justified.
-(2) Assess the reasonableness of the justification.","(1) Confirm that the limitation is documented and justified.
-(2) Exclusion is acceptable at low risk when the model is not a replacement and no benchmark exists.","No need to evaluate the justification in depth. Confirm documentation exists.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-37,"Provide quantitative results including accuracy...","(1) If benchmarking was performed, review quantitative results including accuracy, relevance, and other performance metrics from the comparison.","(1) If benchmarking results are provided, accept quantitative results as supplementary context.","No need to evaluate benchmarking accuracy results in detail at low risk.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-38,"Document any trade-offs between performance and resources...","(1) If benchmarking was performed, review documented trade-offs between performance and resources (e.g., higher accuracy at higher cost or longer processing time).","(1) If trade-off documentation is provided, accept as supplementary context.","No need to evaluate performance/resource trade-offs from benchmarking at low risk.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-39,"Provide commentary on the performance between...","(1) If benchmarking was performed, review the model owner's commentary on benchmark performance and implications for the selected model.","(1) If performance commentary is provided, accept as supplementary context.","No need to independently assess benchmark performance implications at low risk.",Section 8.2 Benchmarking Analysis,100%,100%,1,0,3,0,Benchmarking not required at low risk.
-40,"Explain whether any differences between the data...","(1) If benchmarking was performed, review whether differences in data, model structure, or assumptions between benchmark and selected model impact performance or interpretations.","(1) If explanation of benchmark differences is provided, accept as supplementary context.","No need to independently evaluate benchmark methodology differences at low risk.",Section 8.2 Benchmarking Analysis,100%,100%,2,0,2,0,Benchmarking not required at low risk.
-41,"This type of testing is generally applicable...","(1) Assess whether sensitivity and robustness testing was performed or, if captured elsewhere, whether a summary pointer to the relevant section is provided.
-(2) Evaluate whether the type and scope of testing are appropriate for the model's purpose, use, and methodology.","(1) If sensitivity/robustness testing was captured in another section, confirm a summary pointer exists.
-(2) If not performed, confirm justification is documented.","No need to independently evaluate the scope or appropriateness of sensitivity testing at low risk. Accept summary pointers to other sections.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent sensitivity/robustness testing not required at low risk.
-42,"Evaluating the relationship between model inputs and outputs...","(1) Review the model owner's input perturbation testing: assess how the model responds to small and large changes in input values (rephrased queries, modified documents).
-(2) Evaluate the impact of perturbations on model outputs.","(1) If input perturbation testing results are provided, review for reasonableness.","No need to independently create perturbed inputs or evaluate sensitivity to input changes at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent input perturbation testing not required at low risk.
-43,"Evaluating the model's stability or performance across...","(1) Assess the model's stability or performance across meaningful segments (products, portfolios, channels, risk segments, geography).
-(2) Cross-reference with segment performance review in outcome analysis (8.1).","(1) Segment performance is primarily covered in outcome analysis. If additional segment stability testing is provided, review for reasonableness.","Segment stability is covered in the outcome analysis segment row. No separate sensitivity assessment required at low risk.","Section 8.3 Sensitivity and Robustness Analysis; Section 8.1 Outcomes Analysis",100%,100%,2,0,3,0,Segment stability covered in outcome analysis; no separate testing.
-44,"Evaluating a model's ability to handle noise...","(1) Assess the model's ability to handle noise in unstructured data (e.g., varying image conditions, OCR character confusion).
-(2) Evaluate robustness to data quality variations.","(1) If noise handling testing results are provided, review for reasonableness.","No need to independently test noise handling at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent noise-handling testing not required at low risk.
-45,"Focus on performing and presenting analysis...","(1) Assess whether the sensitivity analysis is appropriate for the model's purpose.
-(2) Review interpretation and business justification of results, especially for non-intuitive or unstable behaviors.","(1) If sensitivity analysis results are provided, review the interpretation for reasonableness.","No need to independently perform or replicate sensitivity analysis at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent sensitivity analysis not required at low risk.
-46,"For GenAI applications, provide any sensitivity...","(1) Review any GenAI-specific sensitivity or robustness testing results demonstrating output consistency.
-(2) Assess whether the results support consistent model behavior across varied inputs.","(1) If GenAI sensitivity/robustness results are provided, review for reasonableness.","No need to independently assess output consistency at low risk. Review if provided.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent output-consistency testing not required at low risk.
-47,"Sensitivity testing includes but is not limited to...","(1) Review sensitivity testing on semantically similar queries (synonyms, rephrasing, punctuation noise, emojis, keyboard proximity errors, alternative tones).
-(2) Evaluate similarity metrics used (retrieval overlap, similarity scores, LLM pairwise evaluators) to measure output divergence under perturbation.","(1) If query perturbation testing results are provided, review for reasonableness.","No need to independently create perturbed queries, generate outputs, or compute similarity metrics at low risk.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent query perturbation testing not required at low risk.
-48,"Robustness testing includes but is not limited to...","(1) Review robustness testing on coherence over long contexts (tracking information after 10+ turns of conversation).
-(2) Assess how the model handles mid-conversation topic changes.","(1) If robustness testing results are provided, review for reasonableness.
-(2) For multi-turn conversational models, coherence and topic-change handling may be elevated to Medium priority.","No need to independently test multi-turn coherence or topic-change handling at low risk. Elevate for conversational models.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent multi-turn coherence testing not required; elevate for conversational models.
-49,"Certain forms of sensitivity analysis may not be possible...","(1) For vendor/black-box models, assess whether high-level behavioral sensitivity checks were performed.
-(2) Check monotonicity of output relative to inputs or key risk drivers to confirm intended implementation.","(1) For vendor models, review any behavioral sensitivity checks if provided.
-(2) If sensitivity testing is not possible due to proprietary constraints, confirm the limitation is disclosed.","No need to independently perform behavioral sensitivity checks on vendor models at low risk. Review if provided.",Section 8.3 Sensitivity and Robustness Analysis,100%,100%,2,0,3,0,Independent vendor behavioral sensitivity checks not required at low risk.
-50,"Ensure proper justification is included if sensitivity testing is omitted.","(1) If sensitivity testing is omitted, review the justification provided.
-(2) Assess whether the justification is reasonable for the model type and risk level.","(1) If sensitivity testing is omitted, confirm a justification for omission is documented.
-(2) At low risk, the omission justification is the expected deliverable.","No need to evaluate the quality of the justification in depth. Confirm documentation exists.",Section 8.3 Sensitivity and Robustness Analysis,100%,0%,2,0,3,3,Validation testing dropped; MD retains documenting the omission justification.
-51,"Document data provenance and traceability mechanisms...","(1) Review data provenance and traceability mechanisms.
-(2) Evaluate how output elements are linked back to source documents.
-(3) Assess how provenance is displayed to users in the interface.","(1) Review data provenance and traceability mechanisms.
-(2) Evaluate how output elements are linked back to source documents.
-(3) Assess how provenance is displayed to users in the interface.","No reduction. Provenance is often native to RAG; review activity unchanged.",Section 8.4 Explainability Testing,0%,0%,2,2,8,8,Provenance review retained; often native to RAG.
-52,"For RAG techniques, explainability analysis includes...","(1) For RAG models, review tracing of each sentence or paragraph back to its originating context chunk (provenance analysis).
-(2) Assess completeness and accuracy of the tracing.","(1) For RAG models, review provenance analysis tracing outputs to originating context chunks.
-(2) Assess completeness and accuracy of the tracing.","No reduction. Review activity; N/A if not RAG.",Section 8.4 Explainability Testing,0%,0%,2,2,5,5,RAG provenance tracing retained.
-53,"Describe the process for SMEs to flag concerning patterns...","(1) Review the SME process for identifying and flagging concerning patterns in explainability output.
-(2) Assess whether the escalation process is adequate.","(1) Review the SME process for identifying and flagging concerning patterns in explainability output.
-(2) Assess whether the escalation process is adequate.","No reduction. Low-effort review activity.",Section 8.4 Explainability Testing,0%,0%,1,1,2,2,SME flagging process review retained.
+# GenAI Streamline deck - proposed changes
+# Base deck: 20260616_GenAI_Low_Risk_Validation_Timeline_Streamline_Slides.yaml
+# Each block below is labeled NEW (insert) or MOD (drop-in replacement for the named existing slide).
+# Percentages only; hours stay internal per Bob's direction.
+
+slides:
+
+  # ----- MOD: replaces existing Slide 2 "Executive Summary" (add one risk-based framing bullet) -----
+  - layout: single
+    title: "Executive Summary"
+    sections:
+      - bullets:
+          - "Faster validation enables quicker deployment of GenAI solutions, allowing business lines to capture value through enhanced efficiency, scalability, and innovation."
+          - "The MRM validation timeline for a subset of GenAI models may be reduced, supported by GenAI-specific development templates, insights from prior validation activities, and improved model development and documentation practices."
+          - "Reductions are risk-based: they trim justification documentation and optional testing, while retaining core model documentation, data quality, and analysis relevant to higher inherent risk."
+          - "Validation will remain risk-based, with heightened focus on areas of higher inherent model risk, including model performance, conceptual soundness, and monitoring processes. Non-agentic AI models in lower risk tiers may be subject to streamlined documentation and testing requirements."
+          - "Continued MRM initiatives, including enhancements to the codebase and validation templates, are expected to further support a more efficient validation process."
+
+  # ----- NEW: insert after Slide 4 "Expectations and Tradeoffs" (the quantified payoff) -----
+  - layout: single
+    title: "Estimated Reduction in Validation and Model Development Effort"
+    sections:
+      - bullets:
+          - "The streamline reduces effort for both the Validation team and the Model Owner and Developer, with the largest savings concentrated in performance testing."
+      - heading: "Estimated effort reduction by section"
+        bullets:
+          - "Development Data: Validation effort is reduced by approximately 36 percent and Model Developer effort by approximately 39 percent."
+          - "Model Framework and Construction: Validation effort is reduced by approximately 50 percent and Model Developer effort by approximately 23 percent."
+          - "Performance Testing: Validation effort is reduced by approximately 58 percent and Model Developer effort by approximately 52 percent."
+          - "Across the development sections, Validation effort is reduced by approximately half and Model Developer effort by approximately 40 percent."
+      - heading: "Where the savings come from"
+        bullets:
+          - "Validation savings come from removing independent testing where the developer's testing is sufficient, including benchmarking, sensitivity and robustness testing, most guardrail testing, and reducing code review to a spot-check."
+          - "Model Developer savings come from reduced documentation of justification and rationale, fewer required test categories, and reduced synthetic data generation at low risk."
+          - "Core review of model performance, conceptual soundness, data quality, and high-risk-relevant analysis is retained."
+
+  # ----- NEW: insert after the effort slide (clarifies expanded scope per Jinjun) -----
+  - layout: single
+    title: "Scope: Full Validation, Not Only the Model Development Document"
+    sections:
+      - bullets:
+          - "The streamline applies across the full validation, including the model development document, the monitoring plan, and the implementation framework."
+          - "Reductions are concentrated in the development sections, namely data, construction, and performance testing."
+          - "Governance, implementation, and ongoing monitoring reviews are largely retained, reflecting their role in managing post-deployment risk."
+
+  # ----- MOD: replaces existing Slide 7 "Streamlined Requirements and Testing for MO/MD (Cont'd)" (performance testing) -----
+  - layout: single
+    title: "Streamlined Requirements and Testing for MO/MD (Cont'd)"
+    sections:
+      - bullets:
+          - "Performance testing requirements can also be reduced."
+      - heading: "Current requirements"
+        bullets:
+          - "Automated performance evaluation and SME performance evaluation on appropriate metrics such as accuracy, relevancy, and faithfulness."
+          - "Guardrail testing such as hallucination detection, toxicity testing, and adversarial testing (prompt injection, jailbreaking, etc.)."
+          - "Benchmarking GenAI models against other LLM vendors or versions, different model frameworks, human performance baselines, simplified methods, and traditional NLP models, if applicable."
+          - "Sensitivity and robustness testing evaluating the relationship between model inputs and outputs."
+      - heading: "Potential reduced requirements"
+        bullets:
+          - "Toxicity, adversarial, and red-teaming testing are not required at low risk; hallucination detection remains and is assessed through outcome analysis. Guardrail testing is elevated for customer-facing exposure."
+          - "Benchmarking and sensitivity/robustness testing can be removed with a documented justification for omission. The incumbent comparison is retained for replacement or upgrade models."
+
+  # ----- MOD: replaces existing Slide 8 "Reduced Independent Review and Testing by Validation" -----
+  - layout: single
+    title: "Reduced Independent Review and Testing by Validation"
+    sections:
+      - heading: "Reduced Independent Review"
+        bullets:
+          - "Reviewing of intermediate performance error analysis, if overall accuracy is acceptable and the business line has completed root cause analysis."
+          - "Reviewing of hyperparameter tuning and the rationale of the model's final configurations."
+          - "Reviewing of benchmarking and sensitivity/robustness, except the incumbent comparison for replacement or upgrade models, which is retained."
+      - heading: "Reduced Independent Testing (if the provided testing is sufficient)"
+        bullets:
+          - "Independent synthetic dataset generation, LLM-as-a-judge analysis, and statistical metric computation."
+          - "Independent guardrail testing, such as curating U.S. Bank-specific queries to test prompt injection and jailbreaking."
+          - "Independent sensitivity and robustness testing, such as perturbing queries and evaluating the similarity of responses."
+          - "Topic modeling to create synthetic testing data covering most knowledge base topics."
+          - "Line-by-line code review is reduced to a spot-check of core modules."
+      - heading: "Retained (risk-based focus)"
+        bullets:
+          - "Review of model performance and outcome analysis, conceptual soundness, data quality, and Validation's independent interpretation of results."
