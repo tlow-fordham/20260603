@@ -80,9 +80,17 @@
 
 ---
 
+## Post-Meeting Update: Justin's Decision (06/15/2026, 10:47 AM)
+
+- Justin emailed the group confirming that after consulting with his leadership, the business line will disable the Artemis (PayVIEW Query Agent) tool entirely via UI feature flag until PA2 is approved for the combined answer. The tool will not be displayed on the UI.
+- This means pilot users will not be able to access the Query Agent at all during the PA2 review period. The business line chose a full disable rather than reverting to the approved four-answer output (which Jordan had noted during the meeting would be consistent with the approved framework if the four answers were concatenated without the LLM synthesis step).
+- No pilot data will be collected during the disable period.
+
+---
+
 ## Action Items
 
-- Justin Caughlan: Confirm with Venkat by end of day 06/15/2026 whether the UI can revert to displaying the approved output (four answers concatenated or displayed separately) without the LLM synthesis step, or whether the API should be stopped. Report decision back to the group.
+- Justin Caughlan: ~~Confirm with Venkat by end of day 06/15/2026 whether the UI can revert to displaying the approved output.~~ Resolved: Justin confirmed the tool will be fully disabled via UI feature flag until PA2 is approved.
 - Justin Caughlan / Satish / Jaya: Submit PA2 for the combined answer change, building on the PA1 narrative with updated methodology, flow diagram, and performance results. Target: 06/18/2026.
 - Justin Caughlan: Submit a change EMA for the pilot to document the combined answer change in Archer. May Tran available to assist. Target: 06/18/2026.
 - Jaya / Satish: Share GitLab repository access with Validation when available. In the interim, share code via OneDrive or another file-sharing method. Target: 06/18/2026.
