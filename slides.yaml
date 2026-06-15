@@ -1,81 +1,95 @@
-# GenAI Streamline deck - proposed changes
-# Base deck: 20260616_GenAI_Low_Risk_Validation_Timeline_Streamline_Slides.yaml
-# Each block below is labeled NEW (insert) or MOD (drop-in replacement for the named existing slide).
-# Percentages only; hours stay internal per Bob's direction.
+# Meeting Minutes - Model-7306 PayVIEW - GTM and MMP ChatBot
+## Combined Answer Change Discussion
 
-slides:
+**Date:** 06/15/2026
+**Format:** Virtual (Teams)
 
-  # ----- MOD: replaces existing Slide 2 "Executive Summary" (add one risk-based framing bullet) -----
-  - layout: single
-    title: "Executive Summary"
-    sections:
-      - bullets:
-          - "Faster validation enables quicker deployment of GenAI solutions, allowing business lines to capture value through enhanced efficiency, scalability, and innovation."
-          - "The MRM validation timeline for a subset of GenAI models may be reduced, supported by GenAI-specific development templates, insights from prior validation activities, and improved model development and documentation practices."
-          - "Reductions are risk-based: they trim justification documentation and optional testing, while retaining core model documentation, data quality, and analysis relevant to higher inherent risk."
-          - "Validation will remain risk-based, with heightened focus on areas of higher inherent model risk, including model performance, conceptual soundness, and monitoring processes. Non-agentic AI models in lower risk tiers may be subject to streamlined documentation and testing requirements."
-          - "Continued MRM initiatives, including enhancements to the codebase and validation templates, are expected to further support a more efficient validation process."
+**Attendees:**
+- Jordan Low (MRM Validation)
+- Jinjun Tong (MRM Validation)
+- Madhavi Ashili (MRG, joined late)
+- May Tran (MRG)
+- Patty Manirath (MRO)
+- Justin Caughlan (MO, Product Manager)
+- Sherin Mathews (MD)
+- Satish Simhadri (MD)
+- Jayalakshmi Mangalagiri (MD)
 
-  # ----- NEW: insert after Slide 4 "Expectations and Tradeoffs" (the quantified payoff) -----
-  - layout: single
-    title: "Estimated Reduction in Validation and Model Development Effort"
-    sections:
-      - bullets:
-          - "The streamline reduces effort for both the Validation team and the Model Owner and Developer, with the largest savings concentrated in performance testing."
-      - heading: "Estimated effort reduction by section"
-        bullets:
-          - "Development Data: Validation effort is reduced by approximately 36 percent and Model Developer effort by approximately 39 percent."
-          - "Model Framework and Construction: Validation effort is reduced by approximately 50 percent and Model Developer effort by approximately 23 percent."
-          - "Performance Testing: Validation effort is reduced by approximately 58 percent and Model Developer effort by approximately 52 percent."
-          - "Across the development sections, Validation effort is reduced by approximately half and Model Developer effort by approximately 40 percent."
-      - heading: "Where the savings come from"
-        bullets:
-          - "Validation savings come from removing independent testing where the developer's testing is sufficient, including benchmarking, sensitivity and robustness testing, most guardrail testing, and reducing code review to a spot-check."
-          - "Model Developer savings come from reduced documentation of justification and rationale, fewer required test categories, and reduced synthetic data generation at low risk."
-          - "Core review of model performance, conceptual soundness, data quality, and high-risk-relevant analysis is retained."
+**Not present:** Xinyu Wu (MRM Validation, out of office 06/15-06/16, returning 06/17)
 
-  # ----- NEW: insert after the effort slide (clarifies expanded scope per Jinjun) -----
-  - layout: single
-    title: "Scope: Full Validation, Not Only the Model Development Document"
-    sections:
-      - bullets:
-          - "The streamline applies across the full validation, including the model development document, the monitoring plan, and the implementation framework."
-          - "Reductions are concentrated in the development sections, namely data, construction, and performance testing."
-          - "Governance, implementation, and ongoing monitoring reviews are largely retained, reflecting their role in managing post-deployment risk."
+---
 
-  # ----- MOD: replaces existing Slide 7 "Streamlined Requirements and Testing for MO/MD (Cont'd)" (performance testing) -----
-  - layout: single
-    title: "Streamlined Requirements and Testing for MO/MD (Cont'd)"
-    sections:
-      - bullets:
-          - "Performance testing requirements can also be reduced."
-      - heading: "Current requirements"
-        bullets:
-          - "Automated performance evaluation and SME performance evaluation on appropriate metrics such as accuracy, relevancy, and faithfulness."
-          - "Guardrail testing such as hallucination detection, toxicity testing, and adversarial testing (prompt injection, jailbreaking, etc.)."
-          - "Benchmarking GenAI models against other LLM vendors or versions, different model frameworks, human performance baselines, simplified methods, and traditional NLP models, if applicable."
-          - "Sensitivity and robustness testing evaluating the relationship between model inputs and outputs."
-      - heading: "Potential reduced requirements"
-        bullets:
-          - "Toxicity, adversarial, and red-teaming testing are not required at low risk; hallucination detection remains and is assessed through outcome analysis. Guardrail testing is elevated for customer-facing exposure."
-          - "Benchmarking and sensitivity/robustness testing can be removed with a documented justification for omission. The incumbent comparison is retained for replacement or upgrade models."
+## Background Recap
 
-  # ----- MOD: replaces existing Slide 8 "Reduced Independent Review and Testing by Validation" -----
-  - layout: single
-    title: "Reduced Independent Review and Testing by Validation"
-    sections:
-      - heading: "Reduced Independent Review"
-        bullets:
-          - "Reviewing of intermediate performance error analysis, if overall accuracy is acceptable and the business line has completed root cause analysis."
-          - "Reviewing of hyperparameter tuning and the rationale of the model's final configurations."
-          - "Reviewing of benchmarking and sensitivity/robustness, except the incumbent comparison for replacement or upgrade models, which is retained."
-      - heading: "Reduced Independent Testing (if the provided testing is sufficient)"
-        bullets:
-          - "Independent synthetic dataset generation, LLM-as-a-judge analysis, and statistical metric computation."
-          - "Independent guardrail testing, such as curating U.S. Bank-specific queries to test prompt injection and jailbreaking."
-          - "Independent sensitivity and robustness testing, such as perturbing queries and evaluating the similarity of responses."
-          - "Topic modeling to create synthetic testing data covering most knowledge base topics."
-          - "Line-by-line code review is reduced to a spot-check of core modules."
-      - heading: "Retained (risk-based focus)"
-        bullets:
-          - "Review of model performance and outcome analysis, conceptual soundness, data quality, and Validation's independent interpretation of results."
+- Jordan recapped the timeline for context, given multiple personnel changes across MO, MD, and MRO since the original PA.
+- PA1 was signed 01/30/2026 based on Soumitri's query agent framework, with four individual RAG answers as the approved output.
+- SPV was signed 05/19/2026. The SPV explicitly stated that the combined answer (summarizing the four answers into one output via an additional LLM call) was not covered by the provisional approval and had not been deployed.
+- Through email exchanges on 06/10 and 06/11/2026, Jaya explained the combined answer architecture and explicitly confirmed that the backend toggle is set to display only the combined answer on the UI. The combined answer has been the only output users see for approximately three weeks.
+- From Validation's perspective, this is a framework change because it introduces an additional generative AI model call. Validation has not had the opportunity to review the summarization prompt or assess the combined answer output prior to deployment.
+
+## MRO Status
+
+- Patty Manirath is transitioning to a new position within the bank. She previously took over the MRO role from Fion Wang. There is no replacement MRO assigned yet, but Patty is still supporting the role during the transition.
+
+## Change Classification
+
+- Patty confirmed that the change meets the definition of a material change under the PA terms.
+- Patty noted that the material change was implemented without informing MRM or MRG, which is inconsistent with the terms agreed upon during the provisional approval.
+- No one on the call disputed this characterization.
+
+## Path Forward: Second Provisional Approval
+
+- The MO and MD agreed to submit a new PA (PA2) focused on the combined answer change. The PA2 can reference and build on the existing PA1 narrative, appending the details on what changed (combined answer methodology, updated flow diagram, performance results).
+- Validation (Jinjun, Jordan) confirmed they can expedite the review, targeting approximately two weeks for completion. The scope of review is limited to the change from four answers to the combined answer (one additional LLM call combining the outputs).
+- Madhavi noted this may impact the full production timeline. Jordan clarified that it does not necessarily delay full production, because the MO can submit initial validation documents at any point when ready and does not have to use the full pilot period. The MO can start the full production process before the end of the second pilot window.
+
+## Interim Measures: Rollback or Pause
+
+- Madhavi recommended that the combined answer not be displayed to users until the PA2 is complete.
+- Satish explained a technical constraint: the current UI is designed to display only one answer. Rolling back to display four separate answers would require UI development effort from Venkat's team and may not be quick.
+- Two interim options were discussed:
+  - Option 1: Have the UI team (Venkat) change the display back to four individual answers. Level of effort unknown.
+  - Option 2: Stop the API entirely so no responses are served until the PA2 is complete.
+- Jordan noted that the original PA did not require four separate UI display boxes. If the four answer text strings were concatenated into one display field without the LLM synthesis step, that would be consistent with the approved framework and would not break the existing UI.
+- Justin agreed that removing the summary piece and reverting to the prior answer format should be feasible and committed to confirming with Venkat.
+- Satish recommended that the business line make the rollback decision quickly. If rollback is not feasible, stopping the API is the fallback.
+- Satish stated that the business line should provide an answer by end of day 06/15/2026.
+
+## MRC Reporting
+
+- Madhavi confirmed she will report the change to MRC regardless of whether rollback occurs, since the unapproved change was in use for approximately three weeks.
+- If the business line rolls back the change, Madhavi's commentary to MRC will reflect that the rollback was completed promptly once the issue was identified. If rollback does not occur, the commentary will note continued use of an unapproved output.
+
+## Controls and Process Discussion
+
+- Patty raised concerns about how the business line can stay agile while complying with MRM requirements, and whether defining work as a proof of concept rather than a pilot would give more flexibility.
+- Madhavi clarified the distinction: if work is a POC and not being presented to end users, it does not require MRM approval. However, once output is presented to users in a pilot capacity, it falls under the PA terms. POC testing can run alongside a pilot, and those results can be submitted with the pilot results for full validation. The key requirement is that material changes not be deployed to users without approval.
+- Patty suggested that first line would benefit from documented standards or education on the appropriate approach for making changes during pilot, to avoid similar situations.
+- Madhavi noted that MRG policy already distinguishes between pilot use and production use. POC activity that is not customer-facing does not require MRM approval.
+- Satish acknowledged that personnel transitions (Soumitri's departure, Sherin joining as new MD, Justin replacing Philip as MO, Patty replacing Fion as MRO) contributed to the miscommunication that led to the change being deployed without approval.
+
+## Change EMA
+
+- May Tran noted that a new change EMA is needed for the pilot to capture the change and document it in Archer.
+- The change EMA is Justin's responsibility as the assigned model owner. May offered to assist.
+
+## Pilot Usage Context
+
+- Jaya noted that only approximately five users are actively using the tool, and 82 queries were submitted over the three-week period. Madhavi acknowledged this but noted it does not reduce the governance risk.
+- The pilot formally began around 05/04/2026. The combined answer change has been in use for approximately three weeks (roughly half the pilot period to date).
+
+---
+
+## Action Items
+
+- Justin Caughlan: Confirm with Venkat by end of day 06/15/2026 whether the UI can revert to displaying the approved output (four answers concatenated or displayed separately) without the LLM synthesis step, or whether the API should be stopped. Report decision back to the group.
+- Justin Caughlan / Satish / Jaya: Submit PA2 for the combined answer change, building on the PA1 narrative with updated methodology, flow diagram, and performance results. Target: 06/18/2026.
+- Justin Caughlan: Submit a change EMA for the pilot to document the combined answer change in Archer. May Tran available to assist. Target: 06/18/2026.
+- Jaya / Satish: Share GitLab repository access with Validation when available. In the interim, share code via OneDrive or another file-sharing method. Target: 06/18/2026.
+- Madhavi Ashili: Report the unapproved change to MRC. Commentary will reflect whether the business line rolled back the change. Target: 06/18/2026.
+- Jordan Low / Jinjun Tong: Expedite PA2 review upon receipt, targeting approximately two weeks from submission. Scope limited to the combined answer change (one additional LLM call).
+
+## Items Deferred to Follow-Up
+
+- Broader discussion on controls and standards for managing changes during pilot, including educating first line on POC versus pilot distinctions and when to engage MRM. Madhavi indicated this is a cross-model governance topic.
+- Full production timeline assessment pending PA2 completion and rollback decision.
