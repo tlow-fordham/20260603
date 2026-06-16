@@ -1,65 +1,44 @@
-To: Caughlan, Justin
-Cc: Mathews, Sherin M; Simhadri, Satish K; Mangalagiri, Jayalakshmi; Wu, Xinyu; Xu, Zhiguang; Hormese, Tessa; Tong, Jinjun
-Subject: RE: Payview Query Agent - Correctness Methodology
+To: Mangalagiri, Jayalakshmi
+Cc: Caughlan, Justin; Mathews, Sherin M; Simhadri, Satish K; Wu, Xinyu; Xu, Zhiguang; Hormese, Tessa; Tong, Jinjun; Maniath, Patty; Ashili, Madhavi; Tran, May
+Subject: RE: Model-7306 PayView Provisional Approval Request - PA2 Draft
 
-Hi Justin,
+Hi Jaya,
 
-Thank you for the SME correctness grading. We wanted to follow up on the updated assessment reporting 37/39 = 94% correctness, as Validation's independent review arrived at a different result.
+Thank you for submitting the PA2 draft and the updated architecture diagram. We have completed an initial review and have comments to share.
 
-Of the 72 deduplicated queries, 44 received a substantive answer and 28 returned no answer. The prior SME grading classified 32 of 44 as correct (72.7%). The updated grading on 06/13 reclassified 13 of those 44 to N/A and excluded them from the denominator, arriving at 29/31 (93.5%).
+At a high level, the form captures the combined answer methodology and the updated flow, which is helpful. There are several areas that need to be updated before we can proceed with the PA2 review, including dates that still reflect PA1, a section that references the combined answer change as a future consideration when it has already been implemented, and the milestone schedule for IV documentation delivery.
 
-Validation reviewed every reclassification. We agree with one change and disagree with 13.
-
-
-Reclassification we agree with
-
-One query was reclassified from Incorrect to Correct ("Check Payables Optimization prerequisites"). The original Incorrect grade was likely a misclassification given strong RAGAS scores across all three metrics.
-
-
-Reclassifications to N/A (13 queries)
-
-In all 13 cases, the model generated a substantive answer that the user received. Reclassifying these to N/A removes them from the denominator without addressing whether the user received correct or incorrect guidance. The root cause of a wrong answer (KB gap, retrieval error, user typo, etc.) is useful diagnostic information, but it does not change the fact that the user received an answer.
-
-| # | Query | Prior | Links | SME Rationale for N/A | Observation |
-|---|---|---|---|---|---|
-| 1 | Who is a good fit for eBill solutions? | Incorrect | 1 | Bot does not have the required data/link | User received incorrect guidance |
-| 2 | Who are our eBill solution providers? | Incorrect | 1 | Wrong link picked | User received incorrect guidance |
-| 3 | Is there a receivables decisioning guide? | Incorrect | 1 | Bot does not have the required data/link | User received incorrect guidance |
-| 4 | How many currencies for intl wire transfer? | Incorrect | 2 | Not within bot's capabilities | User received incorrect guidance |
-| 5 | What is available in new SinglePoint self-service? | Incorrect | 3 | Not fully correct, complex question | User received incorrect guidance |
-| 6 | Minimum requirement for Automated Payables? | Incorrect | 2 | Link not available, product deprecated | User received incorrect guidance |
-| 7 | Can lockbox accept CAD items? | Incorrect | 1 | Document not available | User received incorrect guidance |
-| 8 | What is AO? | Incorrect | 1 | User typo | User received incorrect guidance |
-| 9 | provide ISO wire format | Incorrect | 1 | Attachment not provided | Model responded rather than declining |
-| 10 | Healthcare use cases - "may have?" | Correct | 5 | No particular reasoning | AR=0.7, CR=0.9, Faith=0.9; original SME graded Correct |
-| 11 | Healthcare use cases - "solutions to share?" | Correct | 6 | No particular reasoning | AR=0.7, CR=1.0, Faith=0.9; original SME graded Correct |
-| 12 | Healthcare use cases - "solve challenges?" | Correct | 3 | No particular reasoning | AR=0.9, CR=1.0, Faith=1.0; original SME graded Correct |
-| 13 | Healthcare use cases - "solutions to offer?" | Correct | 0 | No particular reasoning | Zero retrieved context; original SME graded Correct |
-
-The 9 prior-Incorrect queries cite six different rationales, all treated identically as N/A exclusions despite representing different failure modes the model encounters in production.
-
-The 4 prior-Correct queries (rows 10-13) were reclassified with no documented reasoning. Rows 10-12 have among the strongest RAGAS scores in the dataset, with 3-6 resolved KB links each. The model retrieved Healthcare Revenue Cycle and Patient Payments pages and generated detailed answers citing specific products. If the rationale is that healthcare is outside the GTM/MMP query scope, removing correct responses reduces demonstrated coverage, and the model giving confident advice on an out-of-scope topic is itself worth documenting.
-
-Apart from the one Incorrect-to-Correct change (CPO prerequisites), the entire movement from 72.7% to 93.5% was achieved by denominator reduction rather than by correcting grading errors.
-
-
-Question for the development team
-
-Two queries have zero resolved links and zero retrieved context, yet the model returned substantive answers.
-
-| Query | Links | Context | AR | CR | Faith | Prior | Updated |
-|---|---|---|---|---|---|---|---|
-| Healthcare use cases - "solutions to offer?" | 0 | empty | 0.8 | 0 | 0 | Correct | N/A |
-| What is vantage point? | 0 | 0 | 0 | 0 | 0 | Correct | Correct |
-
-The data shows no retrieved context and no resolved links, but the model generated substantive answers. It is unclear whether the retrieval step returned nothing and the model answered without KB content, or whether context was retrieved but not captured in the data export. If the architecture includes a Verified Response Logic layer that gates responses on retrieved context, could you clarify how these two queries produced answers?
-
-
-To be clear, 72.7% still clears the 67% threshold from the original PA. This is a methodology question, not a pass/fail concern. We would like to align on the classification approach before the PA2 submission so the correctness metric is consistent going forward.
-
-Attached is the spreadsheet we used to reconcile the prior and current SME correctness classifications, along with Validation's comments on each query.
-
-Please let us know if you would like to walk through the specific queries on a call.
+We have added detailed comments directly in the document and will return the marked-up version. To keep the thread manageable given the distribution size, I will connect with you and Justin directly to walk through the comments and align on next steps.
 
 Thanks,
 Jordan
+
+---
+
+## Internal Notes (not for external distribution)
+
+### Feedback to give Jaya/Justin on the call
+
+- The PA2 form is largely carried over from PA1, which is expected since the scope is the combined answer change. The new content (Combined Answer paragraph, system prompt, updated flow chart) is a good start, but the form needs cleanup before it can support a PA2 review.
+- The justification paragraph after the system prompt needs to acknowledge why PA2 is being submitted. The current language frames the combined answer as a planned enhancement without mentioning that it was deployed without approval, identified by MRM, and discussed on 06/15. All parties agreed this is a material change. Proposed replacement language is in the comments.
+- The milestone dates for IV documentation (MDD, Monitoring Plan, Implementation Framework all due 06/15) have passed. The MDD received is approximately 50-60% complete with Section 7.1 as the major gap, and the Monitoring Plan is mostly TBDs. These dates need to be revised in the PA2 form to reflect realistic delivery targets.
+- The correctness methodology question (separate email to Justin) needs to be resolved before the PA2 performance narrative can be finalized. Validation's count is 32/44 = 72.7% on the prior grading. The updated grading (93.5%) was achieved by reclassifying 13 got-answer responses to N/A.
+- The success criteria changed from 67% (PA1) to 87% (PA2 Section 4) without explanation. At 72.7%, the model clears 67% but not 87%. Need to understand the basis for this change.
+- We still need the pairwise comparison (SME grades on both the 4-answer and combined answer output for the same queries) to assess whether the combined answer is performing comparably to the approved output.
+
+### Comments to add to the PA2 document
+
+| # | Section | Comment | Status |
+|---|---|---|---|
+| 1 | Model and Requester Information: Request Submission Date | PA1 submission date (01/08/2026) still shown. Update to PA2 submission date. | Done (Tessa) |
+| 2 | MRG Decision: Decision Date | PA1 decision date (01/08/2026) still shown. Update to PA2 decision date. | Done (Tessa) |
+| 3 | MRG Decision: MRO Authorization Date | PA1 MRO authorization date (1/8/2026) still shown. Update to PA2 date. Patty is transitioning out of the MRO role; confirm who authorizes PA2. | To add |
+| 4 | Section 1: Model 6788 reference | Confirm same LLM (GPT-4o) is used for the combined answer synthesis step as for the individual answer generation. | Done (Tessa) |
+| 5 | Section 1: Justification for the change | Current language frames the combined answer as a planned enhancement. Replace with: "During the pilot period approved under PA1 (signed 01/30/2026), the model development team implemented a combined answer output that consolidates the four individual RAG answers into a single synthesized response using an additional LLM call. This change was deployed to the pilot user interface approximately three weeks prior to identification by MRM. The SPV Outcome Form (approved 05/19/2026) noted that the combined answer had not been deployed and was not covered under the existing provisional approval. Following discussion among MRM, MRG, and the business line on 06/15/2026, all parties agreed that the combined answer constitutes a material change to the approved model framework. The business line disabled the tool via UI feature flag on 06/15/2026 pending approval of this PA2. This provisional approval is being submitted to obtain approval for the combined answer output so that the pilot may resume." | To add |
+| 6 | Section 2: Pilot dates | Check if pilot dates (07/06/2026 - 11/01/2026) are consistent with what was communicated during SPV. SPV stated 05/04/2026 - 11/01/2026. The start date change to 07/06 reflects the disable period but should be stated explicitly. | Done (Tessa, partially) |
+| 7 | Section 3: Change EMA | MO needs to create a Change EMA to document the combined answer change and update the EMA section accordingly. Agreed as action item on 06/15 meeting. | Done (Tessa) |
+| 8 | Section 4: Success criteria | Success criteria states "Correctness rate of 87% or higher." PA1 used 67%. What is the basis for this change? At Validation's current count (72.7%), the model clears 67% but not 87%. | To add |
+| 9 | Section 4: "Before Full Production" | Still contains PA1 language recommending "consolidating the four candidate answers into a single synthesized response." This change has already been implemented and is the subject of this PA2. Update to reflect current state. | To add |
+| 10 | Section 4: Guardrail claim | The form states "the Model only provides an answer when it is confident of its containment and accuracy." Pilot data shows two queries with zero retrieved context and zero resolved links that produced substantive answers. This claim needs to be qualified or the VRL behavior clarified. | To add |
+| 11 | Section 5: Milestone dates | MDD, Monitoring Plan, and Implementation Framework were all due 06/15/2026. The MDD received is approximately 50-60% complete (Section 7.1 is the major gap) and the Monitoring Plan is mostly TBDs. Revise milestone dates to reflect realistic delivery targets. | To add |
+| 12 | Section 6: MRG/Validation review | Removed content from Validation review section; BL does not fill these fields. | Done (Tessa) |
