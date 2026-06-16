@@ -1,40 +1,6 @@
-To: Mangalagiri, Jayalakshmi
-Cc: Caughlan, Justin; Mathews, Sherin M; Simhadri, Satish K; Wu, Xinyu; Xu, Zhiguang; Hormese, Tessa; Tong, Jinjun; Maniath, Patty; Ashili, Madhavi; Tran, May
-Subject: RE: Model-7306 PayView Provisional Approval Request - PA2 Draft
 
-Hi Jaya,
-
-Thank you for submitting the PA2 draft and the updated architecture diagram. We have completed an initial review and have comments to share.
-
-At a high level, the form captures the combined answer methodology and the updated flow, which is helpful. There are several areas that need to be updated before we can proceed with the PA2 review, including dates that still reflect PA1, a section that references the combined answer change as a future consideration when it has already been implemented, and the milestone schedule for IV documentation delivery.
-
-We have added detailed comments directly in the document and will return the marked-up version. To keep the thread manageable given the distribution size, I will connect with you and Justin directly to walk through the comments and align on next steps.
-
-Thanks,
-Jordan
-
----
-
-## Internal Notes (not for external distribution)
-
-### Feedback to give Jaya/Justin on the call
-
-- The PA2 form is largely carried over from PA1, which is expected since the scope is the combined answer change. The new content (Combined Answer paragraph, system prompt, updated flow chart) is a good start, but the form needs cleanup before it can support a PA2 review.
-- The milestone dates for IV documentation (MDD, Monitoring Plan, Implementation Framework all due 06/15) have passed. The MDD received is approximately 50-60% complete with Section 7.1 as the major gap, and the Monitoring Plan is mostly TBDs. These dates need to be revised in the PA2 form to reflect realistic delivery targets.
-- The correctness methodology question (separate email to Justin) needs to be resolved before the PA2 performance narrative can be finalized. Validation's count is 32/44 = 72.7% on the prior grading. The updated grading (93.5%) was achieved by reclassifying 13 got-answer responses to N/A.
-- We still need the pairwise comparison (SME grades on both the 4-answer and combined answer output for the same queries) to assess whether the combined answer is performing comparably to the approved output.
-
-### Comments to add to the PA2 document
-
-| # | Section | Comment | Status |
-|---|---|---|---|
-| 1 | Model and Requester Information: Request Submission Date | PA1 submission date (01/08/2026) still shown. Update to PA2 submission date. | Already in doc |
-| 2 | MRG Decision: Decision Date | PA1 decision date (01/08/2026) still shown. Update to PA2 decision date. | Already in doc |
-| 3 | MRG Decision: MRO Authorization Date | PA1 MRO authorization date (1/8/2026) still shown. Update to PA2 date. | To add |
-| 4 | Section 1: Model 6788 reference | Confirm same LLM (GPT-4o) is used for the combined answer synthesis step as for the individual answer generation. | Already in doc |
-| 5 | Section 2: Pilot dates | The form states 07/06/2026 - 11/01/2026 without explaining the change from the SPV-revised period of 05/04/2026 - 11/01/2026. Make the date change self-contained. Proposed language: "The provisional approval granted under PA1 covered a pilot period of 05/04/2026 through 11/01/2026, as revised by the SPV Outcome Form dated 05/19/2026. During that period, the combined answer output (a single LLM-synthesized response replacing the four individual answers) was deployed to pilot users and subsequently identified by MRM as a material change not covered by the existing approval. The business line disabled the tool via UI feature flag on 06/15/2026 pending this request. This provisional approval covers a revised pilot period of 07/06/2026 through 11/01/2026, reflecting resumption of the pilot upon PA2 approval. The end date remains 11/01/2026." | To add (existing doc comment flags the dates but no proposed language yet) |
-| 6 | Section 3: Change EMA | MO needs to create a Change EMA to document the combined answer change and update the EMA section accordingly. Agreed as action item on 06/15 meeting. | Already in doc |
-| 7 | Section 4: "Before Full Production"  | Still contains PA1 language recommending "consolidating the four candidate answers into a single synthesized response." This change has already been implemented and is the subject of this PA2. Update to reflect current state. | To add |
-| 8 | Section 4: Guardrail claim | The form states "the Model only provides an answer when it is confident of its containment and accuracy." Pilot data shows two queries with zero retrieved context and zero resolved links that produced substantive answers. This claim needs to be qualified or the VRL behavior clarified. | To add |
-| 9 | Section 5: Milestone dates | MDD, Monitoring Plan, and Implementation Framework were all due 06/15/2026. The MDD received is approximately 50-60% complete (Section 7.1 is the major gap) and the Monitoring Plan is mostly TBDs. Revise milestone dates to reflect realistic delivery targets. | To add |
-| 10 | Section 6: MRG/Validation review | Removed content from Validation review section; BL does not fill these fields. | Already in doc |
+| Date | Change Description | Type | Classification | Notified By | Notes |
+|---|---|---|---|---|---|
+| 06/10/2026 | Added explicit confirmation step after transaction recognition. Prompt now requires the bot to ask "Is this the transaction you'd like to dispute?" after the customer confirms they recognize the transaction, rather than assuming recognition equals intent to dispute. | Prompt | Immaterial | Baloo / Sudhakar | Adds a clarifying question within Stage 3 (Transaction Identification). Does not add a new stage or change escalation logic. |
+| 06/12/2026 | Removed the word "banker" from the AI disclosure read at the start of the call. CAT approved. | Prompt | Immaterial | John Lorence (email 4:08 PM) | Minor wording adjustment to the Stage 1 disclaimer. Does not change the regulatory disclosure content read before submission (Stage 6). |
+| 06/12/2026 (pending) | Reduce number of parameters sent to the native Escalate tool to prevent transfer loop. Post-call data capture moved to after escalation completes. | Tool config (native) | Immaterial (per MRM assessment, see 06/12 meeting minutes) | Discussed in 06/12 meeting | Bug fix to match documented intent. Not yet deployed as of 06/12. |
