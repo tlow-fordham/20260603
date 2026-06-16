@@ -1,103 +1,65 @@
-# Meeting Minutes - Model-7306 PayVIEW - GTM and MMP ChatBot
-## Combined Answer Change Discussion
+To: Caughlan, Justin
+Cc: Mathews, Sherin M; Simhadri, Satish K; Mangalagiri, Jayalakshmi; Wu, Xinyu; Xu, Zhiguang; Hormese, Tessa; Tong, Jinjun
+Subject: RE: Payview Query Agent - Correctness Methodology
 
-**Date:** 06/15/2026
-**Format:** Virtual (Teams)
+Hi Justin,
 
-**Attendees:**
-- Jordan Low (MRM Validation)
-- Jinjun Tong (MRM Validation)
-- Madhavi Ashili (MRG, joined late)
-- May Tran (MRG)
-- Patty Manirath (MRO)
-- Justin Caughlan (MO, Product Manager)
-- Sherin Mathews (MD)
-- Satish Simhadri (MD)
-- Jayalakshmi Mangalagiri (MD)
+Thank you for the SME correctness grading. We wanted to follow up on the updated assessment reporting 37/39 = 94% correctness, as Validation's independent review arrived at a different result.
 
-**Not present:** Xinyu Wu (MRM Validation, out of office 06/15-06/16, returning 06/17)
+Of the 72 deduplicated queries, 44 received a substantive answer and 28 returned no answer. The prior SME grading classified 32 of 44 as correct (72.7%). The updated grading on 06/13 reclassified 13 of those 44 to N/A and excluded them from the denominator, arriving at 29/31 (93.5%).
 
----
+Validation reviewed every reclassification. We agree with one change and disagree with 13.
 
-## Background Recap
 
-- Jordan recapped the timeline for context, given multiple personnel changes across MO, MD, and MRO since the original PA.
-- PA1 was signed 01/30/2026 based on Soumitri's query agent framework, with four individual RAG answers as the approved output.
-- SPV was signed 05/19/2026. The SPV explicitly stated that the combined answer (summarizing the four answers into one output via an additional LLM call) was not covered by the provisional approval and had not been deployed.
-- Through email exchanges on 06/10 and 06/11/2026, Jaya explained the combined answer architecture and explicitly confirmed that the backend toggle is set to display only the combined answer on the UI. The combined answer has been the only output users see for approximately three weeks.
-- From Validation's perspective, this is a framework change because it introduces an additional generative AI model call. Validation has not had the opportunity to review the summarization prompt or assess the combined answer output prior to deployment.
+Reclassification we agree with
 
-## MRO Status
+One query was reclassified from Incorrect to Correct ("Check Payables Optimization prerequisites"). The original Incorrect grade was likely a misclassification given strong RAGAS scores across all three metrics.
 
-- Patty Manirath is transitioning to a new position within the bank. She previously took over the MRO role from Fion Wang. There is no replacement MRO assigned yet, but Patty is still supporting the role during the transition.
 
-## Change Classification
+Reclassifications to N/A (13 queries)
 
-- Patty confirmed that the change meets the definition of a material change under the PA terms.
-- Patty noted that the material change was implemented without informing MRM or MRG, which is inconsistent with the terms agreed upon during the provisional approval.
-- No one on the call disputed this characterization.
+In all 13 cases, the model generated a substantive answer that the user received. Reclassifying these to N/A removes them from the denominator without addressing whether the user received correct or incorrect guidance. The root cause of a wrong answer (KB gap, retrieval error, user typo, etc.) is useful diagnostic information, but it does not change the fact that the user received an answer.
 
-## Path Forward: Second Provisional Approval
+| # | Query | Prior | Links | SME Rationale for N/A | Observation |
+|---|---|---|---|---|---|
+| 1 | Who is a good fit for eBill solutions? | Incorrect | 1 | Bot does not have the required data/link | User received incorrect guidance |
+| 2 | Who are our eBill solution providers? | Incorrect | 1 | Wrong link picked | User received incorrect guidance |
+| 3 | Is there a receivables decisioning guide? | Incorrect | 1 | Bot does not have the required data/link | User received incorrect guidance |
+| 4 | How many currencies for intl wire transfer? | Incorrect | 2 | Not within bot's capabilities | User received incorrect guidance |
+| 5 | What is available in new SinglePoint self-service? | Incorrect | 3 | Not fully correct, complex question | User received incorrect guidance |
+| 6 | Minimum requirement for Automated Payables? | Incorrect | 2 | Link not available, product deprecated | User received incorrect guidance |
+| 7 | Can lockbox accept CAD items? | Incorrect | 1 | Document not available | User received incorrect guidance |
+| 8 | What is AO? | Incorrect | 1 | User typo | User received incorrect guidance |
+| 9 | provide ISO wire format | Incorrect | 1 | Attachment not provided | Model responded rather than declining |
+| 10 | Healthcare use cases - "may have?" | Correct | 5 | No particular reasoning | AR=0.7, CR=0.9, Faith=0.9; original SME graded Correct |
+| 11 | Healthcare use cases - "solutions to share?" | Correct | 6 | No particular reasoning | AR=0.7, CR=1.0, Faith=0.9; original SME graded Correct |
+| 12 | Healthcare use cases - "solve challenges?" | Correct | 3 | No particular reasoning | AR=0.9, CR=1.0, Faith=1.0; original SME graded Correct |
+| 13 | Healthcare use cases - "solutions to offer?" | Correct | 0 | No particular reasoning | Zero retrieved context; original SME graded Correct |
 
-- The MO and MD agreed to submit a new PA (PA2) focused on the combined answer change. The PA2 can reference and build on the existing PA1 narrative, appending the details on what changed (combined answer methodology, updated flow diagram, performance results).
-- Validation (Jinjun, Jordan) confirmed they can expedite the review, targeting approximately two weeks for completion. The scope of review is limited to the change from four answers to the combined answer (one additional LLM call combining the outputs).
-- Madhavi noted this may impact the full production timeline. Jordan clarified that it does not necessarily delay full production, because the MO can submit initial validation documents at any point when ready and does not have to use the full pilot period. The MO can start the full production process before the end of the second pilot window.
+The 9 prior-Incorrect queries cite six different rationales, all treated identically as N/A exclusions despite representing different failure modes the model encounters in production.
 
-## Interim Measures: Rollback or Pause
+The 4 prior-Correct queries (rows 10-13) were reclassified with no documented reasoning. Rows 10-12 have among the strongest RAGAS scores in the dataset, with 3-6 resolved KB links each. The model retrieved Healthcare Revenue Cycle and Patient Payments pages and generated detailed answers citing specific products. If the rationale is that healthcare is outside the GTM/MMP query scope, removing correct responses reduces demonstrated coverage, and the model giving confident advice on an out-of-scope topic is itself worth documenting.
 
-- Madhavi recommended that the combined answer not be displayed to users until the PA2 is complete.
-- Satish explained a technical constraint: the current UI is designed to display only one answer. Rolling back to display four separate answers would require UI development effort from Venkat's team and may not be quick.
-- Two interim options were discussed:
-  - Option 1: Have the UI team (Venkat) change the display back to four individual answers. Level of effort unknown.
-  - Option 2: Stop the API entirely so no responses are served until the PA2 is complete.
-- Jordan noted that the original PA did not require four separate UI display boxes. If the four answer text strings were concatenated into one display field without the LLM synthesis step, that would be consistent with the approved framework and would not break the existing UI.
-- Justin agreed that removing the summary piece and reverting to the prior answer format should be feasible and committed to confirming with Venkat.
-- Satish recommended that the business line make the rollback decision quickly. If rollback is not feasible, stopping the API is the fallback.
-- Satish stated that the business line should provide an answer by end of day 06/15/2026.
+Apart from the one Incorrect-to-Correct change (CPO prerequisites), the entire movement from 72.7% to 93.5% was achieved by denominator reduction rather than by correcting grading errors.
 
-## MRC Reporting
 
-- Madhavi confirmed she will report the change to MRC regardless of whether rollback occurs, since the unapproved change was in use for approximately three weeks.
-- If the business line rolls back the change, Madhavi's commentary to MRC will reflect that the rollback was completed promptly once the issue was identified. If rollback does not occur, the commentary will note continued use of an unapproved output.
+Question for the development team
 
-## Controls and Process Discussion
+Two queries have zero resolved links and zero retrieved context, yet the model returned substantive answers.
 
-- Patty raised concerns about how the business line can stay agile while complying with MRM requirements, and whether defining work as a proof of concept rather than a pilot would give more flexibility.
-- Madhavi clarified the distinction: if work is a POC and not being presented to end users, it does not require MRM approval. However, once output is presented to users in a pilot capacity, it falls under the PA terms. POC testing can run alongside a pilot, and those results can be submitted with the pilot results for full validation. The key requirement is that material changes not be deployed to users without approval.
-- Patty suggested that first line would benefit from documented standards or education on the appropriate approach for making changes during pilot, to avoid similar situations.
-- Madhavi noted that MRG policy already distinguishes between pilot use and production use. POC activity that is not customer-facing does not require MRM approval.
-- Satish acknowledged that personnel transitions (Soumitri's departure, Sherin joining as new MD, Justin replacing Philip as MO, Patty replacing Fion as MRO) contributed to the miscommunication that led to the change being deployed without approval.
+| Query | Links | Context | AR | CR | Faith | Prior | Updated |
+|---|---|---|---|---|---|---|---|
+| Healthcare use cases - "solutions to offer?" | 0 | empty | 0.8 | 0 | 0 | Correct | N/A |
+| What is vantage point? | 0 | 0 | 0 | 0 | 0 | Correct | Correct |
 
-## Change EMA
+The data shows no retrieved context and no resolved links, but the model generated substantive answers. It is unclear whether the retrieval step returned nothing and the model answered without KB content, or whether context was retrieved but not captured in the data export. If the architecture includes a Verified Response Logic layer that gates responses on retrieved context, could you clarify how these two queries produced answers?
 
-- May Tran noted that a new change EMA is needed for the pilot to capture the change and document it in Archer.
-- The change EMA is Justin's responsibility as the assigned model owner. May offered to assist.
 
-## Pilot Usage Context
+To be clear, 72.7% still clears the 67% threshold from the original PA. This is a methodology question, not a pass/fail concern. We would like to align on the classification approach before the PA2 submission so the correctness metric is consistent going forward.
 
-- Jaya noted that only approximately five users are actively using the tool, and 82 queries were submitted over the three-week period. Madhavi acknowledged this but noted it does not reduce the governance risk.
-- The pilot formally began around 05/04/2026. The combined answer change has been in use for approximately three weeks (roughly half the pilot period to date).
+Attached is the spreadsheet we used to reconcile the prior and current SME correctness classifications, along with Validation's comments on each query.
 
----
+Please let us know if you would like to walk through the specific queries on a call.
 
-## Post-Meeting Update: Justin's Decision (06/15/2026, 10:47 AM)
-
-- Justin emailed the group confirming that after consulting with his leadership, the business line will disable the Artemis (PayVIEW Query Agent) tool entirely via UI feature flag until PA2 is approved for the combined answer. The tool will not be displayed on the UI.
-- This means pilot users will not be able to access the Query Agent at all during the PA2 review period. The business line chose a full disable rather than reverting to the approved four-answer output (which Jordan had noted during the meeting would be consistent with the approved framework if the four answers were concatenated without the LLM synthesis step).
-- No pilot data will be collected during the disable period.
-
----
-
-## Action Items
-
-- Justin Caughlan: ~~Confirm with Venkat by end of day 06/15/2026 whether the UI can revert to displaying the approved output.~~ Resolved: Justin confirmed the tool will be fully disabled via UI feature flag until PA2 is approved.
-- Justin Caughlan / Satish / Jaya: Submit PA2 for the combined answer change, building on the PA1 narrative with updated methodology, flow diagram, and performance results. Target: 06/18/2026.
-- Justin Caughlan: Submit a change EMA for the pilot to document the combined answer change in Archer. May Tran available to assist. Target: 06/18/2026.
-- Jaya / Satish: Share GitLab repository access with Validation when available. In the interim, share code via OneDrive or another file-sharing method. Target: 06/18/2026.
-- Madhavi Ashili: Report the unapproved change to MRC. Commentary will reflect whether the business line rolled back the change. Target: 06/18/2026.
-- Jordan Low / Jinjun Tong: Expedite PA2 review upon receipt, targeting approximately two weeks from submission. Scope limited to the combined answer change (one additional LLM call).
-
-## Items Deferred to Follow-Up
-
-- Broader discussion on controls and standards for managing changes during pilot, including educating first line on POC versus pilot distinctions and when to engage MRM. Madhavi indicated this is a cross-model governance topic.
-- Full production timeline assessment pending PA2 completion and rollback decision.
+Thanks,
+Jordan
