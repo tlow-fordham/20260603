@@ -1,148 +1,45 @@
-# Model-7468 GenAI Selling Points for CBB — Weekly Early Engagement Meeting Minutes
+To: Mangalagiri, Jayalakshmi
+Cc: Caughlan, Justin; Mathews, Sherin M; Simhadri, Satish K; Wu, Xinyu; Xu, Zhiguang; Hormese, Tessa; Tong, Jinjun; Maniath, Patty; Ashili, Madhavi; Tran, May
+Subject: RE: Model-7306 PayView Provisional Approval Request - PA2 Draft
 
-**Date:** 06/16/2026
-**Model:** Model-7468 GenAI Selling Points for CBB
-**Meeting Type:** Weekly Early Engagement
-**Distribution:** Model Owner, Business Line, Model Risk Officer, Model Risk Governance, Validation Team
+Hi Jaya,
 
----
+Thank you for submitting the PA2 draft and the updated architecture diagram. We appreciate the quick turnaround given the timeline discussed on 06/15. We have completed an initial review and have comments to share.
 
-## Attendees
+At a high level, the form is a good starting point. It carries over the bulk of the PA1 narrative, which is appropriate since the scope of this request is the combined answer change, and the new content (the combined answer methodology, the synthesis prompt, and the updated flow chart) gives us what we need to begin orienting on the change. Tessa has also added comments in the document from her pass.
 
-**Validation Team (MRM AI COE):**
-- Jordan Low (Project Lead)
-- Jinjun Tong
-- Aditi Pandey
-- Mehdi Mafi
+There are a few areas we would like to align on before we can begin the PA2 review in earnest. A handful of dates and decision fields still reflect the PA1 submission rather than this request. Section 5 still carries the PA1 recommendation to consolidate the four candidate answers into a single synthesized response as a future consideration under "Before Full Production," when that is in fact the change this PA2 is being submitted to cover, so that language should be updated to reflect the current state. The milestone schedule, also in Section 5, needs another look: the documentation dates have passed, and the 08/23/2026 dates carried over from the SPV should be verified against the revised pilot start and the PA2 step now sitting ahead of the IV. None of these are blockers; they are mostly cleanup and sequencing so the form reflects where we actually are.
 
-**Model Owner / Model Development:**
-- Bhavya Reddy (Model Owner / Product Manager)
-- Carl Huang (Model Developer)
-- Arunkumar Ramalingam (Model User)
+We have captured the detailed comments in the document and will return the marked-up version. Given the size of this distribution, I will follow up with you and Justin directly to walk through the comments and align on the path and timing for the PA2, and we can bring the broader group back in once we have a clear plan.
+
+Thanks again for the work on this.
+
+Best,
+Jordan
 
 ---
 
-## API Transactions Table Review
+## Internal Notes (not for external distribution)
 
-Bhavya confirmed that both exports (API transactions and feedback) were sent earlier in the day. The API transactions table contains 929 rows representing the full pilot usage to date. The request body includes customer profile information (LPID, NAICS, revenue, number of employees, products enrolled), and the response body includes the recommended products and selling point content along with error indicators and latency metrics.
+### Feedback to give Jaya/Justin on the call
 
-MD clarified that the API transactions table represents the complete system activity and serves as the single source of truth. No interactions occur outside of this table. The feedback data is also captured here; the separate feedback table is a convenience view for reporting purposes.
+- The PA2 form is largely carried over from PA1, which is expected since the scope is the combined answer change. The new content (Combined Answer paragraph, system prompt, updated flow chart) is a good start, but the form needs cleanup before it can support a PA2 review.
+- The milestone dates for IV documentation (MDD, Monitoring Plan, Implementation Framework all due 06/15) have passed. The MDD received is approximately 50-60% complete with Section 7.1 as the major gap, and the Monitoring Plan is mostly TBDs. These dates need to be revised in the PA2 form to reflect realistic delivery targets.
+- The correctness methodology question (separate email to Justin) needs to be resolved before the PA2 performance narrative can be finalized. Validation's count is 32/44 = 72.7% on the prior grading. The updated grading (93.5%) was achieved by reclassifying 13 got-answer responses to N/A.
+- We still need the pairwise comparison (SME grades on both the 4-answer and combined answer output for the same queries) to assess whether the combined answer is performing comparably to the approved output.
 
-Jinjun asked whether there is a column distinguishing cached responses from real-time generated responses. MD confirmed that no such column exists because all responses are currently pre-generated and served from cache. Real-time LLM generation is not used due to latency constraints (a single LLM call takes approximately 30 seconds, which exceeds acceptable response times for a live UI). Latency in the table reflects API processing time only (rule evaluation, product matching), not LLM generation time. Rows with no recommendation typically show minimal latency because no further processing is required.
+### Comments to add to the PA2 document
 
-MD stated that real-time LLM generation will not be part of the system design even in future iterations. The team's experience from the pilot confirmed that users cannot wait for LLM response times, and the design will remain cache-based.
-
-Jinjun noted that the "no suitable recommendation" error message in some rows indicates the customer profile did not match any rule-based recommendation criteria. MD confirmed this: not every customer profile will receive a recommendation.
-
-Jinjun confirmed he is satisfied with the API transactions table for now and will provide further feedback after a deeper review.
-
----
-
-## Automated Selling Point Fetch Verification
-
-Jinjun raised the question of how the model owner can verify at scale whether the correct selling point is being fetched for each customer profile. With approximately 1,000 pilot transactions, manual SME review of every interaction is not feasible. He asked whether the team has an automated evaluation that confirms the fetched selling point matches the expected cached entry.
-
-MD explained that the system operates as a two-step process: first, a rules-based recommendation layer evaluates the customer profile and determines which product to recommend; second, the system retrieves the corresponding pre-generated selling point from cache, but only when certain products (Talech/Elavon products) are recommended. Selling points are not directly mapped to customer profiles; they are mapped to recommended products. The recommendation drives which selling point is fetched.
-
-Carl Huang confirmed that automated functional tests exist for the recommendation layer. These tests are hard-coded against expected outcomes and run for every UAT release. However, these tests check the recommendation correctness only, not the selling point content. The selling point endpoint is checked structurally (valid response format) but not for content correctness.
-
-Jinjun explained the rationale for an automated check: if an automated test confirms the correct selling point is fetched for all interactions, SME review is only needed for the pre-generated selling points themselves (the 172 cached entries), not for every production interaction. If the automated test shows 100 percent correctness, SME does not need to sample production interactions.
-
-Carl noted that running automated tests against production is not advisable because test traffic would be recorded in the API transactions table and would consume rate-limited capacity. Any such testing would need to use UAT. He also noted that building a selling-point-fetch verification would follow the same code path as the production system (query customer context, evaluate rules, fetch selling point, compare), so the test would essentially re-execute production logic.
-
-Jordan noted that since the system follows a deterministic code path, the same input produces the same output. The group agreed to add the item to the tracker for the development team to evaluate feasibility.
-
----
-
-## Feedback Table Review
-
-Jordan walked through observations from the feedback export (96 rows).
-
-**"Other reason" free-text not captured.** All 8 rows with "Other reason" contain only the label, with no additional free-form comment. The Salesforce UI has a text box for "Other reason," but the text is not transmitted to the recommender system. Carl Huang confirmed this is a known limitation. Bhavya noted that Arunkumar had indicated BCRM only recently launched the feedback integration (approximately one week prior), which may explain why the free-text field is not yet being passed through. Bhavya agreed to coordinate with BCRM to enable transmission of the free-text input.
-
-**Object ID mapping and filtering.** Jordan noted that one object ID (36806890) accounts for 69 of the 96 feedback rows and asked what it represents. Carl initially noted the object ID may originate from the data pipeline, but after checking the database during the meeting, confirmed that object ID corresponds to the feedback target ID, which maps to the recommendation ID. Three object IDs were identified as money movement (static, non-LLM) recommendations. Carl provided the full IDs in the meeting chat:
-- 241ab87a-6c1d-4188-94a9-cd88ea36bd90
-- 36806890-7ea5-4ccf-a3f3-fd7d4921e264
-- 38c2282b-93ff-48fc-8375-f358b7432be1
-
-Jordan asked the group to filter out the three money movement object IDs. Excluding those leaves approximately 9 feedback rows tied to LLM-generated Talech/Elavon product recommendations. These are the rows relevant for monitoring selling point quality. Carl confirmed that the money movement recommendations use only static selling points and are not related to the LLM-generated content.
-
-Carl shared his screen and connected to the production database to show a breakdown of feedback by product and rejection reason. Bhavya noted that this type of reporting will be available in the BI dashboard once finalized.
-
-**Feedback scope.** Bhavya reiterated that all feedback is tied to the product recommendation, not the selling point text. The feedback mechanism captures whether the banker accepts or rejects the recommended product. The group discussed which feedback categories are most informative:
-- "Not interested at this time" and "not interested ever" reflect normal sales outcomes.
-- "Not an applicable product" may indicate a recommendation quality issue.
-- "Other reason" would be the most likely signal for selling-point-related concerns; currently no entries exist in this category.
-- "Unresponsive" may indicate a technical issue.
-
----
-
-## Datadog Log Export
-
-Jordan asked whether Bhavya has access to Datadog. Bhavya indicated she already has Datadog access for other projects. Carl noted that Datadog logs are raw system logs and would not be analytically useful, but alerts trigger ServiceNow tickets visible to the broader team.
-
-Jordan asked for a small production log export sample, not for real-time monitoring but to demonstrate audit readiness (ability to provide logs within 48 hours if requested by auditors). Carl exported a Datadog log file during the meeting and shared it in the chat (extract-2026-06-16T17_52_35.880Z.csv). Carl noted that Datadog limits exports to 50,000 entries; the past 15 days contain over 300,000 log entries, so the export is a partial sample.
-
-Jordan asked about the Datadog retention policy. Carl responded in the chat that the retention policy is not set by the model team and he is unsure of the exact duration. However, Carl noted that the retention policy is not the binding constraint: the application is required to redeploy at least once every 90 days (and more frequently in practice due to security remediations), and old logs are purged from Datadog upon redeployment. This means effective log retention in Datadog is limited to the interval between deployments, not the enterprise retention policy.
-
----
-
-## SME Review Status
-
-Bhavya confirmed the SME review is on track. The reviewer is the main product lead for Talech products and is reviewing a spreadsheet containing the product ID, title, and selling point content for each cached entry, marking each row as pass or fail. Bhavya followed up with the reviewer the morning of the meeting. Target delivery: end of this week (06/18, as 06/19 is a holiday).
-
----
-
-## MDD Corrections
-
-Aditi confirmed that the dynamic-to-static corrections have been made across most of the MDD. A few residual references to "dynamic" remain but are in the context of prompt templates (parameter substitution), not the model classification. Jordan noted that prompt templates with inserted retrieval context are typically called static. Bhavya agreed to update the remaining references.
-
-Aditi confirmed that the LLM evaluator being GPT-4o has been confirmed verbally but is not yet documented in the MDD. Bhavya agreed to add this.
-
-Aditi will paste the remaining high-priority MDD gaps into the shared chat so Bhavya can address them in one pass.
-
-Mehdi began presenting a gap analysis deck, but Jordan redirected, noting that the items had already been addressed through the meeting discussion and recent data deliveries. The group agreed to focus on the outstanding high-priority items communicated through the tracker and chat rather than reviewing the full deck.
-
----
-
-## Monitoring Thresholds
-
-Jordan asked whether the model owner has a target or baseline for positive versus negative feedback ratios, and whether there are defined monitoring thresholds (green, orange, red) for ongoing monitoring.
-
-Bhavya noted the difficulty: all feedback is tied to product recommendations, not selling point quality. MD added that the primary purpose of collecting feedback is to understand customer interest and improve sales strategy rather than to evaluate selling point correctness.
-
-Jordan suggested that "Other reason" is the most likely proxy for selling-point-related feedback and that "not an applicable product" is the most informative signal for recommendation quality. Currently, no "Other reason" entries contain content, so the signal is clean.
-
-Bhavya noted that a BI dashboard is being finalized by the BI team and should be available within one to two weeks. The dashboard will track rejections, conversions, and feedback distributions. The group did not set specific thresholds during this meeting.
-
----
-
-## Streamline Workshop Invitation
-
-Jinjun informed the group that a workshop on streamlined validation requirements for low-risk GenAI models is scheduled for 06/17. He recommended that the model owner and development team attend, noting that some requirements in the current GenAI template may not apply to low-risk models. Jinjun confirmed that MRM is taking a risk-based approach: low-risk models will have a lighter validation lifecycle, while medium and high-risk models will continue to follow full requirements. The model is classified as low risk.
-
-Bhavya expressed appreciation and indicated the team would attend.
-
-Jordan confirmed the model remains on track for the production date.
-
----
-
-## Items Deferred to Next Session or Email
-
-- Deeper review of API transactions table (Validation to review full export and provide feedback).
-- Automated selling point fetch verification feasibility (added to tracker for dev team evaluation).
-- Monitoring threshold definitions for the monitoring plan.
-- BCRM coordination on transmitting "Other reason" free-text feedback.
-
----
-
-## Action Items
-
-- Aditi to paste remaining high-priority MDD gaps into the shared chat for Bhavya to address. Target: 06/16.
-- Bhavya to update MDD: document GPT-4o as the judge LLM, update remaining dynamic-to-static references in prompt template context.
-- Bhavya to deliver SME review spreadsheet (pass/fail by row). Target: 06/18.
-- Carl to export a Datadog production log sample and send to Validation team. **Delivered during meeting** (extract-2026-06-16T17_52_35.880Z.csv, partial export of 50K entries out of 300K+).
-- Bhavya to coordinate with BCRM on transmitting "Other reason" free-text input to Synapse.
-- Jinjun to add automated selling-point-fetch verification request to the tracker for dev team evaluation.
-- Bhavya and team to attend streamline workshop on 06/17.
-- Bhavya's BI team to finalize monitoring dashboard. Target: 1-2 weeks.
+| # | Section | Comment | Status |
+|---|---|---|---|
+| 1 | Model and Requester Information: Request Submission Date | PA1 submission date (01/08/2026) still shown. Update to PA2 submission date. | Already in doc |
+| 2 | MRG Decision: Decision Date | PA1 decision date (01/08/2026) still shown. Update to PA2 decision date. | Already in doc |
+| 3 | Model and Requester Information: MRO Authorization Date | PA1 MRO authorization date (1/8/2026) still shown. Update to PA2 date. | To add |
+| 4 | Section 1: Model 6788 reference | Confirm same LLM (GPT-4o) is used for the combined answer synthesis step as for the individual answer generation. | Already in doc |
+| 5 | Section 2: Pilot dates | The form states 07/06/2026 - 11/01/2026 without explaining the change from the SPV-revised period of 05/04/2026 - 11/01/2026. Make the date change self-contained. Proposed language: "The provisional approval granted under PA1 covered a pilot period of 05/04/2026 through 11/01/2026, as revised by the SPV Outcome Form dated 05/19/2026. During that period, the combined answer output (a single LLM-synthesized response replacing the four individual answers) was deployed to pilot users and subsequently identified by MRM as a material change not covered by the existing approval. The business line disabled the tool via UI feature flag on 06/15/2026 pending this request. This provisional approval covers a revised pilot period of 07/06/2026 through 11/01/2026, reflecting resumption of the pilot upon PA2 approval. The end date remains 11/01/2026." | To add |
+| 6 | Section 6: Change EMA | MO needs to create a Change EMA to document the combined answer change and update the EMA section accordingly. Agreed as action item on 06/15 meeting. | Already in doc |
+| 7 | Section 5: "Before Full Production" | Still contains PA1 language recommending "consolidating the four candidate answers into a single synthesized response." This change has already been implemented and is the subject of this PA2. Update to reflect current state. | To add |
+| 8 | Section 4: Guardrail claim | The form states "the Model only provides an answer when it is confident of its containment and accuracy." Pilot data shows two queries with zero retrieved context and zero resolved links that produced substantive answers. This claim needs to be qualified or the VRL behavior clarified. | To add |
+| 9 | Section 5: Documentation due dates | MDD, Monitoring Plan, and Implementation Framework were all dated due 06/15/2026 (the SPV Appendix had 06/14/2026). The MDD received is approximately 50-60% complete (Section 7.1 is the major gap) and the Monitoring Plan is mostly TBDs. Revise these dates to reflect realistic delivery targets, since the IV review clock does not start until complete documentation is received. | To add |
+| 10 | Section 5: Validation conclusion and pilot results dates (resolves Tessa's "check SPV dates" comment) | The 08/23/2026 dates originated in the SPV Outcome Form Appendix (anticipated validation conclusion, 8-10 weeks after expected documentation receipt of ~06/14/2026). Please verify these dates are still accurate, since the documentation is not yet complete and a PA2 for the combined answer is now required first. Also please confirm what "Final Pilot testing results - 08/23/2026" refers to relative to the 11/01/2026 pilot end date (e.g., interim results from usage to date versus full pilot results), and reconcile the fact that both "Final Pilot testing results" and "Model validation to conclude" carry the same 08/23/2026 date. | To add |
+| 11 | Section 6: MRG/Validation review | Removed content from Validation review section; BL does not fill these fields. | Already in doc |
