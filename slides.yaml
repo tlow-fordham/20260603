@@ -11,7 +11,7 @@ Hi all,
 
 Ahead of Thursday's session, here is a proposed agenda so we can make the most of the 30 minutes. The goal is to align on the validation path for the combined answer change and the Initial Validation, how correctness is being measured, and a realistic documentation timeline. Happy to adjust if there are other items you would like to cover.
 
-## 1. Validation path, sequence, and PA2 form (7 min)
+## 1. Validation path, sequence, and PA2 form (5 min)
 
 The combined answer change is being reviewed first through a second Provisional Approval (PA2), scoped to the added summarization step. The Initial Validation then proceeds once the model documentation is complete. The aim of this item is to confirm that shared sequence and the documentation standard the IV will assess against (the GenAI and Agentic AI Model Development Template), so expectations are aligned on both sides.
 
@@ -19,15 +19,16 @@ The combined answer change is being reviewed first through a second Provisional 
 2. Confirm the standard the IV assesses against and that PA-level requirements are lighter than IV-level requirements.
 3. PA2 form gaps: Validation has returned comments on the draft form (stale PA1 dates and decision fields, the Section 5 line that still describes the combined answer as a future step, the milestone dates, and the Change EMA). Confirm the MO will incorporate these so the PA2 can proceed.
 
-## 2. Correctness methodology and evaluation data (11 min)
+## 2. Correctness methodology and model change impact (15 min)
 
-Validation has reviewed the pilot grading and would like to align on how correctness is classified going forward, so the metric is consistent through PA2 and IV. Validation's review of the prior grading puts correctness at 72.7%, which clears the 67% PA threshold; this is a methodology alignment rather than a pass or fail question at this stage.
+Validation has reviewed the pilot grading and would like to align on how correctness is classified and on the approach for measuring the impact of the combined answer change. Validation's review of the prior grading puts correctness at 72.7%, which clears the 67% PA threshold; this is a methodology alignment rather than a pass or fail question at this stage.
 
 1. Align on the principle that a response counts as N/A only when the model returns no answer, and that a wrong answer is classified as Incorrect with the root cause noted alongside it.
-2. Review the reclassified queries and the side-by-side grading of the four-answer and combined-answer outputs (the pairwise comparison) with the SME in a separate working session. Action: set a date for that session.
-3. Evaluation data integrity: two queries in the dataset initially showed no source links or retrieved context, which on re-pull turned out to be present but dropped from the export. Because the SME grades correctness from this data, and Validation assesses whether answers are grounded in the knowledge base using the link and context fields, we would like to understand what happened on the backend for those two queries and whether other rows could be affected. Action: re-pull the full dataset with complete link and context fields so the SME grading and the grounding assessment rest on reliable data.
+2. Walk through the reclassified queries in this session to confirm the basis for each SME correctness change.
+3. Following up on our requests of 06/10 (to add the four individual answers to the dataset) and 06/11 (to grade the approved four-answer output): to measure the impact of the combined answer change, the MD provides the original four-answer outputs and the SME grades those for correctness as well, so the four-answer and combined-answer correctness can be tabulated side by side. The SME performs the grading; Validation independently assesses the tabulated comparison rather than grading the outputs itself. Please confirm a date for this.
+4. Evaluation data integrity: two queries in the dataset initially showed no source links or retrieved context, which on re-pull turned out to be present but dropped from the export. Because the SME grades correctness from this data, and Validation assesses whether answers are grounded in the knowledge base using the link and context fields, we would like to understand what happened on the backend for those two queries and whether other rows could be affected. Action: re-pull the full dataset with complete link and context fields so the SME grading and the grounding assessment rest on reliable data.
 
-## 3. IV documentation quality, performance results, and timeline (12 min)
+## 3. IV documentation quality, performance results, and timeline (10 min)
 
 The Model Development Document, Monitoring Plan, and Implementation Framework were targeted for 06/15. To begin the Initial Validation, Validation needs the documentation substantially complete and at IV depth, with the performance/outcome analysis and the development data and knowledge base coverage being the key areas.
 
@@ -47,4 +48,5 @@ Jordan
 - Evidence supporting the IV readiness discussion (topic 3): the draft MDD is approximately 50-60% complete; Section 7.1 Outcome Analysis is not yet at IV depth; the model identity is ambiguous (MDD still references Llama2-7B and Mixtral with a contradictory selection table, while the pilot uses GPT-4o); Section 5 development data and KB coverage are thin. See Tessa's MDD review comments.
 - Pre-sync with Xinyu before 1:30 on the IV timeline, since topics 1 and 3 turn on her view of the review duration.
 - Topics added at Zhiguang's request (secondary reviewer): PA2 form gaps (topic 1, q3), document quality and performance results discussion (topic 3, q1), and the no-changes-after-kickoff timeline rule (topic 3, q2). The model-frozen-at-kickoff point lands well here given the combined answer was changed mid-pilot; keep the framing forward-looking rather than retrospective.
-- Agenda is now full for 30 minutes (7/11/12). If the room runs short, hold topic 1 q3 (PA2 form gaps are already captured in document comments) and topic 2 q2 (the healthcare walkthrough is a separate working session anyway).
+- Agenda runs the full 30 minutes (5/15/10), with topic 2 (the reclassification review and change-impact approach) as the centerpiece. If the room runs short, hold topic 1 q3 (PA2 form gaps are already captured in document comments).
+- Independence note for topic 2: the SME grades both the four-answer and combined-answer outputs; Validation assesses the tabulated comparison and does not grade the outputs. The reclassification review happens live in this session, not in a Validation-led working session.
