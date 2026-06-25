@@ -1,71 +1,53 @@
-# Meeting Minutes - Model-7306 PayVIEW - GTM and MMP ChatBot
-## Artemis Validation Standards and PA2 Alignment
+## Executive Summary
 
-**Date:** 06/18/2026
-**Format:** Microsoft Teams
+This report documents Model Risk Management (MRM) Validation's second Provisional Approval (PA2) review of Model-7306, PayVIEW - GTM and MMP ChatBot. It covers one change to the model: the Combined Answer. Under the original Provisional Approval, signed 01/30/2026, the model presented up to four separate candidate answers to the agent. The model now adds a generative synthesis step that merges those candidate answers into a single combined answer with inline source citations.
 
-**Attendees:**
-- Model Owner: Justin Caughlan
-- Model Development: Jayalakshmi Mangalagiri, Satish Simhadri
-- MRM Validation: Jordan Low
-- MRG: May Tran
-- MRO: Lisa Raymond (new Model Risk Officer for the model)
+The combined answer was deployed during the pilot before it received the separate approval required by the Special Purpose Validation Outcome Form, signed 05/19/2026. Model Risk Governance (MRG) determined the change material, and the business line disabled the model through a backend feature flag pending this review. This PA2 is scoped to the combined answer change and to continued, expanded pilot use.
 
----
+Validation reviewed the updated pilot performance for the combined answer output. Correctness is 72.7 percent on the deduplicated answered queries, which clears the 67 percent pilot threshold. Validation has no concerns that would prevent continued pilot use prior to a full validation and recommends an Approved with Restriction outcome through 11/01/2026. The comprehensive assessment will follow in the Initial Validation.
 
-## Correctness methodology
+## Model Purpose and Usage
 
-- The model owner and Validation aligned on how query responses are graded for correctness, so that the approach is understood and applied consistently. The goal is to measure the model's performance accurately, not to reach a particular threshold.
-- A response is graded not applicable when the model does not provide a specific answer, for example a blank response, a zero, a statement that it does not know, or a direction to check the links. Not applicable responses are excluded from both the numerator and the denominator and are neither correct nor incorrect.
-- A response is graded correct or incorrect only when the model provides a specific answer. For incorrect responses, the root cause is documented, for example incorrect links, a missing knowledge base article, or an error within an existing article.
-- Where the model returns a helpful answer that is grounded in the knowledge base and contains no material errors, the response is graded correct, even if the underlying question is broad or only partially within the intended scope. The example discussed was a request for product recommendations for a healthcare client: the model does not make client specific recommendations, but it correctly returns the documented ideal client profile information, which is graded correct.
-- Validation's independent evaluation of the combined answer output is 72.7 percent correct, which clears the 67 percent threshold and does not block expansion of the pilot population.
-- The parties agreed to document the methodology so it is applied consistently by current and future subject matter experts.
+The model assists sales agents in answering Global Treasury Management (GTM) and Money Movement Platform (MMP) questions using the bank's knowledge base articles. It is employee facing, and agents review the model's output before relaying information to a customer. The model purpose and usage are unchanged from the original Provisional Approval; refer to the PA1 report for the full description.
 
-## Two queries with missing links and context
+## Model Theory and Construction
 
-- Two queries had previously shown no source links or retrieved context and could not be scored. The model development team traced this to an error in the spreadsheet used to compile the links rather than to the model. According to the team, the combined answer link field did not consolidate the links across the candidate answers, and for those rows the links and context were left empty, which prevented the automated metrics from computing.
-- The model development team re-gathered the links and context and re-ran the automated evaluation to recompute the metrics. The team stated that the agent would have seen the links in the live tool and that the gap was in the evaluation spreadsheet only. Validation will confirm complete capture of the link and context fields across the dataset.
-- One of these two queries is the healthcare product recommendation example. Consistent with the methodology above, it is graded correct, which reverts an earlier not applicable.
+The retrieval augmented generation framework, embedding models, cache mechanism, gateway access, and foundation large language model are unchanged from the original Provisional Approval and are described in the PA1 report.
 
-## Pairwise comparison of the combined answer and the four answer output
+The change under this review is the addition of a generative synthesis step. The up-to-four grounded candidate answers produced by the approved process are passed to the foundation large language model (GPT-4o) with an instruction to merge them into a single combined answer, consolidating duplicative content and preserving inline source citations. When only one candidate answer is available, the model formats it directly without synthesis. When no answer can be grounded, the model indicates that it could not find an answer and prompts the agent to verify manually. A backend, code level toggle controls whether the combined answer or the four separate answers are displayed; the toggle is not user facing.
 
-- To support the change, the four individual candidate answers will be graded for correctness alongside the combined answer so the two versions can be compared on the same queries.
-- The business line's position is that the combined answer's value is a single, clearer, more digestible response that is easier for the agent to use. Validation's position is that it is prudent to confirm the combined answer remains accurate and does not, for example, merge terms from two different candidate answers that concern different products or subjects with opposing content. The purpose of the comparison is therefore to confirm that the combined answer preserves the same information as the approved four answer output without introducing errors when the answers are merged. The comparison is not intended to determine which format is preferable.
-- The model development team will join the four answer outputs and the combined answer outputs into a single sheet so the subject matter expert can grade both efficiently. For most queries only one candidate answer is relevant, so the additional grading is expected to be quick. A sampling approach will be used if the data volume grows.
+## Development Data
 
-## Knowledge base links, the article corpus, and the indexing code
+The development data and the retrieval corpus are unchanged from the original Provisional Approval; refer to the PA1 report. The combined answer change operates on the candidate answers already produced and does not alter the data sources or retrieval. [TBD: Confirm the knowledge base article count for the pilot corpus and reconcile against the prior 800 article pilot limit.]
 
-- Validation noted that some knowledge base links return an access error or no longer exist in the new SharePoint environment. The business line will communicate knowledge base article changes to the team, as there is no automated mechanism for this today.
-- The model development team will share the indexed article file, including the article text and the article count, and the code that generates that file, including the keyword extraction step.
+## Model Performance
 
-## Validation path and the PA2 form
+Validation reviewed the pilot performance data for the combined answer output. The pilot data comprises 72 deduplicated queries, of which 44 received a substantive answer and 28 returned no answer. Correctness is assessed on the 44 answered queries.
 
-- This review is the second Provisional Approval and is scoped to the change from the four answer output to the combined answer. The Initial Validation will follow.
-- The model development team will update the PA2 form in two areas: the dates, and the Section 5 language that described the combined answer as a future enhancement, which will be reworded to reflect that it is the current change under review.
-- Form dates: the second pilot start date is 07/06/2026 and the end date remains 11/01/2026. A line will be added noting that this is the second pilot and that the first pilot started 05/04/2026. The MRO authorization date will be completed with the new MRO. The MRG decision date will be provided by MRG at review and is left blank for now.
-- Form routing is from the model owner to the MRO and then to MRG.
+Based on the prior subject matter expert grading, 32 of the 44 answered queries were graded correct, a correctness rate of 72.7 percent. Validation conducted an independent review and reached a consistent result, classifying 29 correct, 11 incorrect, and 4 as requiring clarification, which is 72.5 percent of the 40 classifiable queries. Both results clear the 67 percent threshold.
 
-## MRO transition
+The model owner separately reported approximately 93.5 percent, reached by reclassifying 13 answered responses to not applicable and excluding them from the denominator. Validation's position is that a response that reaches the user and gives incorrect information is incorrect regardless of the underlying cause; the cause should be documented alongside the grade but does not remove the response from the denominator. Validation relies on the 72.7 percent rate, with the denominator stated above.
 
-- Lisa Raymond is the new Model Risk Officer for the model. The model development team will work with her to complete the MRO section of the form.
-- It was clarified that this is a new Provisional Approval required because of a material model change, the combined answer, rather than an extension or a response to a pilot issue.
+Two items were resolved during the review. Two queries that initially showed no source links or context were confirmed by the model development team to have retrieved relevant content that had been dropped from the data export, so the responses were grounded. A set of healthcare related queries that had been reclassified to not applicable are graded correct, consistent with the agreed methodology that a helpful answer grounded in the knowledge base is correct.
 
----
+To support the change, a pairwise comparison grading the combined answer against the approved four answer output on the same queries is in progress, to confirm that the synthesis step preserves the information without introducing errors when the answers are merged. [TBD: Insert the pairwise comparison results once received.] Ground truth reference answers to support the automated correctness metric are [TBD: pending from the model development team]; these are needed for the Initial Validation and are not a precondition for this provisional approval.
 
-## Action Items
+Validation has no concerns with the combined answer performance for continued pilot use.
 
-- Model Development (Jaya): share the indexed article file, including the article text and the article count. Target 06/18/2026.
-- Model Development (Jaya): share the code that generates the indexed article file, including the keyword extraction step. Target 06/18/2026.
-- Model Development (Jaya): provide the updated PA2 form with the reworded Section 5 and the date updates. Target 06/18/2026.
-- Model Development (Jaya): merge the four answer outputs and the combined answer outputs into a single sheet for subject matter expert grading. Target near term, ahead of the pairwise grading.
-- Model Owner (Justin): grade the four answer outputs alongside the combined answers for the pairwise comparison, and apply the agreed methodology to the affected queries, including reverting the healthcare query to correct. Target after the merged sheet is provided.
-- Model Owner (Justin): submit the Change EMA together with the PA2 submission. Target 06/18/2026.
-- Model Owner (Justin) and MRO (Lisa Raymond): complete the MRO authorization date and the MRO section of the form.
-- MRM Validation: review the next version of the PA2 form and the supporting documents on receipt.
-- Business line: communicate knowledge base article changes, including removed or restricted links, to the team going forward.
+## Risk Mitigation
 
-## Items Deferred to Next Session or Email
+The risk mitigations from the original Provisional Approval remain in effect and are unchanged: employee facing use with agent review before any customer relay, a limited group of trained and experienced agents, a curated set of pre approved knowledge base articles that contain no customer data with source links preserved, access through the bank's GenAI gateway providing authentication, logging, and content filtering, profanity filtering, and prompt injection controls. The combined answer change adds a synthesis step downstream of the already grounded candidate answers and does not alter these controls. The model's grounding control is the verbal reinforcement step applied on the foundation model. [TBD: Confirm from the application code whether the verbal reinforcement step suppresses an answer or only annotates it.]
 
-- The sampling approach for the pairwise grading once the data volume grows.
-- The Initial Validation and its supporting documentation review, which follow the PA2.
+The following early engagement observations are provided for the model owner's consideration and are not formal validation conclusions. The combined answer was deployed before the required approval, which the business line has remediated by disabling the model pending this review. Some pilot knowledge base links return access errors or no longer exist, and the business line will communicate knowledge base article changes going forward. The labeling that marks a cached answer as reviewed by subject matter experts is applied automatically when a query is promoted to the cache rather than by an actual review. [TBD: Confirm the cached-label observation with the model owner before finalizing.]
+
+## Risk Management Groups Approvals
+
+The Fair and Responsible Banking review was completed on 01/15/2026 with a Moderate rating and a determination to accept the pilot; this is unchanged. [TBD: Confirm the Change EMA number for the combined answer change once submitted; the prior record is EMA #65941440.] [TBD: Confirm whether a PRISM record is required or changes for this change and the new EMA; do not assume it is unchanged.] [TBD: Confirm the MRG model risk rating for the model.]
+
+## Conclusion
+
+Validation reviewed the combined answer change and the updated pilot performance and held discussions with the model owner and the model development team. Based on Validation's preliminary review, the combined answer output performs within the pilot correctness threshold, and the controls from the original provisional approval remain in effect. Validation identified no immediate concerns that would prevent continued pilot use prior to completion of a full validation.
+
+Validation recommends an Approved with Restriction outcome, permitting pilot use of the model with the combined answer output from 07/06/2026 through 11/01/2026, with a restriction effective date of 11/01/2026. The pilot is restricted to up to 28 experienced agents initially, and up to 148 agents contingent on a correctness rate of 67 percent or higher, limited to Global Treasury Management and Money Movement Platform queries and to the pre approved knowledge base article set. No further changes to the model framework, output, or scope are permitted during the pilot; any subsequent change requires a new Provisional Approval or submission for Initial Validation prior to deployment.
+
+The next validation activity is the Initial Validation. [TBD: Confirm the Initial Validation documentation delivery date and the resulting timeline.]
