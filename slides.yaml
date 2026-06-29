@@ -1,3 +1,4 @@
+
 ## Combined answer generation and the reflexion step
 
 - The model development team confirmed Validation's reading of the code. The reflexion step grades each of the four per-article answers as pass or fail and generates a revised answer for each. The combined answer is then synthesized by the foundation model from the per-article answers together with their reflexion notes.
@@ -12,8 +13,8 @@
 ## Failed-article content in the combined answer
 
 - Validation showed examples where the combined answer presented content although the per-article answers did not find an answer: the VantagePoint query, where all four answers were "I could not find," and a healthcare query, where only one of four answered yet the combined answer added terms such as EOB, EOBL, and ERA that were not in that answer.
-- On screen, Validation showed that in `concatenate_final_answers` the notes appended to the answer are collected only from articles whose answer failed, so failed-article content can flow into the combined answer in both the all-fail and partial-fail cases.
-- The model development team's stated design is that an "I could not find" answer is excluded from the combined answer and that no answer is produced when all four fail. Because the examples contradict that design, the observed behavior is inconsistent with the intended design. The team agreed to verify and correct it.
+- On screen, Validation showed that in `concatenate_final_answers` the notes are collected only from articles whose answer failed (the else branch, lines 1757 to 1769) and are appended to the combined answer input in both the no-answer and the partial-answer paths (lines 1771 to 1789), so failed-article content can flow into the combined answer in both the all-fail and partial-fail cases.
+- The model development team's stated design is that an "I could not find" answer is excluded from the combined answer and that no answer is produced when all four fail. Because the examples contradict that design, the observed behavior is inconsistent with the intended design. The team agreed to verify the cause in the code and to correct the behavior so that failed-article content is excluded from the combined answer, consistent with their stated design. This is a correction to the implementation, distinct from the separate documentation update noted above.
 
 ## Citations
 
@@ -22,7 +23,7 @@
 ## Provenance and traceability
 
 - Validation asked that the input to the combined answer, meaning the per-article answers and their notes, be visible with clear delimiters identifying each article, so the combined answer can be traced to its inputs. On screen, Validation noted that `get_combined_Answer` logs only the answer count before the combining call.
-- The model development team clarified that the "combined context" column is used only for the automated evaluation and is not the input to the combined answer. The team will add the reflexion notes as a column, separate the inputs with delimiters, and look at including the source links inline.
+- The model development team clarified that the "combined context" column is used only for the automated evaluation and is not the input to the combined answer. The team will add the reflexion notes for each of the four per-article answers as columns, separate the inputs with delimiters identifying the article, and look at including the source links inline.
 
 ## SME testing
 
@@ -40,7 +41,7 @@
 
 - Model Development (Jaya): ensure failed-article content does not reach the combined answer, and verify against the examples shown. Target next update.
 - Model Development (Jaya): correct the citation display so source links are visible in the evaluation formats, and confirm whether links are being dropped by the HTML parsing on special characters. Target next update.
-- Model Development (Jaya, Satish): add the reflexion notes as a column and separate the combined answer inputs with delimiters, in the logs and the evaluation data. Target 06/30/2026.
+- Model Development (Jaya, Satish): add the reflexion notes for each of the four per-article answers as columns and separate the combined answer inputs with delimiters identifying the article, in the logs and the evaluation data. Target 06/30/2026.
 - Model Development (Jaya): correct the source link capture so links are retained with the combined answer for the pilot when it resumes. Target before pilot restart.
 - Model Owner (Justin): deliver the finalized SME evaluation scoring both the four-answer and combined answer outputs. Target 06/30/2026.
 - MRM Validation: spot-check the no-answer and partial-fail cases, and set the revised PA2 completion and pilot start date from the SME delivery plus approximately two weeks.
