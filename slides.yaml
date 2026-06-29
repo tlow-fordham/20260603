@@ -1,23 +1,46 @@
-# Jordan Low
-917-378-3239 · jordan.low@usbank.com
+## Combined answer generation and the reflexion step
 
-June 27, 2026
+- The model development team confirmed Validation's reading of the code. The reflexion step grades each of the four per-article answers as pass or fail and generates a revised answer for each. The combined answer is then synthesized by the foundation model from the per-article answers together with their reflexion notes.
+- The model development team described the reflexion step as a sanitizer intended to remove unsupported claims and preserve valid content, so the user receives a single synthesized answer.
+- Validation walked through the relevant code on screen. The per-article answers and the reflexion notes are assembled in `concatenate_final_answers`; `get_combined_Answer` triggers the combining call when more than one source block is present; and `query_CombinedQA_BatchVLLM` produces the combined output.
 
-**Re: AI Platform Adoption & Enablement Lead (req 2026-0017932)**
+## Documentation and the PA2 form
 
-Dear Hiring Team,
+- Validation noted that the combined answer behavior differs from the original approval, where the reflexion step acted as a guardrail and no answer was shown when the score was not high enough. In the combined answer flow, the per-article "I could not find" messages are removed before synthesis, so the summarizer receives the reflexion-revised answers and their notes without the original confidence signal.
+- The model development team pointed to the PA2 form wording "answer along with notes" as covering the inclusion of the notes, and noted the notes are not displayed to the user. Validation asked that the documentation accurately describe the implemented mechanism.
 
-I am applying for the AI Platform Adoption & Enablement Lead role in the AI Enablement organization. I bring two skills this position needs in one person, hands-on AI/ML engineering and model-risk governance, and I apply them to a single goal: accelerating trustworthy enterprise generative AI (GenAI) adoption, helping teams build, deploy, and monitor AI that is measurable, reliable, and defensible.
+## Failed-article content in the combined answer
 
-As owner of AI Center of Excellence (AI CoE) initiative ID 1286 (MRM-AI Validation), I wrote the initial validation-automation codebase, delivered the GenAI Performance Evaluation training series, two enterprise sessions on the toolset (large-language-model (LLM) evaluators, topic modeling, and Giskard) in May 2025 ([Session 6: Performance Evaluation Use Cases](https://usbank.sharepoint.com/sites/ModelRiskManagement/AI_ML%20Center%20of%20Excellence/Trainings/Generative%20AI/Session%206%20Performance%20Evaluation%20Use%20Cases/Generative%20AI_%20Performance%20Evaluation%20Use%20Cases-20250515_100255-Meeting%20Recording.mp4?csf=1&web=1&e=Bh6R19), [Session 7: Performance Evaluation Code Demo](https://usbank.sharepoint.com/sites/ModelRiskManagement/AI_ML%20Center%20of%20Excellence/Trainings/Generative%20AI/Session%207%20Performance%20Evaluation%20Code%20Demo/Generative%20AI_%20Performance%20Evaluation%20Code%20Demo-20250529-Meeting%20Recording.mp4?csf=1&web=1&e=lburEh)), and now lead its productionization with the team into a standardized playbook and toolset, reusable components for topic modeling, synthetic-data generation, and LLM-as-judge evaluation, an agentic workflow (GitHub Copilot) that drafts validation reports and meeting minutes from the model inventory, and a DeepEval-backed agentic-AI evaluation framework now used on production agents, Conversational AI in IVRs (Dispute Claim Submission) and Conversational AI in IVR (Knowledgebase Integration). On the governance side, I co-authored the bank's GenAI validation standards, including the GenAI Model Development Template (which received positive Federal Reserve feedback that the bank "laid out good expectations for GenAI"), the Monitoring and Implementation/Testing templates, and the low- and ultra-low-risk streamline requirements, and I designed and delivered a four-month GenAI Immersion Program that trained analysts across the organization.
+- Validation showed examples where the combined answer presented content although the per-article answers did not find an answer: the VantagePoint query, where all four answers were "I could not find," and a healthcare query, where only one of four answered yet the combined answer added terms such as EOB, EOBL, and ERA that were not in that answer.
+- On screen, Validation showed that in `concatenate_final_answers` the notes appended to the answer are collected only from articles whose answer failed, so failed-article content can flow into the combined answer in both the all-fail and partial-fail cases.
+- The model development team's stated design is that an "I could not find" answer is excluded from the combined answer and that no answer is produced when all four fail. Because the examples contradict that design, the observed behavior is inconsistent with the intended design. The team agreed to verify and correct it.
 
-I also bring deep, hands-on familiarity with the modern agentic stack this role enables. Evaluating Conversational AI in IVRs (Dispute Claim Submission), a production voice-AI dispute agent, I worked across Amazon Connect / Q in Connect, Amazon Bedrock and AgentCore Gateway (Model Context Protocol), Claude Haiku, and Amazon Nova Sonic and Nova Pro, the same building blocks teams across the bank are adopting, which positions me to help other stakeholders stand up similar systems safely. I also validated the bank's first approved GenAI model and established the observability standard now reused across its production AI portfolio. Earlier, as Chief Information Officer of a machine-learning hedge fund, I built and ran a production AI/ML platform on Amazon Web Services and Azure with Apache Airflow, Docker, and continuous integration / continuous delivery, and I led a 20-person quantitative-research team at Credit Suisse Asset Management. I hold five MIT degrees and am a CFA charterholder.
+## Citations
 
-I already work alongside this team. I lead MRM's independent evaluation of the Lumenova Responsible AI platform (RAI for offline evaluation, Beacon for real-time monitoring and guardrails), and my benchmarking, using LLM judges I built, led the vendor to strengthen its guardrails; I partner with Jim Howard on gateway content-filtering and platform entitlement design, and I am evaluating TrustWise (the Harmony AI Control Tower) with the team. I also bridge the first and second lines for Saima directly, surfacing generative and agentic models from MRM's inventory into the AI CoE intake and registry and connecting model owners to the AI CoE (for example, flagging DocuSign Insight, the bank's contract-intelligence model, as a document-intelligence win). I know the priorities and can contribute from day one.
+- Validation noted that combined answers in the evaluation data showed empty citations, for example "( )". The model development team explained that the source links are extracted into a separate column rather than kept inline, and that special characters in some answers can cause the HTML parsing to fail and drop the link. On the user interface the citation numbers and links are present and functional. The relevant output handling is in `query_CombinedQA_BatchVLLM`. The team will check and correct so citations are visible in the formats used for review.
 
-Moving to the first line, I see a clear way to accelerate generative AI deployment further. Today, much of the validation timeline is spent realigning first-line documentation and deliverables to second-line expectations after the fact. Having built both sides, the validation standards and the automation, I can help teams produce validation-ready documentation from the first-line side, aligned up front, so that models clear validation and reach production far faster. Generative AI also changes continuously, so it calls for continuous, real-time monitoring rather than point-in-time review; I can help design first-line risk management that fits how these systems actually operate while remaining defensible and aligned to current regulatory and industry expectations. I would welcome the chance to discuss how I can help accelerate safe, scalable AI adoption across the enterprise.
+## Provenance and traceability
 
-Sincerely,
-Jordan Low
-Vice President, Quantitative Model Analyst | AI CoE Validation, Model Risk Management | RM&C
-jordan.low@usbank.com
+- Validation asked that the input to the combined answer, meaning the per-article answers and their notes, be visible with clear delimiters identifying each article, so the combined answer can be traced to its inputs. On screen, Validation noted that `get_combined_Answer` logs only the answer count before the combining call.
+- The model development team clarified that the "combined context" column is used only for the automated evaluation and is not the input to the combined answer. The team will add the reflexion notes as a column, separate the inputs with delimiters, and look at including the source links inline.
+
+## SME testing
+
+- The model owner has completed the SME evaluation and will finalize it after a session with the model development team, with delivery expected by 06/30/2026. The evaluation will score both the original four-answer output and the combined answer so the two can be compared.
+- Validation asked that the grading reflect whether the user received correct information, including the cases where the per-article answers did not find an answer, and will spot-check those cases.
+
+## Timeline
+
+- Validation requested moving the PA2 completion and pilot start date out from 07/06/2026. Both sides agreed the extension is driven by the rework from the clarifications and the pending SME results, and by the need to complete the report and the management and senior management sign-offs within the normal two to three week condensed window, not only by team availability over the July 3 and July 6 period.
+- The revised date will be set from when the finalized SME results are delivered, with approximately two weeks added. A target of approximately 07/13/2026 was discussed, contingent on prompt delivery of the results.
+
+---
+
+## Action Items
+
+- Model Development (Jaya): ensure failed-article content does not reach the combined answer, and verify against the examples shown. Target next update.
+- Model Development (Jaya): correct the citation display so source links are visible in the evaluation formats, and confirm whether links are being dropped by the HTML parsing on special characters. Target next update.
+- Model Development (Jaya, Satish): add the reflexion notes as a column and separate the combined answer inputs with delimiters, in the logs and the evaluation data. Target 06/30/2026.
+- Model Development (Jaya): correct the source link capture so links are retained with the combined answer for the pilot when it resumes. Target before pilot restart.
+- Model Owner (Justin): deliver the finalized SME evaluation scoring both the four-answer and combined answer outputs. Target 06/30/2026.
+- MRM Validation: spot-check the no-answer and partial-fail cases, and set the revised PA2 completion and pilot start date from the SME delivery plus approximately two weeks.
