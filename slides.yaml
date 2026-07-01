@@ -1,115 +1,174 @@
+# Model-7468 GenAI Selling Points for CBB — Initial Validation Kickoff Meeting Minutes
 
-## Executive Summary
+**Date:** 06/30/2026
+**Model:** Model-7468 GenAI Selling Points for CBB
+**Meeting Type:** Initial Validation Kickoff
+**Distribution:** Model Owner, Business Line, Model Risk Officer, Model Risk Governance, Validation Team
 
-This report documents Model Risk Management (MRM) Validation's second Provisional Approval (PA2) review of Model-7306, PayVIEW - GTM and MMP ChatBot. It covers one change to the model: the Combined Answer. Under the original Provisional Approval, signed 01/30/2026, the model presented up to four separate candidate answers and their notes to the agent. The model now adds an additional generative large language model call that synthesizes those candidate answers and notes into a single newly generated combined answer with inline source citations.
+---
 
-Material changes to the model during the pilot were not permitted under the terms of the original Provisional Approval. The combined answer was nonetheless shown to pilot users from the start of the pilot on 05/04/2026 without the required separate approval. The Special Purpose Validation Outcome Form, signed 05/19/2026, reiterated that the combined answer change specifically was not approved and required separate documentation and approval before deployment. Model Risk Governance (MRG) determined the change material, and the business line disabled the model through a backend feature flag on 06/15/2026 pending this review. This PA2 is scoped to the combined answer change and to continued, expanded pilot use.
+## Attendees
 
-Validation reviewed the updated pilot performance for the combined answer output. Correctness is 72.7 percent on the deduplicated answered queries, which clears the 67 percent pilot threshold. Validation has no concerns that would prevent continued pilot use prior to a full validation and recommends an Approved with Restriction outcome through 11/01/2026. The comprehensive assessment will follow in the Initial Validation. Validation's recommendations on the change, including the corrections the model development team has committed to make before the pilot resumes, are documented in the Conclusion.
+**Validation Team (MRM AI COE):**
+- Jordan Low (Primary Validator)
+- Aditi Pandey (Secondary Validator)
+- Jinjun Tong
+- Xinyu Wu (Validation Manager)
 
-## Model Purpose and Usage
+**Model Owner / Model Development:**
+- Bhavya Reddy (Model Owner / Product Manager)
+- Carl Huang (Model Developer)
 
-The model assists sales agents in answering Global Treasury Management (GTM) and Money Movement Platform (MMP) questions using the bank's knowledge base articles. It is employee facing, and agents review the model's output before relaying information to a customer. The model purpose and usage are unchanged from the original Provisional Approval; refer to the PA1 report for the full description.
+**Business Line:**
+- Arunkumar Ramalingam
 
-## Model Theory and Construction
+**Model Risk Governance:**
+- Damien Traore
 
-The retrieval augmented generation framework, embedding models, cache mechanism, gateway access, and foundation large language model are unchanged from the original Provisional Approval and are described in the PA1 report.
+**Declined:**
+- Melissa DeNembo (Model Risk Officer)
 
-The change under this review is the addition of a new generative large language model call that produces the combined answer. The up-to-four candidate answers and their notes produced by the approved process are passed to the foundation large language model (GPT-4o) in an additional call that generates a single combined answer, consolidating duplicative content and preserving inline source citations. This is a generation step rather than a deterministic concatenation: the combined answer is newly generated text produced by the model from the candidate answers and notes. When only one candidate answer is available, the model formats it directly without the synthesis call. When no answer can be grounded, the model indicates that it could not find an answer and prompts the agent to verify manually. Which output is presented, the combined answer or the four separate answers, is selected by a backend, code level toggle that is internal and not user facing. This output-selection toggle is distinct from the feature flag the business line used to disable the Query Agent pending this review.
+---
 
-### Combined answer synthesis prompt
+## Introduction and Transition
 
-The system prompt and instruction used for the combined answer generation call are reproduced below as provided by the model development team.
+Jordan opened the meeting by noting that Mehdi Mafi has left the firm. Jordan is now the Primary Validator and Aditi remains the Secondary Validator. Jordan acknowledged the extensive Early Engagement period (five meetings from May through June, plus a system demo on 06/15) and framed this meeting as the formal transition from Early Engagement into the Initial Validation under the streamlined low-risk timeline of 6 to 8 weeks.
 
-System prompt, wrapped in Llama-2 style system tags:
+---
 
-```
-<|SYS|>
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-<</SYS>>
-```
+## Validation Scope and Possible Outcomes
 
-Instruction:
+Aditi presented the validation scope. The following sections are in scope: model data and conceptual soundness (development data, framework and theory, assumptions and limitations), outcome analysis, explainability, model governance (change management review, development document, model inventory and EMA), implementation framework and production controls (Part 1 of the implementation document), and monitoring plan review.
 
-```
-Question: {query}
-Answers: {answers}
-The above HTML snippet contains multiple answers from a RAG system in response to the question.
-Task: Combine these answers into one cohesive paragraph with appropriate citations to answer the question.
-Output guidelines: Merge repetitive content smoothly. Return the answer as a valid HTML. Add inline <a> citations in parentheses immediately after the sentences they support.
-```
+The following are out of scope: post-development adjustments (none exist), benchmarking, sensitivity and robustness analysis, model system review (the model is not part of a model system), model change review (post-production), implementation Part 2 (due 90 days after model implementation), and the monitoring report.
 
-### Validation analysis of the synthesis prompt
+Three possible outcomes were presented: Approved (with or without findings), Approved with Restrictions (time-bound or compensating controls), and Not Approved. For time-bound restrictions, the restriction effective date is the date of last approved use, not the sign-off date.
 
-Validation reviewed the synthesis prompt against standard prompt construction practices. The assessment is organized by practice below. These are recommendations for strengthening the prompt and do not, on their own, prevent the pilot from resuming.
+---
 
-1. Role specification (persona). The prompt defines a generic persona, "a helpful, respectful and honest assistant." It is not scoped to the Global Treasury Management and Money Movement Platform domain or to the task of consolidating retrieved answers, so it does not set domain vocabulary or precision expectations.
-2. Explicit task description. The task is stated, to combine the answers into one cohesive paragraph with citations, but it does not state the downstream use, that the output is presented to a sales agent who relies on it, and it is described at a high level.
-3. Delimiters. The candidate answers are passed as a single HTML snippet in the Answers field with no delimiters separating one answer from another and no marker separating the instruction from the data. This contributes to the lack of per-answer traceability noted in the Risk Mitigation section.
-4. Constraints, positive and negative. The prompt includes positive constraints, to merge repetitive content, return valid HTML, and add inline citations, but no negative constraints. It does not instruct the model to use only the content of the provided answers, nor to avoid presenting an answer when the candidates contain none. The absence of these constraints is directly related to the combined answer behavior assessed in the Risk Mitigation section.
-5. Few-shot examples. The prompt contains no examples of an acceptable combined answer, so the model is not shown the intended structure, level of detail, or citation behavior.
-6. Output format specification. An output format is specified, a single valid HTML paragraph with inline anchor tag citations. The format is a prose paragraph rather than a structured, parseable format, and Validation observed that the citations render as empty parentheses in the non-HTML formats used for review.
-7. Enumeration of required content. The prompt does not enumerate what the combined answer must preserve from the inputs, for example that each distinct grounded fact be retained and that no fact be introduced that is not in the inputs. What is included is left to the model.
-8. Error handling and disambiguation. The prompt provides only generic safety handling, "if you don't know the answer, do not share false information." It does not handle the case where the provided answers contain no grounded answer, for example "I could not find a specific answer," and it does not disambiguate conflicting answers. This is the most material gap for this use case and is tied to the failed-article content reaching the combined output.
-9. Self-verification. The prompt does not ask the model to verify that the combined answer is supported by the provided answers or that the citations correspond to real sources.
+## SME Review
 
-Given that this is a low-risk model and that GPT-4o is an advanced large language model capable of producing a coherent combined answer from the candidate answers even with a minimal prompt, and given that the pilot results were within the correctness threshold, Validation has no concerns with the synthesis prompt for the pilot. However, Validation recommends that the prompt be strengthened, in particular by adding explicit handling for unanswered inputs (item 8) and a constraint to ground the combined answer only in the provided answers (item 4), by adding per-article delimiters to the input (item 3), and by adapting the Llama-2 chat formatting to the GPT-4o interface, since GPT-4o does not interpret the Llama-2 system tags as a control structure and the prompt appears carried over from the prior Llama-2 based implementation. These recommendations are consolidated in the Conclusion and will be assessed further during the Initial Validation.
+Aditi noted that Validation requires a row-level pass/fail spreadsheet from the SME, not just an email confirmation. Bhavya explained that the SME (the Talech/Elavon product lead) reviewed each of the 172 selling points individually, which took approximately two weeks. She asked whether the confirmation email from the SME could serve as the source of truth.
 
-## Development Data
+Jordan clarified that Validation needs the spreadsheet to demonstrate row-level review and to provide a cross-reference for future changes to the cache. Bhavya agreed to create the spreadsheet, add the pass/fail column on the SME's behalf, and copy the SME on the email so he is on the thread.
 
-The development data and the retrieval corpus are unchanged from the original Provisional Approval; refer to the PA1 report. The pilot corpus comprises 526 knowledge base articles, the same set used for the original Provisional Approval and within the 800 article pilot limit. The combined answer change operates on the candidate answers already produced and does not alter the data sources or retrieval.
+---
 
-## Model Performance
+## Pilot Performance and Feedback
 
-Validation reviewed the pilot performance data for the combined answer output. The pilot data comprises 72 deduplicated queries, of which 44 received a substantive answer and 28 returned no answer. Correctness is assessed on the 44 answered queries.
+Aditi asked about the timeline for pilot performance data. Bhavya indicated end of July for the "Other reason" free-text feedback, noting that the feature was only recently enabled and insufficient data has accumulated.
 
-Based on the prior subject matter expert grading, 32 of the 44 answered queries were graded correct, a correctness rate of 72.7 percent. Validation conducted an independent review and reached a consistent result, classifying 29 correct, 11 incorrect, and 4 as requiring clarification, which is 72.5 percent of the 40 classifiable queries. Both results clear the 67 percent threshold.
+Arunkumar clarified that the standard reject reasons (preset dropdown options) are the only feedback being collected. Bankers are not providing free-text feedback and have communicated that they do not have time to enter selling point ratings. The 1-to-5 rating committed to in the Provisional Approval was never implemented. All feedback collected is for the product recommendation, not the selling point content.
 
-The model owner separately reported approximately 93.5 percent, reached by reclassifying 13 answered responses to not applicable and excluding them from the denominator. Validation's position is that a response that reaches the user and gives incorrect information is incorrect regardless of the underlying cause; the cause should be documented alongside the grade but does not remove the response from the denominator. Validation relies on the 72.7 percent rate, with the denominator stated above.
+Xinyu raised the streamlined timeline: the previous 10-to-12 week IV timeline has been reduced to 6 to 8 weeks for low-risk models, meaning full documentation and testing should be complete before kickoff. Given the mid-August production date, the team has approximately 6 weeks, of which 1 to 2 weeks are needed for management review and sign-off, leaving approximately 4 weeks for validation work.
 
-A set of healthcare related queries that had been reclassified to not applicable are treated as correct under the agreed methodology, that a helpful answer grounded in the knowledge base is correct. [TBD: Confirm the final grades for these queries against the model owner's updated subject matter expert grading once received.] The combined answer behavior observed in some of these queries is assessed in the Validation Commentary below.
+Xinyu asked whether the reject reasons are directly related to model performance. Bhavya confirmed they are for product recommendations, not the GenAI model. Xinyu stated that if the feedback is not directly related to model performance, it does not count toward the pilot performance assessment Validation is looking for. The model owner needs to evaluate whether the model output meets the business need.
 
-To support the change, a pairwise comparison grading the combined answer against the approved four answer output on the same queries is in progress, to confirm that the synthesis step preserves the information without introducing errors when the answers are merged. [TBD: Insert the pairwise comparison results once received.] Ground truth reference answers to support the automated correctness metric are [TBD: pending from the model development team]; these are needed for the Initial Validation and are not a precondition for this provisional approval.
+Jordan noted that the SME has manually reviewed all 172 selling points, and since all outputs are cached with no live generation, the pilot does not provide additional insight beyond the SME review. Jordan added that Validation is confirming the feedback channel is now open for monitoring purposes, even though no selling point feedback has been collected. If feedback collection remains incomplete, Validation can raise a finding and impose a restriction; the finding would not affect the validation outcome.
 
-### Validation Commentary on the Combined Answer
+Aditi asked Bhavya to document that the feedback described in the Provisional Approval (1-to-5 rating and free-text on selling points) was not implemented. Bhavya confirmed this has been updated in the latest Model Development Document.
 
-The model owner and model development team state that the combined answer is synthesized from up to four candidate answers and their reflexion notes, with the reflexion step acting as a sanitizer that removes unsupported claims and preserves valid content. Per the PA2 form, where no definitive answer can be derived the system indicates this explicitly and continues to present the relevant source links, and the reflexion notes are retained when a per-article response is "I could not find a specific answer to your question in this article. Please verify manually," while "I don't know" entries are dropped.
+---
 
-Validation independently reviewed the combined answer generation code and found that the reflexion notes passed into the synthesis step are collected only from articles whose per-article answer did not find an answer. As a result, the combined answer can present content carried from articles for which the model reported it could not find an answer, both when all per-article answers fail and when only some fail. Validation identified specific examples in the pilot data. In the VantagePoint query, all four per-article answers were "I could not find a specific answer," yet the combined answer presented a substantive description of the product. In a healthcare use cases query, three of the four per-article answers were "I could not find" and only one produced an answer, yet the combined answer presented use cases carried from the three articles that reported no answer. Presenting material from articles the model reported it could not answer overrides the per-article confidence signal. This is inconsistent with the statement that the model only provides an answer when it is confident of its containment and accuracy, and it can surface content that is not grounded in a successful retrieval. Validation also found that the source citations were not visible in the formats used for review and that the per-article inputs to the combined answer were not individually traceable.
+## Retrieval Algorithm: Dense Search vs Hybrid Retrieval
 
-In response, the model development team acknowledged the behavior and agreed that an article that did not produce an answer should not contribute content to the combined answer. The team committed to correct the behavior so that content from such an article does not appear in the combined answer, while continuing to present the article links, to make the source citations visible in the review formats, and to add the per-article inputs with delimiters identifying each article. [TBD: confirm this correction is implemented prior to PA2 pilot production.]
+Aditi raised the discrepancy between the MDD, which describes dense search, and the code, which uses hybrid retrieval. Carl clarified that rag_plus_generator.py is not the active code path; the production code uses rag_feature_generator.py. However, Carl confirmed the retrieval is hybrid: the primary method is text embedding search (vector-based), supplemented by a secondary entity-link retrieval based on document entity relationships. The entity-link retrieval supplements the vector search to include as many relevant chunks as possible.
 
-Given that this is a low-risk, employee facing model with agent review before any customer use, Validation has no concerns with the combined answer behavior for the pilot, contingent on the correction being implemented and confirmed prior to pilot production and on the subject matter expert testing confirming the affected cases. [TBD: confirm the subject matter expert results on the no-answer and partial-answer cases.] These recommendations are consolidated in the Conclusion.
+Bhavya agreed to update the MDD (Section 6.2, retrieval strategy) to reflect the hybrid approach. Carl asked Bhavya to send him the latest document so he can make the update.
 
-## Risk Mitigation
+---
 
-The risk mitigations from the original Provisional Approval remain in effect and are unchanged: employee facing use with agent review before any customer relay, a limited group of trained and experienced agents, a curated set of pre approved knowledge base articles that contain no customer data with source links preserved, access through the bank's GenAI gateway providing authentication, logging, and content filtering, profanity filtering, and prompt injection controls. The combined answer change adds a synthesis step downstream of the already grounded candidate answers and does not alter these controls. The model's grounding control is the reflexion step, a verbal reinforcement step applied on the foundation model that grades each per-article answer. In the combined answer, the synthesis is performed on the per-article answers together with their reflexion notes. The model development team's position is that presenting the notes alongside a valid answer is intended, consistent with the phrase "answer along with notes" in the PA2 form. The separate behavior in which content from an article that did not produce an answer reaches the combined answer is a defect the model development team has agreed to correct, and is assessed under Model Performance.
+## Prompt Alignment Between Code and MDD
 
-The following early engagement observations are provided for the model owner's consideration and are not formal validation conclusions. The combined answer was deployed before the required approval, which the business line has remediated by disabling the model pending this review. Some pilot knowledge base links return access errors or no longer exist, and the business line will communicate knowledge base article changes going forward.
+Aditi noted that the prompt visible in GitLab differs from the prompt documented in the MDD. She asked the model development team to confirm which is the final production prompt and update the MDD to match. Bhavya agreed to locate the prompt section and update it.
 
-## Risk Management Groups Approvals
+---
 
-The Fair and Responsible Banking review for the original model was completed on 01/15/2026 with a Moderate rating and a determination to accept the pilot. A Change EMA, number 6818852, has been submitted for the combined answer change and is pending review by Model Risk Governance and Fair and Responsible Banking. [TBD: confirm the outcome of the Change EMA review once complete.] [TBD: confirm whether a PRISM record is required or changes for this change; do not assume it is unchanged.] [TBD: confirm the MRG model risk rating for the model.]
+## Feature-Benefit-Need Mapping in Archer
 
-## Conclusion
+Aditi asked about the Archer description referencing "Feature-Benefit-Need (FBN) mapping." Carl clarified that the current production system uses feature-plan mapping from the recommendation rule file, not FBN. FBN exists in the rag_plus_generator code, which is the legacy code path not currently in use. FBN could be implemented in the future but is not active now. The Archer description needs to be updated.
 
-Validation reviewed the combined answer change and the updated pilot performance and held discussions with the model owner and the model development team. Based on Validation's preliminary review, the combined answer output performs within the pilot correctness threshold, and the controls from the original provisional approval remain in effect. Validation identified no immediate concerns that would prevent continued pilot use prior to completion of a full validation, contingent on the recommendations below that the model development team has committed to address before the pilot resumes and on the subject matter expert testing confirming the affected cases.
+---
 
-Validation recommends an Approved with Restriction outcome, permitting pilot use of the model with the combined answer output from 07/06/2026 through 11/01/2026, with a restriction effective date of 11/01/2026. The pilot is restricted to up to 28 experienced agents initially, and up to 148 agents contingent on a correctness rate of 67 percent or higher, limited to Global Treasury Management and Money Movement Platform queries and to the pre approved knowledge base article set. No further changes to the model framework, output, or scope are permitted during the pilot; any subsequent change requires a new Provisional Approval or submission for Initial Validation prior to deployment.
+## Customer Interaction Data in Archer
 
-Validation recommends the following.
+Aditi noted that Archer describes the model as leveraging "customer interaction data," but no customer interaction data is used as a model input. Only customer attributes (NAICS, sub-industry, revenue) are used. Bhavya confirmed this is not accurate and agreed to work with Damien to update the Archer description.
 
-**Before the pilot resumes:**
+---
 
-- Correct the combined answer so that content from an article whose per-article answer did not produce an answer does not appear in the combined output. The model development team has committed to this correction; it is to be confirmed implemented prior to PA2 pilot production. [TBD: confirm implemented prior to PA2 pilot production.]
-- Make the source citations visible in the formats used for review and logging, and add the per-article inputs to the combined answer with delimiters identifying each article. The model development team has committed to this change.
+## EMA Update
 
-**During the pilot and before the Initial Validation:**
+Aditi asked whether a new EMA is needed, since the current EMA covers the pilot phase. Damien confirmed that the current EMA is for the pilot stage. When the pilot is completed and the model moves to production, a new EMA will need to be submitted. Damien has added a note to the current EMA indicating that a production EMA will be needed. This should be submitted between now and August.
 
-- Update the PA2 documentation to describe the implemented mechanism, including that content from unanswered articles is excluded from the combined output, and reconcile the statements that the system maintains transparency when no answer is derived and that the model only answers when confident with the corrected behavior.
-- Correct the architecture description to reflect the implementation: the offline keyword extraction uses KeyBERT and HDBSCAN (node 1.4), and the runtime retrieval is an in-memory cosine similarity over stored embeddings rather than a vector database.
-- Strengthen the combined answer synthesis prompt, including explicit handling for unanswered inputs (so that an "I could not find" answer is recognized and excluded), a constraint to ground the combined answer only in the provided answers, per-answer delimiters in the input, and adaptation of the prompt formatting to the GPT-4o interface. These will be assessed further during the Initial Validation.
-- For the model owner's consideration: continue to communicate knowledge base article changes, given that some pilot links return access errors or no longer exist.
+---
 
-The next validation activity is the Initial Validation, to be conducted against the documentation milestones the model owner has set out in the provisional approval request. The model owner should submit the complete Initial Validation documentation package, consisting of the Model Development Document, the Monitoring Plan Document, and the Implementation Framework and Testing Document, sufficiently in advance of the intended full production date to allow the Initial Validation to be completed before the pilot concludes on 11/01/2026.
+## MDD Update Requests
+
+Aditi presented the remaining documentation requests from the kickoff deck:
+
+- Updated architecture flowchart, similar to the one provided during the PA, with updates to reflect the feedback loop and the cache layer.
+- Documentation of the Talech-to-Elavon brand change in the data or preprocessing section, describing the code-level search and replace and its impact.
+- Discussion of the example selling points Excel file and the boosted retrieval algorithm that gives preference to curated selling point examples. Aditi emphasized the importance of documenting this given the boost's influence on retrieval results.
+- Rationale for selecting 10 chunks when the total knowledge base contains 28 chunks. Bhavya confirmed she has updated the chunk count (the correct number is 28).
+- Token limit correction: the maximum input tokens for GPT-4o are 128K and maximum output tokens are 25K, not 2K as stated in the MDD. Carl agreed to locate and correct the reference.
+
+Jordan asked the model owner to confirm the material versus immaterial change definition in Section 10. Bhavya confirmed that the definition has been updated in the latest MDD: the addition of new product domains has been moved from minor to material changes.
+
+---
+
+## Monitoring Plan
+
+Bhavya confirmed she has provided an updated monitoring plan that includes cache-related metrics, following guidance Jordan provided during the Early Engagement meetings regarding Synapse, Datadog, API transactions, and feedback monitoring. Validation noted it will conduct a thorough review of the updated plan.
+
+---
+
+## Data Retention
+
+Bhavya confirmed that Synapse follows the standard U.S. Bank log retention policy of 3 to 5 years, with the Synapse instance for this model retaining data for 5 years. The location of this information in the documentation is unclear. Bhavya agreed to confirm it is documented and add it if not.
+
+---
+
+## Production Scope
+
+Bhavya confirmed the full launch will expose the model to 527 bankers, nationwide within the United States only.
+
+---
+
+## MRO and MRG Contacts
+
+Xinyu confirmed that Melissa DeNembo is the Model Risk Officer and Damien Traore is the current MRG contact for this model. Xinyu advised the business line to direct process questions to Melissa first, and escalate to Damien and the MRG team if Melissa cannot provide an answer.
+
+---
+
+## MDD Remaining Comments
+
+Bhavya noted that she received Validation's feedback on the MDD (dated 06/23) and has updated most items, marking many comments as resolved. She will review the remaining items with Carl and address them before the next weekly meeting.
+
+Bhavya provided process feedback: for low-risk models, having three separate documents (development document, implementation document, monitoring plan) creates tracking overhead, and a single consolidated document would be easier to maintain.
+
+---
+
+## Items Deferred to Next Session or Email
+
+- Thorough review of the updated MDD by Validation.
+- Thorough review of the updated monitoring plan by Validation.
+- EMA submission timing and process (Bhavya to coordinate with Damien).
+- Remaining MDD comment resolution (Bhavya and Carl to address before next meeting).
+
+---
+
+## Action Items
+
+- Bhavya to create and send the SME review spreadsheet with row-level pass/fail for all 172 selling points, copying the SME on the email. Target: before next weekly meeting.
+- Carl to update MDD Section 6.2 to reflect hybrid retrieval (entity-link + dense search) instead of dense search only. Bhavya to send Carl the latest document.
+- Bhavya to confirm the production prompt matches the MDD and update the MDD if they differ.
+- Bhavya to update Archer: remove FBN reference (legacy, not in production), correct "customer interaction data" language. Coordinate with Damien on Archer updates.
+- Bhavya to add the Talech-to-Elavon brand change to the MDD data/preprocessing section.
+- Bhavya to add the example selling points Excel file and boosted retrieval algorithm to the MDD.
+- Carl to correct the maximum output token limit in the MDD (25K, not 2K).
+- Bhavya to confirm the architecture flowchart is included in the updated MDD with cache and feedback loop.
+- Bhavya to submit a production EMA before August (coordinate with Damien on timing).
+- Bhavya to confirm data retention (5-year Synapse) is documented in the MDD or implementation document.
+- Aditi to update the kickoff deck with explicit milestone dates (per Xinyu's feedback), correct MRG contact to Damien, and remove the "Marketing models" reference from Slide 10.
+- Aditi to send the updated kickoff deck to the distribution list.
+- Validation to review the updated MDD and monitoring plan and provide any additional feedback.
