@@ -1,47 +1,115 @@
 
-## Combined answer generation and the reflexion step
+## Executive Summary
 
-- The model development team confirmed Validation's reading of the code. The reflexion step grades each of the four per-article answers as pass or fail and generates a revised answer for each. The combined answer is then synthesized by the foundation model from the per-article answers together with their reflexion notes.
-- The model development team described the reflexion step as a sanitizer intended to remove unsupported claims and preserve valid content, so the user receives a single synthesized answer.
-- Validation walked through the relevant code on screen. The per-article answers and the reflexion notes are assembled in `concatenate_final_answers`; `get_combined_Answer` triggers the combining call when more than one source block is present; and `query_CombinedQA_BatchVLLM` produces the combined output.
+This report documents Model Risk Management (MRM) Validation's second Provisional Approval (PA2) review of Model-7306, PayVIEW - GTM and MMP ChatBot. It covers one change to the model: the Combined Answer. Under the original Provisional Approval, signed 01/30/2026, the model presented up to four separate candidate answers and their notes to the agent. The model now adds an additional generative large language model call that synthesizes those candidate answers and notes into a single newly generated combined answer with inline source citations.
 
-## Documentation and the PA2 form
+Material changes to the model during the pilot were not permitted under the terms of the original Provisional Approval. The combined answer was nonetheless shown to pilot users from the start of the pilot on 05/04/2026 without the required separate approval. The Special Purpose Validation Outcome Form, signed 05/19/2026, reiterated that the combined answer change specifically was not approved and required separate documentation and approval before deployment. Model Risk Governance (MRG) determined the change material, and the business line disabled the model through a backend feature flag on 06/15/2026 pending this review. This PA2 is scoped to the combined answer change and to continued, expanded pilot use.
 
-- Validation noted that the combined answer behavior differs from the original approval, where the reflexion step acted as a guardrail and no answer was shown when the score was not high enough. In the combined answer flow, the per-article "I could not find" messages are removed before synthesis, so the summarizer receives the reflexion-revised answers and their notes without the original confidence signal.
-- The model development team pointed to the PA2 form wording "answer along with notes" as covering the inclusion of the notes, and noted the notes are not displayed to the user. Validation asked that the documentation accurately describe the implemented mechanism.
+Validation reviewed the updated pilot performance for the combined answer output. Correctness is 72.7 percent on the deduplicated answered queries, which clears the 67 percent pilot threshold. Validation has no concerns that would prevent continued pilot use prior to a full validation and recommends an Approved with Restriction outcome through 11/01/2026. The comprehensive assessment will follow in the Initial Validation. Validation's recommendations on the change, including the corrections the model development team has committed to make before the pilot resumes, are documented in the Conclusion.
 
-## Failed-article content in the combined answer
+## Model Purpose and Usage
 
-- Validation showed examples where the combined answer presented content although the per-article answers did not find an answer: the VantagePoint query, where all four answers were "I could not find," and a healthcare query, where only one of four answered yet the combined answer added terms such as EOB, EOBL, and ERA that were not in that answer.
-- On screen, Validation showed that in `concatenate_final_answers` the notes are collected only from articles whose answer failed (the else branch, lines 1757 to 1769) and are appended to the combined answer input in both the no-answer and the partial-answer paths (lines 1771 to 1789), so failed-article content can flow into the combined answer in both the all-fail and partial-fail cases.
-- The model development team's stated design is that an "I could not find" answer is excluded from the combined answer and that no answer is produced when all four fail. Because the examples contradict that design, the observed behavior is inconsistent with the intended design. The team agreed to verify the cause in the code and to correct the behavior so that failed-article content is excluded from the combined answer, consistent with their stated design. This is a correction to the implementation, distinct from the separate documentation update noted above.
+The model assists sales agents in answering Global Treasury Management (GTM) and Money Movement Platform (MMP) questions using the bank's knowledge base articles. It is employee facing, and agents review the model's output before relaying information to a customer. The model purpose and usage are unchanged from the original Provisional Approval; refer to the PA1 report for the full description.
 
-## Citations
+## Model Theory and Construction
 
-- Validation noted that combined answers in the evaluation data showed empty citations, for example "( )". The model development team explained that the source links are extracted into a separate column rather than kept inline, and that special characters in some answers can cause the HTML parsing to fail and drop the link. On the user interface the citation numbers and links are present and functional. The relevant output handling is in `query_CombinedQA_BatchVLLM`. The team will check and correct so citations are visible in the formats used for review.
+The retrieval augmented generation framework, embedding models, cache mechanism, gateway access, and foundation large language model are unchanged from the original Provisional Approval and are described in the PA1 report.
 
-## Provenance and traceability
+The change under this review is the addition of a new generative large language model call that produces the combined answer. The up-to-four candidate answers and their notes produced by the approved process are passed to the foundation large language model (GPT-4o) in an additional call that generates a single combined answer, consolidating duplicative content and preserving inline source citations. This is a generation step rather than a deterministic concatenation: the combined answer is newly generated text produced by the model from the candidate answers and notes. When only one candidate answer is available, the model formats it directly without the synthesis call. When no answer can be grounded, the model indicates that it could not find an answer and prompts the agent to verify manually. Which output is presented, the combined answer or the four separate answers, is selected by a backend, code level toggle that is internal and not user facing. This output-selection toggle is distinct from the feature flag the business line used to disable the Query Agent pending this review.
 
-- Validation asked that the input to the combined answer, meaning the per-article answers and their notes, be visible with clear delimiters identifying each article, so the combined answer can be traced to its inputs. On screen, Validation noted that `get_combined_Answer` logs only the answer count before the combining call.
-- The model development team clarified that the "combined context" column is used only for the automated evaluation and is not the input to the combined answer. The team will add the reflexion notes for each of the four per-article answers as columns, separate the inputs with delimiters identifying the article, and look at including the source links inline.
+### Combined answer synthesis prompt
 
-## SME testing
+The system prompt and instruction used for the combined answer generation call are reproduced below as provided by the model development team.
 
-- The model owner has completed the SME evaluation and will finalize it after a session with the model development team, with delivery expected by 06/30/2026. The evaluation will score both the original four-answer output and the combined answer so the two can be compared.
-- Validation asked that the grading reflect whether the user received correct information, including the cases where the per-article answers did not find an answer, and will spot-check those cases.
+System prompt, wrapped in Llama-2 style system tags:
 
-## Timeline
+```
+<|SYS|>
+You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
+If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
+<</SYS>>
+```
 
-- Validation requested moving the PA2 completion and pilot start date out from 07/06/2026. Both sides agreed the extension is driven by the rework from the clarifications and the pending SME results, and by the need to complete the report and the management and senior management sign-offs within the normal two to three week condensed window, not only by team availability over the July 3 and July 6 period.
-- The revised date will be set from when the finalized SME results are delivered, with approximately two weeks added. A target of approximately 07/13/2026 was discussed, contingent on prompt delivery of the results.
+Instruction:
 
----
+```
+Question: {query}
+Answers: {answers}
+The above HTML snippet contains multiple answers from a RAG system in response to the question.
+Task: Combine these answers into one cohesive paragraph with appropriate citations to answer the question.
+Output guidelines: Merge repetitive content smoothly. Return the answer as a valid HTML. Add inline <a> citations in parentheses immediately after the sentences they support.
+```
 
-## Action Items
+### Validation analysis of the synthesis prompt
 
-- Model Development (Jaya): ensure failed-article content does not reach the combined answer, and verify against the examples shown. Target next update.
-- Model Development (Jaya): correct the citation display so source links are visible in the evaluation formats, and confirm whether links are being dropped by the HTML parsing on special characters. Target next update.
-- Model Development (Jaya, Satish): add the reflexion notes for each of the four per-article answers as columns and separate the combined answer inputs with delimiters identifying the article, in the logs and the evaluation data. Target 06/30/2026.
-- Model Development (Jaya): correct the source link capture so links are retained with the combined answer for the pilot when it resumes. Target before pilot restart.
-- Model Owner (Justin): deliver the finalized SME evaluation scoring both the four-answer and combined answer outputs. Target 06/30/2026.
-- MRM Validation: spot-check the no-answer and partial-fail cases, and set the revised PA2 completion and pilot start date from the SME delivery plus approximately two weeks.
+Validation reviewed the synthesis prompt against standard prompt construction practices. The assessment is organized by practice below. These are recommendations for strengthening the prompt and do not, on their own, prevent the pilot from resuming.
+
+1. Role specification (persona). The prompt defines a generic persona, "a helpful, respectful and honest assistant." It is not scoped to the Global Treasury Management and Money Movement Platform domain or to the task of consolidating retrieved answers, so it does not set domain vocabulary or precision expectations.
+2. Explicit task description. The task is stated, to combine the answers into one cohesive paragraph with citations, but it does not state the downstream use, that the output is presented to a sales agent who relies on it, and it is described at a high level.
+3. Delimiters. The candidate answers are passed as a single HTML snippet in the Answers field with no delimiters separating one answer from another and no marker separating the instruction from the data. This contributes to the lack of per-answer traceability noted in the Risk Mitigation section.
+4. Constraints, positive and negative. The prompt includes positive constraints, to merge repetitive content, return valid HTML, and add inline citations, but no negative constraints. It does not instruct the model to use only the content of the provided answers, nor to avoid presenting an answer when the candidates contain none. The absence of these constraints is directly related to the combined answer behavior assessed in the Risk Mitigation section.
+5. Few-shot examples. The prompt contains no examples of an acceptable combined answer, so the model is not shown the intended structure, level of detail, or citation behavior.
+6. Output format specification. An output format is specified, a single valid HTML paragraph with inline anchor tag citations. The format is a prose paragraph rather than a structured, parseable format, and Validation observed that the citations render as empty parentheses in the non-HTML formats used for review.
+7. Enumeration of required content. The prompt does not enumerate what the combined answer must preserve from the inputs, for example that each distinct grounded fact be retained and that no fact be introduced that is not in the inputs. What is included is left to the model.
+8. Error handling and disambiguation. The prompt provides only generic safety handling, "if you don't know the answer, do not share false information." It does not handle the case where the provided answers contain no grounded answer, for example "I could not find a specific answer," and it does not disambiguate conflicting answers. This is the most material gap for this use case and is tied to the failed-article content reaching the combined output.
+9. Self-verification. The prompt does not ask the model to verify that the combined answer is supported by the provided answers or that the citations correspond to real sources.
+
+Given that this is a low-risk model and that GPT-4o is an advanced large language model capable of producing a coherent combined answer from the candidate answers even with a minimal prompt, and given that the pilot results were within the correctness threshold, Validation has no concerns with the synthesis prompt for the pilot. However, Validation recommends that the prompt be strengthened, in particular by adding explicit handling for unanswered inputs (item 8) and a constraint to ground the combined answer only in the provided answers (item 4), by adding per-article delimiters to the input (item 3), and by adapting the Llama-2 chat formatting to the GPT-4o interface, since GPT-4o does not interpret the Llama-2 system tags as a control structure and the prompt appears carried over from the prior Llama-2 based implementation. These recommendations are consolidated in the Conclusion and will be assessed further during the Initial Validation.
+
+## Development Data
+
+The development data and the retrieval corpus are unchanged from the original Provisional Approval; refer to the PA1 report. The pilot corpus comprises 526 knowledge base articles, the same set used for the original Provisional Approval and within the 800 article pilot limit. The combined answer change operates on the candidate answers already produced and does not alter the data sources or retrieval.
+
+## Model Performance
+
+Validation reviewed the pilot performance data for the combined answer output. The pilot data comprises 72 deduplicated queries, of which 44 received a substantive answer and 28 returned no answer. Correctness is assessed on the 44 answered queries.
+
+Based on the prior subject matter expert grading, 32 of the 44 answered queries were graded correct, a correctness rate of 72.7 percent. Validation conducted an independent review and reached a consistent result, classifying 29 correct, 11 incorrect, and 4 as requiring clarification, which is 72.5 percent of the 40 classifiable queries. Both results clear the 67 percent threshold.
+
+The model owner separately reported approximately 93.5 percent, reached by reclassifying 13 answered responses to not applicable and excluding them from the denominator. Validation's position is that a response that reaches the user and gives incorrect information is incorrect regardless of the underlying cause; the cause should be documented alongside the grade but does not remove the response from the denominator. Validation relies on the 72.7 percent rate, with the denominator stated above.
+
+A set of healthcare related queries that had been reclassified to not applicable are treated as correct under the agreed methodology, that a helpful answer grounded in the knowledge base is correct. [TBD: Confirm the final grades for these queries against the model owner's updated subject matter expert grading once received.] The combined answer behavior observed in some of these queries is assessed in the Validation Commentary below.
+
+To support the change, a pairwise comparison grading the combined answer against the approved four answer output on the same queries is in progress, to confirm that the synthesis step preserves the information without introducing errors when the answers are merged. [TBD: Insert the pairwise comparison results once received.] Ground truth reference answers to support the automated correctness metric are [TBD: pending from the model development team]; these are needed for the Initial Validation and are not a precondition for this provisional approval.
+
+### Validation Commentary on the Combined Answer
+
+The model owner and model development team state that the combined answer is synthesized from up to four candidate answers and their reflexion notes, with the reflexion step acting as a sanitizer that removes unsupported claims and preserves valid content. Per the PA2 form, where no definitive answer can be derived the system indicates this explicitly and continues to present the relevant source links, and the reflexion notes are retained when a per-article response is "I could not find a specific answer to your question in this article. Please verify manually," while "I don't know" entries are dropped.
+
+Validation independently reviewed the combined answer generation code and found that the reflexion notes passed into the synthesis step are collected only from articles whose per-article answer did not find an answer. As a result, the combined answer can present content carried from articles for which the model reported it could not find an answer, both when all per-article answers fail and when only some fail. Validation identified specific examples in the pilot data. In the VantagePoint query, all four per-article answers were "I could not find a specific answer," yet the combined answer presented a substantive description of the product. In a healthcare use cases query, three of the four per-article answers were "I could not find" and only one produced an answer, yet the combined answer presented use cases carried from the three articles that reported no answer. Presenting material from articles the model reported it could not answer overrides the per-article confidence signal. This is inconsistent with the statement that the model only provides an answer when it is confident of its containment and accuracy, and it can surface content that is not grounded in a successful retrieval. Validation also found that the source citations were not visible in the formats used for review and that the per-article inputs to the combined answer were not individually traceable.
+
+In response, the model development team acknowledged the behavior and agreed that an article that did not produce an answer should not contribute content to the combined answer. The team committed to correct the behavior so that content from such an article does not appear in the combined answer, while continuing to present the article links, to make the source citations visible in the review formats, and to add the per-article inputs with delimiters identifying each article. [TBD: confirm this correction is implemented prior to PA2 pilot production.]
+
+Given that this is a low-risk, employee facing model with agent review before any customer use, Validation has no concerns with the combined answer behavior for the pilot, contingent on the correction being implemented and confirmed prior to pilot production and on the subject matter expert testing confirming the affected cases. [TBD: confirm the subject matter expert results on the no-answer and partial-answer cases.] These recommendations are consolidated in the Conclusion.
+
+## Risk Mitigation
+
+The risk mitigations from the original Provisional Approval remain in effect and are unchanged: employee facing use with agent review before any customer relay, a limited group of trained and experienced agents, a curated set of pre approved knowledge base articles that contain no customer data with source links preserved, access through the bank's GenAI gateway providing authentication, logging, and content filtering, profanity filtering, and prompt injection controls. The combined answer change adds a synthesis step downstream of the already grounded candidate answers and does not alter these controls. The model's grounding control is the reflexion step, a verbal reinforcement step applied on the foundation model that grades each per-article answer. In the combined answer, the synthesis is performed on the per-article answers together with their reflexion notes. The model development team's position is that presenting the notes alongside a valid answer is intended, consistent with the phrase "answer along with notes" in the PA2 form. The separate behavior in which content from an article that did not produce an answer reaches the combined answer is a defect the model development team has agreed to correct, and is assessed under Model Performance.
+
+The following early engagement observations are provided for the model owner's consideration and are not formal validation conclusions. The combined answer was deployed before the required approval, which the business line has remediated by disabling the model pending this review. Some pilot knowledge base links return access errors or no longer exist, and the business line will communicate knowledge base article changes going forward.
+
+## Risk Management Groups Approvals
+
+The Fair and Responsible Banking review for the original model was completed on 01/15/2026 with a Moderate rating and a determination to accept the pilot. A Change EMA, number 6818852, has been submitted for the combined answer change and is pending review by Model Risk Governance and Fair and Responsible Banking. [TBD: confirm the outcome of the Change EMA review once complete.] [TBD: confirm whether a PRISM record is required or changes for this change; do not assume it is unchanged.] [TBD: confirm the MRG model risk rating for the model.]
+
+## Conclusion
+
+Validation reviewed the combined answer change and the updated pilot performance and held discussions with the model owner and the model development team. Based on Validation's preliminary review, the combined answer output performs within the pilot correctness threshold, and the controls from the original provisional approval remain in effect. Validation identified no immediate concerns that would prevent continued pilot use prior to completion of a full validation, contingent on the recommendations below that the model development team has committed to address before the pilot resumes and on the subject matter expert testing confirming the affected cases.
+
+Validation recommends an Approved with Restriction outcome, permitting pilot use of the model with the combined answer output from 07/06/2026 through 11/01/2026, with a restriction effective date of 11/01/2026. The pilot is restricted to up to 28 experienced agents initially, and up to 148 agents contingent on a correctness rate of 67 percent or higher, limited to Global Treasury Management and Money Movement Platform queries and to the pre approved knowledge base article set. No further changes to the model framework, output, or scope are permitted during the pilot; any subsequent change requires a new Provisional Approval or submission for Initial Validation prior to deployment.
+
+Validation recommends the following.
+
+**Before the pilot resumes:**
+
+- Correct the combined answer so that content from an article whose per-article answer did not produce an answer does not appear in the combined output. The model development team has committed to this correction; it is to be confirmed implemented prior to PA2 pilot production. [TBD: confirm implemented prior to PA2 pilot production.]
+- Make the source citations visible in the formats used for review and logging, and add the per-article inputs to the combined answer with delimiters identifying each article. The model development team has committed to this change.
+
+**During the pilot and before the Initial Validation:**
+
+- Update the PA2 documentation to describe the implemented mechanism, including that content from unanswered articles is excluded from the combined output, and reconcile the statements that the system maintains transparency when no answer is derived and that the model only answers when confident with the corrected behavior.
+- Correct the architecture description to reflect the implementation: the offline keyword extraction uses KeyBERT and HDBSCAN (node 1.4), and the runtime retrieval is an in-memory cosine similarity over stored embeddings rather than a vector database.
+- Strengthen the combined answer synthesis prompt, including explicit handling for unanswered inputs (so that an "I could not find" answer is recognized and excluded), a constraint to ground the combined answer only in the provided answers, per-answer delimiters in the input, and adaptation of the prompt formatting to the GPT-4o interface. These will be assessed further during the Initial Validation.
+- For the model owner's consideration: continue to communicate knowledge base article changes, given that some pilot links return access errors or no longer exist.
+
+The next validation activity is the Initial Validation, to be conducted against the documentation milestones the model owner has set out in the provisional approval request. The model owner should submit the complete Initial Validation documentation package, consisting of the Model Development Document, the Monitoring Plan Document, and the Implementation Framework and Testing Document, sufficiently in advance of the intended full production date to allow the Initial Validation to be completed before the pilot concludes on 11/01/2026.
