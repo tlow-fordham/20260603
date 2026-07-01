@@ -1,174 +1,112 @@
-# Model-7468 GenAI Selling Points for CBB — Initial Validation Kickoff Meeting Minutes
 
-**Date:** 06/30/2026
-**Model:** Model-7468 GenAI Selling Points for CBB
-**Meeting Type:** Initial Validation Kickoff
-**Distribution:** Model Owner, Business Line, Model Risk Officer, Model Risk Governance, Validation Team
+# 4 Modeling Framework and Business Uses
 
----
+This section summarizes the salient facts about the model, its components, its dependencies, and how it is used. Assessments are reserved for Part II.
 
-## Attendees
+Model-7468 GenAI Selling Points is a new, single-method model; it is not a model suite and contains no separately inventoried sub-models or segments. It generates personalized, product-specific selling points for Business Banking customers from customer attributes and underlying product documentation, supporting Sales and Business Banking teams by improving the relevance, consistency, and efficiency of product messaging. The model replaces a manual and template-based process for creating selling points; there is no incumbent automated system performing this function.
 
-**Validation Team (MRM AI COE):**
-- Jordan Low (Primary Validator)
-- Aditi Pandey (Secondary Validator)
-- Jinjun Tong
-- Xinyu Wu (Validation Manager)
+Outputs are internal-facing. They are surfaced to bankers within the Salesforce recommendation workflow through an application programming interface (API), and the model does not interact with customers. The scope covers Business Banking customers across the supported industries and revenue bands, mapped to the documented Elavon payment products, including Elavon Mobile, Elavon Terminal, and Elavon Register. The knowledge base comprises nine product documents (generic Talech documents rebranded to Elavon during processing) segmented into 28 chunks as documented, together with a curated selling-points source; the evaluation dataset comprises 172 queries. The data sources and inventory are assessed in Section 7.1. At full launch the model will be exposed to 527 bankers, nationwide within the United States. The count of supported industry and revenue segments is to be confirmed [TBD].
 
-**Model Owner / Model Development:**
-- Bhavya Reddy (Model Owner / Product Manager)
-- Carl Huang (Model Developer)
+The model uses a hybrid architecture that combines a deterministic product recommender, a retrieval-augmented generation (RAG) component, a foundation large language model (LLM) for generation, and a production cache (see Figure 4.1). The deterministic recommender maps customer industry (North American Industry Classification System, or NAICS), sub-industry, and revenue band to a recommended product, plan, and key features through a predefined mapping table, so that identical inputs produce identical product selections. Customer attributes and the recommended product details are then assembled by a fixed template into a standardized query. Retrieval embeds the query using the text-embedding-ada-002 model (1,536 dimensions, deployed through Azure OpenAI) and compares it against product-document chunks stored in a PostgreSQL database with the pgvector extension. Retrieval is hybrid: the primary method is dense vector search over an Inverted File with Flat compression (IVFFlat) approximate nearest neighbor index, returning the top 20 chunks, supplemented by a secondary entity-link retrieval based on document entity relationships; the combined set is re-ranked by a multi-factor relevance score before a final subset is passed to generation. Generation uses GPT-4o, accessed through the enterprise generative AI gateway, with no fine-tuning. Each output is a structured selling point consisting of a headline, a subheader, a body, bullet points, an optional disclaimer, the identifiers of the source documents used, and an effectiveness score.
 
-**Business Line:**
-- Arunkumar Ramalingam
+[INSERT IMAGE HERE: Model-7468 GenAI Selling Points system architecture diagram]
 
-**Model Risk Governance:**
-- Damien Traore
+**Figure 4.1. Model-7468 GenAI Selling Points end-to-end architecture.** The diagram presents the model in four phases: document pre-processing (document parsing, text chunking and embedding with text-embedding-ada-002, and document metadata extraction using GPT-4o, stored in the PostgreSQL database); the product recommender (a recommender interface and recommendation engine driven by the parsed product-recommendation mapping document and the customer profile); the selling points generator (template assembly, query embedding with text-embedding-ada-002, database query, context assembly, generation using GPT-4o, post-processing, and the response, which in production is served through the production cache); and feedback and analytics (display, and the collection, storage, and analysis of ratings, thumbs up or down, and comments). The model uses the same foundation model, GPT-4o, for both metadata extraction and generation, and text-embedding-ada-002 for both document and query embedding. A single figure covers both the development and production flows, consistent with the template.
 
-**Declined:**
-- Melissa DeNembo (Model Risk Officer)
+[TBD - the model owner is to update the diagram to show the production cache. The cache is part of the production pathway as described above and in the Model Development Document, and the deployed configuration confirms caching is enabled (CACHE_ENABLE set to true), but it is not yet depicted in the figure.]
+
+[TBD - the model owner is to confirm that full production will capture the complete feedback loop shown in the figure, including the feedback components not collected during the pilot. In the pilot, captured feedback tracked the product recommendation rather than selling-point quality (see Section 12).]
+
+The production pathway is static and cached. Product recommendations are fixed for each customer segment, and previously generated selling points are returned from a cache keyed by customer segment, with new generation occurring only when no cached output exists for a segment. The Model Development Document characterizes the model as dynamic, owing to evolving knowledge base content and real-time generation, while also describing production behavior as partially deterministic with cached reuse; Validation's understanding from the materials and the system demonstration is that the current production pathway is static and cached. This characterization is reconciled in Sections 10.1 and 10.3. The cadence at which the knowledge base is refreshed and the cache is regenerated, which is the static-model equivalent of a manual recalibration schedule, is to be confirmed [TBD].
+
+The model has no upstream or downstream models. Its inputs are data rather than model outputs: customer attributes are sourced from the enterprise ELZ data store, and the recommender mapping is a configured lookup. The downstream consumer is the Salesforce banker workflow, a user-facing system rather than a model, in which a banker reviews and may edit a selling point before use. The feedback currently collected is limited to preset reject reasons on the product recommendation; the selling-point ratings described in the Provisional Approval were not implemented (Section 12). Because there are no interconnected models, no model system applies, as addressed in Section 9.
+
+The principal assumptions and limitations are the dependence of output quality on knowledge base accuracy and currency, generative phrasing variability controlled through low temperature and caching, limited domain coverage beyond the documented products, the absence of provenance in the user interface, and the absence of a selling-point quality signal in the captured feedback. These are summarized in Section 3 and assessed in Sections 7.5, 8, and 12.
+
+*Section 4 Sources:* MDD Sections 3.1-3.2, 4.1, 5, 6.1-6.2; sample outputs (products and output structure); IV readiness assessment.
+*Section 4 Gaps:* production banker segment counts [TBD]; knowledge base refresh and cache regeneration cadence [TBD]; confirm current chunk count if the Elavon knowledge base differs from the 28 documented. Figures: paste the architecture image at the Figure 4.1 placeholder; model owner to update the diagram to show the production cache and to confirm full production captures the complete feedback loop (Section 12).
 
 ---
 
-## Introduction and Transition
+# 7 Model Data and Conceptual Soundness
 
-Jordan opened the meeting by noting that Mehdi Mafi has left the firm. Jordan is now the Primary Validator and Aditi remains the Secondary Validator. Jordan acknowledged the extensive Early Engagement period (five meetings from May through June, plus a system demo on 06/15) and framed this meeting as the formal transition from Early Engagement into the Initial Validation under the streamlined low-risk timeline of 6 to 8 weeks.
+## 7.1 Development Data
 
----
+Validation reviewed the development and testing data as documented in the Model Development Document. The knowledge base consists of nine internal product documents, segmented into 28 chunks as documented, covering back office capabilities (customer database and loyalty, employee management, integrations, inventory management, invoices, and reports) and three solution sheets (restaurant, retail, and service). Customer attributes, namely industry (North American Industry Classification System, or NAICS), sub-industry, and revenue, are sourced from the enterprise ELZ data store. The reported evaluation dataset comprises 172 queries with labeled product and document associations, and production evaluation draws on application programming interface (API) transactions with generated outputs.
 
-## Validation Scope and Possible Outcomes
+The small size of the knowledge base is favorable for source-grounded review, because Validation can compare generated claims against the full set of source documents at the document level without depending on chunk-level granularity. Validation noted that the documentation states all product types and all segment combinations are represented and that no token truncation was observed. The representativeness of the 172-query evaluation set across all intended industry and revenue segments has not been fully demonstrated in the materials reviewed; the sample size of 172 is informative, but its per-segment breakdown should be confirmed [TBD]. Validation also noted that the knowledge base has shifted to the current Elavon-branded product set, so the data statistics should be confirmed against the current content if it differs from the 28 chunks documented [TBD].
 
-Aditi presented the validation scope. The following sections are in scope: model data and conceptual soundness (development data, framework and theory, assumptions and limitations), outcome analysis, explainability, model governance (change management review, development document, model inventory and EMA), implementation framework and production controls (Part 1 of the implementation document), and monitoring plan review.
+On data quality and governance, the documentation describes subject matter expert content validation prior to ingestion, handling of null and invalid content, deduplication of overlapping table and text content, and retrieval-coverage checks. Validation has no concerns with the described data quality controls for a knowledge base of this size, subject to confirming the current-cache statistics noted above.
 
-The following are out of scope: post-development adjustments (none exist), benchmarking, sensitivity and robustness analysis, model system review (the model is not part of a model system), model change review (post-production), implementation Part 2 (due 90 days after model implementation), and the monitoring report.
+Validation noted that the documented knowledge base understates the actual sources and processing. The nine documented files are generic Talech product documents, and a search-and-replace during processing rebrands the Talech terminology to Elavon, which accounts for the Elavon products in the outputs. Separately, a curated selling-points spreadsheet, elavonSellingPoints.xlsx, which is an updated Elavon version of an older Talech version, is cited in the outputs and receives the model's largest retrieval boost (Section 7.3), making it the most-favored retrieval input; it is not listed in the development-data inventory and its contents, provenance, and quality controls are not described. The data inventory should be completed to document elavonSellingPoints.xlsx and the Talech origin and rebranding of the development data. Because the outputs depend on rebranded content, Validation should also confirm that the Talech-to-Elavon search-and-replace is accurate and complete, since differences between Elavon and Talech product names, features, or plans could carry into the outputs; this is assessed with the faithfulness review in Section 8.1 [TBD].
 
-Three possible outcomes were presented: Approved (with or without findings), Approved with Restrictions (time-bound or compensating controls), and Not Approved. For time-bound restrictions, the restriction effective date is the date of last approved use, not the sign-off date.
+## 7.2 Model Framework and Theory
 
----
+Validation reviewed the model's design as documented and summarized in Figure 4.1. The hybrid approach, a deterministic recommender for product selection combined with retrieval-augmented generation (RAG) for content and a production cache for stability, is consistent with the intended use of producing grounded, consistent product messaging for internal banker review. Restricting generation to retrieved product content and fixing product selection through deterministic logic are appropriate choices for limiting hallucination and output variability in this use case. Validation has no concerns with the overall framework and theory as presented for this internal-facing, low risk use.
 
-## SME Review
+The model uses two externally developed foundation models from the same provider, accessed through Azure OpenAI by way of the enterprise generative AI gateway, with no fine-tuning. GPT-4o is the large language model (LLM) used for both document metadata extraction during pre-processing and selling-point generation. The text-embedding-ada-002 model is the embedding model used to represent both the product-document chunks and the query for retrieval, producing 1,536-dimension vectors. The same two models therefore serve multiple steps of the pipeline shown in Figure 4.1. Because both models come from a single external provider and serve more than one stage, a change to either model would affect multiple pipeline stages; the change-management treatment of such a change is addressed in Section 10.1.
 
-Aditi noted that Validation requires a row-level pass/fail spreadsheet from the SME, not just an email confirmation. Bhavya explained that the SME (the Talech/Elavon product lead) reviewed each of the 172 selling points individually, which took approximately two weeks. She asked whether the confirmation email from the SME could serve as the source of truth.
+GPT-4o, developed by OpenAI, is accessed through U.S. Bank's Azure OpenAI gateway, which is maintained by Information Systems Security and is the bank's sanctioned path for foundation-model access. The platform-level controls the gateway applies (authentication and authorization, logging, Personally Identifiable Information (PII) filtering, and content filtering) are described as constructed in Section 7.3 and assessed as a guardrail in Section 8.2.
 
-Jordan clarified that Validation needs the spreadsheet to demonstrate row-level review and to provide a cross-reference for future changes to the cache. Bhavya agreed to create the spreadsheet, add the pass/fail column on the SME's behalf, and copy the SME on the email so he is on the thread.
+On capabilities and context limits, GPT-4o is a general-purpose, instruction-following generative model that supports structured output (the application is configured to return JavaScript Object Notation, or JSON), multilingual text, and summarization and synthesis, which align with the requirement to generate concise, grounded selling points. Its published input context window is approximately 128,000 tokens, and its training knowledge has a fixed cutoff date; reliance on retrieval grounding mitigates the knowledge-cutoff limitation for product-specific content. The text-embedding-ada-002 model is a general-purpose retrieval embedding model with a published maximum input of approximately 8,191 tokens, comfortably above the configured 4,000-character chunk size. The exact context window, maximum output tokens, and knowledge cutoff for the deployed versions should be confirmed against current vendor documentation [TBD verify]. Validation noted that the maximum output tokens setting, which caps the length of the generated response rather than the input, is set to 25,000 in the reviewed development configuration. At the 06/30 kickoff the model owner confirmed the intended limits are 128,000 input tokens and 25,000 output tokens, and that the 2,000 figure elsewhere in the document is an error to be corrected. Validation notes that a 25,000-token output nonetheless exceeds GPT-4o's published maximum output [TBD verify], so the production value and its effect should be confirmed.
 
----
+On support for the model selection, GPT-4o and text-embedding-ada-002 are widely adopted, industry-standard models, and GPT-4o is reported to perform competitively on public instruction-following and generation benchmarks. This published standing, together with the use-case fit described above, supports the appropriateness of the selection for a low risk, internal-facing application. Validation reviewed this as support for the design choice; it is distinct from the outcome benchmarking addressed in Section 8.3, which is not applicable for this model. Any specific benchmark or leaderboard figures relied on to support the selection should be referenced to their published source [TBD]. Validation further noted that text-embedding-ada-002 is a prior-generation embedding model and that newer embedding models are available; whether to adopt a newer model is a matter for the model owner to consider and does not raise a concern for the current use.
 
-## Pilot Performance and Feedback
+## 7.3 Model Construction and Selection
 
-Aditi asked about the timeline for pilot performance data. Bhavya indicated end of July for the "Other reason" free-text feedback, noting that the feature was only recently enabled and insufficient data has accumulated.
+Validation reviewed the construction details. Documents are chunked using a two-tier approach, page-level segmentation followed by recursive character splitting, at 4,000 characters with 200-character overlap, and chunks are canonicalized to normalize brand and product terminology, which includes a search-and-replace that rebrands the generic Talech source content to Elavon. Retrieval is hybrid: a primary dense vector search with L2 (Euclidean) distance over an Inverted File with Flat compression (IVFFlat) index of 100 partitions, returning the top 20 chunks, supplemented by a secondary entity-link retrieval based on document entity relationships, followed by a multi-factor relevance score with documented boosts (curated selling-point documents, product-type match, business-size match, content-category match, and recency), penalties (product-type mismatch and near-duplicate content), a minimum relevance threshold of 0.2, and per-document and total chunk limits for diversity. The 06/30 kickoff clarified that the production code path is rag_feature_generator.py; the rag_plus_generator.py path is legacy and not in production, and Validation's assessment addresses the production path. GPT-4o is used at a low-creativity setting for metadata extraction (temperature 0.1) and at a low temperature for generation (temperature 0.2 in the documented configuration), with a structured JSON response format and a custom, dynamically assembled prompt that places retrieved chunks behind a clear boundary to limit prompt injection and includes explicit negative constraints, for example not fabricating features and avoiding specific revenue figures. Validation has no concerns with the construction approach as documented.
 
-Arunkumar clarified that the standard reject reasons (preset dropdown options) are the only feedback being collected. Bankers are not providing free-text feedback and have communicated that they do not have time to enter selling point ratings. The 1-to-5 rating committed to in the Provisional Approval was never implemented. All feedback collected is for the product recommendation, not the selling point content.
+The input and output guardrails are constructed around the gateway through which GPT-4o is accessed. The gateway applies authentication and authorization, comprehensive logging of interactions, Personally Identifiable Information (PII) detection and filtering, and content filtering, and contractual and technical controls provide that U.S. Bank data is not used by the provider to train its foundation models. The model also applies its own input handling, including PII handling, and output post-processing. Validation has no concerns with the construction of these controls as documented; the content and PII filtering are detailed and assessed as guardrails in Section 8.2.
 
-Xinyu raised the streamlined timeline: the previous 10-to-12 week IV timeline has been reduced to 6 to 8 weeks for low-risk models, meaning full documentation and testing should be complete before kickoff. Given the mid-August production date, the team has approximately 6 weeks, of which 1 to 2 weeks are needed for management review and sign-off, leaving approximately 4 weeks for validation work.
+Validation noted that the configuration block in the documentation shows a development environment setting (ENV_CAT=dev) and a default temperature of 0.2, while the narrative refers to a low temperature for consistency. The configuration values that apply in production, including the temperature, the token limits noted in Section 7.2, and the environment, should be confirmed against the production deployment; this confirmation is part of the Part 2 implementation verification (Section 11.3), which is deferred and out of scope for this validation.
 
-Xinyu asked whether the reject reasons are directly related to model performance. Bhavya confirmed they are for product recommendations, not the GenAI model. Xinyu stated that if the feedback is not directly related to model performance, it does not count toward the pilot performance assessment Validation is looking for. The model owner needs to evaluate whether the model output meets the business need.
+Validation noted several construction points to confirm with the model owner. The retrieval index is an Inverted File with Flat compression (IVFFlat) approximate nearest neighbor index configured with 100 partitions, which is unusual for a corpus of 28 chunks, where partitioning provides little benefit and an exact search would be both trivial and fully deterministic; the rationale and any effect on recall or determinism should be confirmed [TBD]. Because the corpus is small and the retrieval caps return up to ten chunks, a large fraction of the knowledge base may be supplied to generation for each query, so the degree to which the ranking discriminates should be confirmed [TBD]. The re-ranking also applies a business-size match boost that depends on a company_size value, and an annual_revenue field, that the documentation states are extracted from the documents by GPT-4o; product documents are unlikely to state customer company size or revenue, so the coverage of these fields across the chunks and how often the size and revenue boosts engage should be confirmed [TBD].
 
-Jordan noted that the SME has manually reviewed all 172 selling points, and since all outputs are cached with no live generation, the pilot does not provide additional insight beyond the SME review. Jordan added that Validation is confirming the feedback channel is now open for monitoring purposes, even though no selling point feedback has been collected. If feedback collection remains incomplete, Validation can raise a finding and impose a restriction; the finding would not affect the validation outcome.
+## 7.4 Development Adjustments
 
-Aditi asked Bhavya to document that the feedback described in the Provisional Approval (1-to-5 rating and free-text on selling points) was not implemented. Bhavya confirmed this has been updated in the latest Model Development Document.
+Validation reviewed the adjustments applied to the model during development, before final performance evaluation. The development-time adjustments are the retrieval re-ranking tunings, the minimum relevance threshold, and the per-document and total chunk caps described in Section 7.3; their final configured values are disclosed. Consistent with the streamlined scope, the final configurations are disclosed even though a full tuning-justification record is not required at low risk. No score calibrations, overlays, or overrides are applied to the generated output during development. Validation has no concerns with this position. Adjustments applied after development, during or prior to use, are addressed in Section 8.6.
 
----
+## 7.5 Assumptions and Limitations
 
-## Retrieval Algorithm: Dense Search vs Hybrid Retrieval
+Validation reviewed the assumptions and limitations identified by the developer and assessed their treatment. The developer identifies dependence on knowledge base quality (high materiality, mitigated by subject matter expert validation and version-controlled updates), generative output variability (medium, mitigated by low temperature and caching), limited domain coverage (low, mitigated by retrieval filtering and fallback responses), and token or context limits (low, mitigated by prompt standardization and grounding). Validation has no concerns with the developer's characterization for the documented products.
 
-Aditi raised the discrepancy between the MDD, which describes dense search, and the code, which uses hybrid retrieval. Carl clarified that rag_plus_generator.py is not the active code path; the production code uses rag_feature_generator.py. However, Carl confirmed the retrieval is hybrid: the primary method is text embedding search (vector-based), supplemented by a secondary entity-link retrieval based on document entity relationships. The entity-link retrieval supplements the vector search to include as many relevant chunks as possible.
+Validation additionally noted three limitations not fully developed in the documentation. Provenance is not exposed in the user interface and is available only in backend logs, which constrains a banker's ability to verify the source of a claim at the point of use. The captured feedback signal tracks the product recommendation rather than the quality of the generated selling point, which limits the ability to monitor generation quality after deployment. The LLM-as-a-judge evaluation was found to provide limited discriminating signal and is not relied upon by Validation. These are developed in Sections 8.5, 12.1, and 8.1 respectively.
 
-Bhavya agreed to update the MDD (Section 6.2, retrieval strategy) to reflect the hybrid approach. Carl asked Bhavya to send him the latest document so he can make the update.
-
----
-
-## Prompt Alignment Between Code and MDD
-
-Aditi noted that the prompt visible in GitLab differs from the prompt documented in the MDD. She asked the model development team to confirm which is the final production prompt and update the MDD to match. Bhavya agreed to locate the prompt section and update it.
+*Section 7 Sources:* MDD Sections 5, 6.1-6.2 (chunking, embeddings, retrieval, prompt, vector database, cache), 6.3, 3.3; sample outputs; 06/02 output assessment (judge reliability); IV readiness assessment. Model specifications to be confirmed against current vendor documentation.
+*Section 7 Gaps:* per-segment representativeness of the 172-query set [TBD]; current-cache data statistics if the knowledge base changed [TBD]; model context window / output / cutoff verification [TBD verify]; reconciliation of the documented 25,000 output-token limit with the published output ceiling [TBD]; production configuration parity deferred to Part 2 (Section 11.3); documentation of elavonSellingPoints.xlsx and the Talech rebranding [TBD]; IVFFlat rationale, retrieval discrimination, and the company_size/annual_revenue metadata coverage [TBD]; published source for any model-selection benchmark figures [TBD].
 
 ---
 
-## Feature-Benefit-Need Mapping in Archer
+# 8 Model Outcomes and Performance Review
 
-Aditi asked about the Archer description referencing "Feature-Benefit-Need (FBN) mapping." Carl clarified that the current production system uses feature-plan mapping from the recommendation rule file, not FBN. FBN exists in the rag_plus_generator code, which is the legacy code path not currently in use. FBN could be implemented in the future but is not active now. The Archer description needs to be updated.
+## 8.1 Outcomes Analysis
 
----
+Validation reviewed the performance evidence as documented. The developer reports subject matter expert validation across the evaluation dataset and an automated evaluation using an LLM-as-a-judge for faithfulness, answer relevance, and context relevance, supported by embedding similarity and standard retrieval metrics where ground truth is available.
 
-## Customer Interaction Data in Archer
+Validation noted two matters bearing on the weight given to this evidence. First, the LLM-as-a-judge evaluation provides limited discriminating signal: in Validation's review the effectiveness score clustered near 0.92 with no meaningful correlation to the underlying critique, and the critique did not distinguish grounded from ungrounded outputs. Validation does not rely on the automated judge for the outcome and assesses faithfulness directly. Second, GPT-4o is used both to generate and to evaluate, which can bias automated scores; this reinforces reliance on subject matter expert review and Validation's independent check rather than the automated metric.
 
-Aditi noted that Archer describes the model as leveraging "customer interaction data," but no customer interaction data is used as a model input. Only customer attributes (NAICS, sub-industry, revenue) are used. Bhavya confirmed this is not accurate and agreed to work with Damien to update the Archer description.
+The subject matter expert row-level pass and fail results for all 172 selling points were delivered on 07/01/2026, and the model owner's initial results show a 100% pass rate; Validation's review of these results is in progress, and the denominator and per-segment breakdown should be stated explicitly [TBD]. A 100% aggregate pass rate warrants independent corroboration, which Validation provides through the faithfulness spot-check described next. Validation's independent faithfulness spot-check against the source documents is feasible with the materials in hand and is pending completion; because the curated selling-points spreadsheet (elavonSellingPoints.xlsx) receives the largest retrieval boost, the spot-check and the source set must include it, not only the nine documented files, and must account for the Talech-to-Elavon rebranding applied in processing, since rebranding errors would carry into the outputs (see Section 7.1) [TBD]. The business line confirmed on 06/18/2026 that the is_approved flag is not currently used and is not visible to users, so display is not gated on approval status, which explains the all-FALSE 06/02 export alongside the 06/15 demonstration; subject matter expert approval is therefore not enforced at the system level. The 06/30 kickoff confirmed that all outputs are served from the cache with no live generation and that the subject matter expert reviewed all 172 cached selling points individually, so the pilot does not add performance insight beyond the subject matter expert review; whether the served content is limited to subject matter expert-reviewed cache entries, and how any cache miss is handled, is carried into Section 11.2 [TBD].
 
----
+## 8.2 Guardrail Analysis
 
-## EMA Update
+Validation reviewed the documented guardrails. Input controls include PII detection using the Presidio framework, masking of sensitive content prior to processing, access control filtering, and the absence of free-text end-user input (the model is driven by structured customer attributes, not open user prompts). Output controls include compliance filtering, toxicity detection, and formatting validation. Bankers provide an additional review layer before any output is used.
 
-Aditi asked whether a new EMA is needed, since the current EMA covers the pilot phase. Damien confirmed that the current EMA is for the pilot stage. When the pilot is completed and the model moves to production, a new EMA will need to be submitted. Damien has added a note to the current EMA indicating that a production EMA will be needed. This should be submitted between now and August.
+In addition to the model's own guardrails, GPT-4o is reached only through U.S. Bank's gateway, which applies platform-level controls to all traffic. The gateway performs Personally Identifiable Information (PII) filtering on inputs and outputs, logs all interactions, and applies content filtering using neural multi-class classification that screens harmful content across four categories (hate, sexual, violence, and self-harm) at four severity levels, with content at medium or high severity filtered by default. These are enterprise-standard controls applied to all gateway traffic rather than controls tuned to this model, so they mitigate generic content and privacy risk but do not substitute for the model-specific faithfulness and grounding assessment in Section 8.1. Validation has no concerns with the gateway controls as a baseline guardrail for this internal-facing use.
 
----
+For this internal-facing, low risk model whose inputs are structured rather than free-text, independent adversarial, toxicity, and red-team testing are not performed; the exposure that motivates that testing is limited here, and the human review control is the primary mitigant. Hallucination risk is assessed through the faithfulness review in Section 8.1 rather than a separate independent test. Because the is_approved flag is not currently enforced (Section 11.2), the operative human controls are the subject matter expert review of cache content and banker review before customer use; Validation's assessment of guardrail adequacy is contingent on confirming the coverage of that subject matter expert review and the handling of cache misses [TBD].
 
-## MDD Update Requests
+## 8.3 Benchmarking Analysis
 
-Aditi presented the remaining documentation requests from the kickoff deck:
+Benchmarking is out of scope for this validation, as confirmed at the 06/30 kickoff. There is no incumbent automated system performing this function and no comparable internal or external benchmark for the generated content, and the documentation records this exclusion and its basis, which is acceptable for a non-replacement, low risk model.
 
-- Updated architecture flowchart, similar to the one provided during the PA, with updates to reflect the feedback loop and the cache layer.
-- Documentation of the Talech-to-Elavon brand change in the data or preprocessing section, describing the code-level search and replace and its impact.
-- Discussion of the example selling points Excel file and the boosted retrieval algorithm that gives preference to curated selling point examples. Aditi emphasized the importance of documenting this given the boost's influence on retrieval results.
-- Rationale for selecting 10 chunks when the total knowledge base contains 28 chunks. Bhavya confirmed she has updated the chunk count (the correct number is 28).
-- Token limit correction: the maximum input tokens for GPT-4o are 128K and maximum output tokens are 25K, not 2K as stated in the MDD. Carl agreed to locate and correct the reference.
+## 8.4 Sensitivity and Robustness Analysis
 
-Jordan asked the model owner to confirm the material versus immaterial change definition in Section 10. Bhavya confirmed that the definition has been updated in the latest MDD: the addition of new product domains has been moved from minor to material changes.
+Sensitivity and robustness analysis is out of scope for this validation, as confirmed at the 06/30 kickoff. The production pathway is deterministic and cached, so identical inputs return identical outputs, and there is no parameter training that would warrant input-perturbation sensitivity analysis of a fitted model; robustness in production derives from the deterministic recommender, retrieval grounding, cache-based consistency, and controlled input structure. The cache-retrieval behavior was evidenced by a 20-sample test reported in the documentation in which served responses matched the cached content character-for-character across a range of segments; a re-run against the current Elavon-branded cache is part of the Part 2 implementation verification (Section 11.3), which is out of scope for this validation.
 
----
+## 8.5 Explainability Testing
 
-## Monitoring Plan
+Validation reviewed the explainability mechanisms. Outputs cite the source documents used and retain backend traceability to retrieved chunks, and retrieval ranking provides visibility into which content influenced an output. Validation noted that provenance is not exposed in the user interface; a banker reviewing an output cannot see the underlying source at the point of use. The documentation describes a planned future enhancement to expose traceability in the interface. For the current internal use with banker review, the available traceability is sufficient to support source verification during review, and the user-interface limitation is documented as a future enhancement.
 
-Bhavya confirmed she has provided an updated monitoring plan that includes cache-related metrics, following guidance Jordan provided during the Early Engagement meetings regarding Synapse, Datadog, API transactions, and feedback monitoring. Validation noted it will conduct a thorough review of the updated plan.
+## 8.6 Post-Development Production Adjustments
 
----
-
-## Data Retention
-
-Bhavya confirmed that Synapse follows the standard U.S. Bank log retention policy of 3 to 5 years, with the Synapse instance for this model retaining data for 5 years. The location of this information in the documentation is unclear. Bhavya agreed to confirm it is documented and add it if not.
-
----
-
-## Production Scope
-
-Bhavya confirmed the full launch will expose the model to 527 bankers, nationwide within the United States only.
-
----
-
-## MRO and MRG Contacts
-
-Xinyu confirmed that Melissa DeNembo is the Model Risk Officer and Damien Traore is the current MRG contact for this model. Xinyu advised the business line to direct process questions to Melissa first, and escalate to Damien and the MRG team if Melissa cannot provide an answer.
-
----
-
-## MDD Remaining Comments
-
-Bhavya noted that she received Validation's feedback on the MDD (dated 06/23) and has updated most items, marking many comments as resolved. She will review the remaining items with Carl and address them before the next weekly meeting.
-
-Bhavya provided process feedback: for low-risk models, having three separate documents (development document, implementation document, monitoring plan) creates tracking overhead, and a single consolidated document would be easier to maintain.
-
----
-
-## Items Deferred to Next Session or Email
-
-- Thorough review of the updated MDD by Validation.
-- Thorough review of the updated monitoring plan by Validation.
-- EMA submission timing and process (Bhavya to coordinate with Damien).
-- Remaining MDD comment resolution (Bhavya and Carl to address before next meeting).
-
----
-
-## Action Items
-
-- Bhavya to create and send the SME review spreadsheet with row-level pass/fail for all 172 selling points, copying the SME on the email. Target: before next weekly meeting.
-- Carl to update MDD Section 6.2 to reflect hybrid retrieval (entity-link + dense search) instead of dense search only. Bhavya to send Carl the latest document.
-- Bhavya to confirm the production prompt matches the MDD and update the MDD if they differ.
-- Bhavya to update Archer: remove FBN reference (legacy, not in production), correct "customer interaction data" language. Coordinate with Damien on Archer updates.
-- Bhavya to add the Talech-to-Elavon brand change to the MDD data/preprocessing section.
-- Bhavya to add the example selling points Excel file and boosted retrieval algorithm to the MDD.
-- Carl to correct the maximum output token limit in the MDD (25K, not 2K).
-- Bhavya to confirm the architecture flowchart is included in the updated MDD with cache and feedback loop.
-- Bhavya to submit a production EMA before August (coordinate with Damien on timing).
-- Bhavya to confirm data retention (5-year Synapse) is documented in the MDD or implementation document.
-- Aditi to update the kickoff deck with explicit milestone dates (per Xinyu's feedback), correct MRG contact to Damien, and remove the "Marketing models" reference from Slide 10.
-- Aditi to send the updated kickoff deck to the distribution list.
-- Validation to review the updated MDD and monitoring plan and provide any additional feedback.
+Post-development production adjustments are out of scope for this validation, as none are applied, confirmed at the 06/30 kickoff. The documentation states that output quality is controlled through design, guardrails, and human review rather than through post-development adjustments.
