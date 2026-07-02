@@ -1,73 +1,123 @@
-# Individual Career and Development Plan: Jordan Low
+# Mid-Year Review: Progress Against Goals (H1 2026)
 
-01/01/2026 - 12/31/2026 (Mid-Year Update, 06/30/2026)
-
----
-
-## Explore Your Motivations
-
-**Describe your career interests, whether you want to grow in your current role or prepare for a new one. Think of the aspects of your work that are most engaging, where you have the most opportunity to highlight your strengths and contribute your unique talents.**
-
-I am at my best when I am building something that sits at the intersection of technology and governance: automation tooling that makes AI adoption faster and more defensible, evaluation frameworks that hold up under regulatory scrutiny, or a team member's ability to do both. In H1 2026, the work that energized me most combined hands-on GenAI engineering with cross-functional impact: standing up the team's GenAI validation automation codebase (AI CoE Intake #1286), delivering the bank's first agentic AI Provisional Approval (Model-7409), leading the Lumenova and Nimbus Uno platform evaluations, and co-leading the first-line presentation series on GenAI streamlining and change management. What these have in common is that they bridge the gap between building AI capabilities and governing them responsibly, and that bridge is where I contribute the most.
-
-What drains my energy has not changed: extended meetings with too many participants and navigating organizational politics. I manage both better than I did a year ago, but they remain areas I tolerate rather than enjoy.
-
-My career interests are growing toward roles where I can apply this combination of technology and governance at a broader organizational scale. I see the bank investing heavily in AI platforms, guardrail tooling, and adoption enablement, and I believe my experience evaluating these platforms, building automation on top of them, and stress-testing them against MRM requirements positions me to contribute more broadly to how AI is adopted and governed across the organization. I want to continue deepening my GenAI and agentic AI expertise while expanding the scope and visibility of my impact beyond the validation function.
+My self-review is structured against the three goal pillars and their sub-goals. Each goal was set at the start of the cycle. For each, I describe what I set out to accomplish and the progress I have made through H1 2026, including work that arose during the half and fits within these pillars.
 
 ---
 
-## Identify Development Priorities
+## Goal 1: Customer Focus and Growth Enablement
 
-**Given your career interests, where would you like to focus your development? Use the U.S. Bank Leadership Profile to help you identify where to prioritize your efforts.**
+Partner closely with the business through early engagement, timely decision-making, and scalable governance to support responsible adoption of AI and advanced analytics.
 
-I want to focus on two areas:
+### Training and Workshops
 
-**Digital and innovation first.** My technical depth is the foundation of my contributions, and I want to keep pushing it toward broader organizational impact. In H1 2026, I led three concurrent platform evaluations (Lumenova, Nimbus Uno, TrustWise), built the team's GenAI automation codebase through Phase 1, developed the DeepEval-backed evaluation and adversarial guardrail harness now used across multiple models, and authored the SR 2026-13a impact analysis that informed MRM's proportionality posture. In H2, I want to deepen my expertise in agentic AI evaluation frameworks and move the codebase into Phase 2, while continuing to translate technical depth into reusable tools and methodologies that scale beyond my individual work.
+1. Facilitate the GenAI Governance Requirements Workshop, Session 2 (Performance Testing Requirements). Status: Deferred to Q4 (rescheduled by Bob). I completed the preparatory work: I authored the Section 7 (Performance Testing) priority and complexity guidance for Low and Ultra-Low risk models and supported the 06/17 model-owner session. The formal Session 2 workshop is now targeted for November 2026.
 
-**Collaboration and engagement.** This half pushed me significantly in both people leadership and cross-functional collaboration. I onboarded and now manage two offshore team members (Aditi, Tessa), coached a team member through a performance improvement plan, covered for a peer during extended leave, and served as the team escalation path during my manager's absence. On the cross-functional side, I co-led the first-line GenAI presentation series on streamlining and change management, represented Validation at the MRM Monitoring Steering Committee, and contributed to the MRG quarterly stakeholder meeting, all of which required building partnerships across AI CoE, Technology Oversight, MRG, and the business lines. In H2, I want to build on this by strengthening my cross-functional partnerships with first-line AI enablement and platform teams, becoming more deliberate about delegation, and developing my team members' ability to operate independently.
+2. Provide feedback and support to teammates on Agentic AI training sessions. Status: On track. I provided feedback and support across all three sessions of the MRM AI/ML training series (Session 1: Agentic AI Introduction, Session 2: Agentic AI Introduction Part 2, Session 3: OpenAI Agents SDK and MS Copilot demo). The next team training session is the LangGraph training on August 13.
 
----
+3. Share knowledge from GenAI validations with the rest of the team. Status: Ongoing. I shared live model version-tracking and DeepEval mechanics with the team for AWS Q in Connect (QiC) and IVR models, drawing on the Model-7409 and Model-7637 experience; noted at the 06/09 meeting as helpful for Zhiguang and Sourav.
 
-## Development Items
+4. Support the first-line GenAI presentation series on Streamlining and Change Management. Status: Done. I helped build the slides, shaped the approach, and answered questions across several sessions for both the GenAI Streamlining of Development and Validation for Low and Ultra-Low Risk Models series and the GenAI Model Change Management and Requirements series (Jinjun presented both). I built the underlying effort-reduction quantification (approximately 44 percent Validation and 35 percent model-owner reduction) and the material-versus-immaterial change definitions used in the 06/09 workshop and 06/22 follow-up. The GenAI PA timeline was formally reduced from 4 to 6 weeks to 2 to 3 weeks as a result of the strategic planning process, in part informed by this effort-reduction analysis.
 
-### Digital and Innovation First
+### Cross-Functional Collaboration
 
-**Additional Information:**
+5. Collaborate with AI Technology Oversight on the AI/ML risk management framework (policy, tiering, testing and monitoring procedures, AI change management, registry fields, Copilot Studio oversight), in partnership with the AI/ML CoE, Technology Oversight, Legal, Compliance, Information Security, and other MRM teams, including the PA template review with prioritized recommendations from the Model-7306 experience. Status: On track. I produced the updated Provisional Approval Request template (June v2) cleaned for AI Validation CoE review, contributed Copilot Studio oversight experience through Model-7638 (primary validator) and informal support on Model-7527, and advanced the GenAI change-management requirements.
 
-- Build and advance the team's GenAI validation automation capabilities
-  - H1 progress: completed AI CoE Intake #1286 Phase 1 (topic modeling, synthetic data generation, LLM-as-a-Judge evaluation, GPT-5.1 migration). The codebase is in production use within the IT dev environment
-  - H2 focus: Phase 2 (DeepEval-backed agent and RAG evaluation framework), and secure recognition of production status
-- Deepen expertise in GenAI and agentic AI evaluation, with a focus on platform adoption and enablement
-  - H1 progress: delivered the bank's first agentic IVR Provisional Approval (Model-7409), recommended a DeepEval-based regression gate for pilot-period change management, and led the Lumenova and Nimbus Uno platform POC evaluations with measurable platform impact (my evaluation feedback drove vendor upgrades to prompt-injection detection and coherence-score methodology)
-  - H2 focus: complete the Agentic AI Framework Evaluation white paper (co-authored with Aditi), advance multi-turn guardrail testing, and begin the GenAI IV validation template work
-- Increase the organizational visibility and impact of what I build
-  - H1 progress: produced the automation-tooling slide for the AI CoE strategic-planning deck, positioning MRM-AI Validation as the lead internal automation initiative; authored the SR 2026-13a impact analysis that informed MRM's proportionality and streamline posture
-  - H2 focus: deliver Performance Testing training (November 2026), continue contributing to the GenAI Validation Automation Playbook, and explore opportunities to apply my platform evaluation and governance expertise more broadly across the organization
+6. Provide feedback and support to the team and Xinyu on AI/ML updates for the Model Risk Committee, AI Stakeholder Committee, and regulators. Status: Done and ongoing. I represented Validation at the MRM Monitoring Steering Committee on 06/25, standing in for Xinyu, and raised two GenAI-specific governance gaps: where hallucination falls in the failure mode taxonomy (accuracy versus robustness) and how forced vendor model upgrades (for example, GPT-4 to GPT-5) should be classified in the monitoring template. Both surfaced gaps in the current framework for GenAI-specific failure modes. I also contributed to the MRG quarterly stakeholder meeting (06/26).
 
-**Status:** In Progress
-**Completion Date:** 12/31/2026
+### White Papers and Research
 
----
+7. Agentic AI Framework Evaluation white paper, documenting evaluation criteria and summarizing relevant industry frameworks, by Q4 2026 (co-authored with Aditi, as lead author). Status: Approximately 50 percent complete. I completed the research synthesis covering five major industry frameworks (NIST AI 600-1, OWASP Top 10 for Agentic Applications, MITRE ATLAS, CSA MAESTRO, AURA), the regulatory overlay (SR 2026-13a), and the evaluation tooling landscape. I also built the DeepEval configuration and adversarial guardrail harness on Model-7409 (19 metrics across conversation quality and guardrail dimensions), which serves as the hands-on implementation foundation for the methodology sections. The remaining work is drafting the paper itself from the completed research base.
 
-### Collaboration and Engagement
+8. Alignment between SME and Automated Testing for GenAI Evaluation white paper (Jordan). Status: In progress (research phase). I have foundational learnings from the Model-7009 validation and the Calibrating LLM-as-Judge work, and I attended and gathered knowledge from workshops on conformal prediction approaches to blending automated and human evaluation (including the Nimbus conformal prediction layer and Oliver Wyman's conformal-threshold-based acceptance/escalation framework). Drafting has not begun, but the conceptual foundation is established.
 
-**Additional Information:**
+9. Automatic Prompt Optimization and Context Engineering white paper (Jordan). Status: In progress (research phase). I have deep foundational knowledge in this area from developing the DSPy/GEPA prompt-optimization tooling in the validation codebase and from my independent research and teaching on reflective prompt evolution, Pareto-based optimization, and automated evaluate-reflect-mutate workflows. The conceptual framework and practical implementation experience are established; drafting has not begun.
 
-- Lead model validation projects end to end, with growing scope and complexity
-  - H1 progress: I led five concurrent model engagements as primary validator, delivered four validations on time, and managed the Model-7306 material change escalation through MRG and MRO
-  - H2 focus: deliver the Model-7306 PA2 and Model-7468 IV, and lead Model-7158 IV kickoff
-- Develop people leadership capabilities
-  - H1 progress: designed and ran Aditi's onboarding, maintained Tessa's weekly status and quality review, coached Mehdi through his PIP, evaluated a candidate (Varsha), and served as escalation path during Xinyu's absence
-  - H2 focus: build Aditi's and Tessa's independence on their assigned models, develop delegation skills, and support onboarding if the team hires a replacement
-- Strengthen cross-functional partnerships, particularly with first-line AI teams
-  - H1 progress: collaborated with AI Technology Oversight, co-led the first-line GenAI streamlining and change management presentation series, represented Validation at the MRM Monitoring Steering Committee, contributed to MRG quarterly stakeholder meeting, and coordinated the OCC DDAI exam response
-  - H2 focus: deepen engagement with first-line AI enablement and platform teams on governance and adoption initiatives
+### Research and Development Initiatives (H2 2026)
 
-**Status:** In Progress
-**Completion Date:** 12/31/2026
+10. Contribute to the team's H2 2026 R&D roadmap initiatives, now part of the tracked strategic-planning plan reported to management. Status: In progress. The R&D roadmap includes validation-capability research, multi-turn agentic AI guardrails, and document-intelligence applications, in addition to the white papers and codebase initiatives captured above. The team scoped these in the 06/30 H2 planning session, and timelines, milestones, owners, and deliverables are being defined.
 
 ---
 
-## Summary
+## Goal 2: Effective Risk Management
 
-H1 2026 was a half of significant growth in both technical depth and cross-functional scope. I delivered four validations on time, built out the team's automation codebase, led three platform evaluations, co-led the first-line GenAI presentation series, and took on people management responsibilities that were not in my original goals. The thread connecting my strongest contributions is the intersection of technology and governance: building and evaluating AI capabilities that are both effective and defensible. In H2, my priorities are completing the in-progress Initial Validations, advancing the automation codebase to Phase 2, and expanding the organizational reach of my cross-functional partnerships and the tools I build.
+Ensure strong, consistent execution of all aspects of the Model Risk Management program, with a clear ownership mindset and disciplined governance across the full model lifecycle.
+
+I completed the following validations in 2026, all delivered on time:
+- Model-7306 PayVIEW ChatBot, Provisional Approval (01/30/2026).
+- Model-6170, Special Purpose Validation (01/30/2026).
+- Model-7306 PayVIEW ChatBot, Special Purpose Validation, pilot extension (05/19/2026).
+- Model-7409 Conversational AI in IVRs, Provisional Approval, Approved with Restrictions (05/28/2026).
+
+All my 2026 completions to date are Provisional Approvals and Special Purpose Validations; no full Initial Validations have closed yet.
+
+1. Serve as primary validator on the following models this cycle (contributing to the team's target of 8 or more full or provisional validations):
+   - Model-7306 PayVIEW ChatBot. Status: On track. I completed PA1 in 01/2026 and delivered the SPV pilot extension. I identified and escalated an undocumented combined-answer change as a material change requiring a new PA, coordinating the MRG and MRO escalation, the 06/15 material-change meeting, and an interim disable of the feature. My independent correctness analysis showed the model owner's regrade gain came from denominator reduction rather than error correction. PA2 is now in active section-by-section drafting (target approximately two weeks); IV is targeted to follow shortly after PA2 closes, with draft documentation (MDD, Monitoring Plan) received 06/15 and under review.
+   - Model-7468 GenAI Selling Points for CBB. Status: In progress. I was named project lead and primary validator (06/02). I conducted an independent code review and CSV spot-checks that surfaced observations on pricing accuracy and cross-industry product mapping, completed the system and Synapse data-architecture review, and kicked off the IV. I am now drafting the PA and the full Initial Validation section by section.
+   - Model-7637 Knowledgebase Integration (IVR). Status: In progress. I completed four early-engagement meetings; engagement is paused per Xinyu's direction pending stable model documentation.
+   - Model-7409 Conversational AI in IVRs (Agentic AI). Status: Done (PA). This is the bank's first agentic IVR model to reach Provisional Approval. I delivered an Approved with Restrictions outcome (signed and distributed 05/28); the pilot is live 06/09 to 12/09. I am now running pilot-period change management and recommended a DeepEval-based regression gate (part of the team's GenAI validation automation codebase, AI CoE Intake #1286) so the business line can make immaterial changes within validation control during the pilot, streamlining the change process and reducing rework. IV to follow.
+   - Model-7158 Entity Name Resolution as a Service. Status: Upcoming IV. The model is under a one-year Provisional Approval; the model owner is electing a full Initial Validation, which I will lead. Kickoff and target dates are being set.
+
+2. Support validations as secondary validator. Status: I had no secondary validator assignments this cycle.
+
+2a. Annual reviews and other lifecycle activities:
+   - Model-7154 DocuSign Insight, Annual Review (Nan/Jordan; due 12/18/2026), including the data-breach-notification clause-detection prompt template. Status: In progress, with new scope. Beyond the annual review, I conducted early engagements with the model owner on their platform upgrade options (including the Agiloft "Astra" vendor demo on 06/22), coordinating with MRG and MRM on the potential implications, while covering for Nan.
+   - Model-6962 GCTC Credit Ratings Extraction, Annual Review (Nan/Jordan; due 12/15/2026, recurring).
+   - Model-7638 Premier Airlines. Status: Scope change. I conducted early engagement with the business line until the model was reclassified as out of scope (a tool, rescoped to an EMQ: email-only use, 30-user cap) and moved to MRG. Early-engagement work credited; not a completed validation.
+
+3. Complete finding closures within the validation-review window, as secondary validator with Nan. Status: Done, all on time. I closed five findings within the 30-day review window: four on Model-7154 DocuSign Insight from the Q4 2025 Initial Validation (FID-0018213 Development Document Enhancement, FID-0018214 Monitoring Plan Enhancement, FID-0018215 Estimation Method Construction, FID-0018216 Implementation Document Enhancement) and one on Model-6962 GCTC Credit Ratings Extraction from the December 2025 Annual Review (FID-0018237 Document Enhancement).
+
+4. Perform monitoring and issue management for assigned models. Status: On track. I have no open issues at present. Monitoring reviews are upcoming on the model owners' submission schedule (Model-6962 next monitoring submission due 09/30/2026; Model-7154 due 12/31/2026).
+
+5. Meet timeline commitments (100 percent of assigned validations on time, supporting the team 90 percent target). Status: On track, 100 percent on time. All four of my completed validations this half were delivered on time. I have the Model-7306 PA2 on an accelerated two-week turn, with the Model-7306 IV targeted to follow shortly after PA2 closes, and full IVs (Models 7468, 7409, 7637) are underway.
+
+6. Support regulatory and audit readiness. Status: In progress. I coordinated Validation's response to the OCC DDAI target exam, including the IR.20 drift and bias performance-monitoring response with Jinjun's research and coordination across Validation and first line. I also authored the SR 2026-13a impact analysis (the SR 11-7 to SR 2026-13a transition), which informed MRM's proportionality posture and the streamline business case.
+
+7. People and team leadership. Status: Ongoing.
+   - Direct-report management: I designed and ran Aditi's onboarding curriculum and maintained Tessa's weekly status and quality review.
+   - Team development: I spent significant time tracking and coaching Mehdi through his performance improvement plan, working to change his performance trajectory before his departure. I also evaluated an offshore vendor candidate (Varsha) for potential team addition.
+   - Team coverage: I covered for Nan during her absence and served as the team escalation path during Xinyu's absence.
+
+---
+
+## Goal 3: Operational Excellence
+
+Drive operational excellence across MRM by ensuring processes are effective, efficient, and scalable. Support automation and continuous improvement initiatives.
+
+### Templates and Guidance Documents
+
+1. Help draft and review the enhanced Implementation Framework and Testing, Monitoring Plan, and Monitoring Report templates, with GenAI and Agentic AI specific instructions. Status: In progress. I am contributing through drafting and validator-perspective review; specific template assignments shift across the team over the cycle.
+
+2. Co-author the GenAI Validation Template. Status: On track. I co-authored and reviewed the GenAI Validation Template draft v1, building on the November 2024 base as the standardized template the streamline scope work builds on.
+
+### Platform Evaluations
+
+3. Lead the Lumenova Platform POC evaluation (Jordan/Nan; Jan to Mar, extended through June). Status: On track, with measurable platform impact. I completed 16 Jira tickets across four testing categories and have one (LLM-as-judge pipeline) in backlog for next sprint.
+
+   Ingress guardrail testing: I assessed Lumenova's out-of-the-box guardrail policies and identified five missing archetypes (data exfiltration prevention, advanced jailbreaking detection, out-of-domain query detection, citation/source grounding verification, indirect prompt injection detection). I benchmarked ingress and egress guardrails against the same adversarial datasets used in validating Model-7009, flagging a 32.6 percent pass-through rate on malicious inputs. I tested prompt injection detection on the Deepset and Qualifire benchmarks (initial recall 41.4 percent; after my feedback contributed to a platform upgrade, recall improved to 85.9 percent on Deepset and 96.7 percent on Qualifire). I ran a false positive blocking test (zero false positives on approximately 1,950 legitimate test cases) and configured the financial topic detection parameter in the GitLab repo.
+
+   Egress guardrail testing: I evaluated the Trust Score and Coherence Score against the Stanford ARES ground-truth dataset (500 queries). Context Relevance AUC was 82.8 percent and Trust Score AUC was 72.2 percent pre-upgrade. After my evaluation feedback drove a platform upgrade, Context Relevance AUC improved to 84.8 percent and Trust Score AUC improved to 87.6 percent (+15.4 percentage points). I also built an independent GPT-4o context relevance evaluator as a benchmark comparison, which outperformed Lumenova (MRM AUC 90.0 percent versus Lumenova 84.8 percent; MRM F1 83.7 percent versus Lumenova 77.0 percent).
+
+   Evaluator testing: I ran the independent statistical comparison of Lumenova's evaluators against the Model-7009 reference (Wilcoxon signed-rank test on 964 queries across BLEU, METEOR, and ROUGE-L) and recommended pivoting from legacy metrics to LLM-based evaluators. I built reusable GitLab code libraries (JSON Parser, Score Clustering, Performance Metrics, Visualization) for guardrail performance analysis.
+
+   SDK and infrastructure: I documented the certificate bundle setup for API access and resolved the SDK install blocker by identifying the correct Artifactory path (lumenova-beacon 2.7.2), enabling the team to proceed with Beacon evaluation work.
+
+   As of June, the work has progressed to the LLM-as-judge evaluation pipeline in Beacon using the SDK, and I sustained sprint and daily-huddle participation through the half.
+
+4. Lead the Nimbus Uno platform POC evaluation (Jordan/Nan; April to July), with an end-to-end Model-7009 test on Nimbus. Status: On track. For Phase I (traditional model testing, April to July), I attended all seven sessions (six training sessions and the Session 7 feedback roundtable), took meeting minutes across all sessions, and provided detailed feedback including the critical assessment that GenAI features are not yet activated in the bank's environment. I authored the platform assessment for Xinyu and set up Model-7009 as the Phase II GenAI test case (Q3 to Q4). Phase II GenAI testing has not yet started.
+
+5. Evaluate ML Studio and Modeva platforms. Status: On hold pending the active Nimbus, Lumenova, and TrustWise evaluations.
+
+6. Evaluate and test the TrustWise AI control-tower platform (real-time guardrails and monitoring for generative and agentic AI). Status: Early-stage evaluation. I am participating in the TrustWise testing and evaluation workstream.
+
+I am an active testing participant across all three platform evaluations (Lumenova, Nimbus Uno, and TrustWise), assessing each platform's fit for GenAI and agentic validation and feeding findings back to vendors and leadership. This comparative evaluation experience is now load-bearing in the platform selection process, as my assessments provide the team's primary evidence base for GenAI platform capabilities and gaps.
+
+### Validation Automation
+
+7. Co-develop the GenAI Validation Automation Playbook (reusable automated testing methodologies, Python tools, scripts), with Nan and Zhiguang; target December 2026. Status: On track. I advanced the Playbook and the DeepEval-backed evaluation and adversarial guardrail harness used on Model-7409 and ported to Model-7637.
+
+8. Build out the MRM-AI Validation GenAI codebase and workflow (AI CoE Intake #1286; the team's internally built tooling initiative, which I co-lead) to develop and deploy AI-driven automation capabilities within Model Risk Management to increase efficiency in GenAI model validation. Status: On track; the codebase is in production and actively used in the validation process. Phased roadmap:
+   - Phase 1, GenAI Automation Codebase V1 (complete, 2026H1): delivered a reusable validation automation toolset including LLM-as-a-Judge evaluation, topic modeling, synthetic data generation, and migration to Azure APIM gateway with GPT-5.1. I completed the migration ahead of the legacy gateway decommission and manage ongoing access and key rotation. Currently in active production use on GenAI model validations.
+   - Phase 2, Agent Evaluation and Codebase V2 (in progress, target 2026H2): adding DeepEval-backed agentic AI testing and evaluation capabilities and consolidating the codebase into V2 (started on Model-7409). Also includes validation-capability research, GenAI framework evaluation, agentic AI guardrails, and document-intelligence applications. Production deployment target Q4 2026.
+   - Phase 3, MRM Validation Agent (in planning, target 2027): designing a customized agent to orchestrate end-to-end validation workflows. The codebase is in production use today within the IT dev environment; scoping for the formal IT production environment promotion is underway.
+   I am also driving visibility for this initiative, including securing recognition of the codebase's production status and refining the initiative description to emphasize efficiency and capability building. I produced the automation-tooling slide for the AI CoE strategic-planning deck, positioning MRM-AI Validation as the lead internal automation initiative.
+
