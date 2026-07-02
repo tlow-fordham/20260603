@@ -1,154 +1,73 @@
-# Provisional Approval Report (PA2) - Model-7306 PayVIEW - GTM and MMP ChatBot
+# Individual Career and Development Plan: Jordan Low
 
-Draft, 06/19/2026. Internal Validation draft. Not for distribution.
-Recommended outcome: Approved with Restriction. Pilot period: 07/06/2026 through 11/01/2026.
-
-This report follows the structure of the original Provisional Approval (PA1) report and is scoped to the change under review. Unchanged elements are asserted concisely with reference to the PA1 report rather than re-documented.
+01/01/2026 - 12/31/2026 (Mid-Year Update, 06/30/2026)
 
 ---
 
-## Executive Summary
+## Explore Your Motivations
 
-This report documents Model Risk Management (MRM) Validation's second Provisional Approval (PA2) review of Model-7306, PayVIEW - GTM and MMP ChatBot. It covers one change to the model: the Combined Answer. Under the original Provisional Approval, signed 01/30/2026, the model presented up to four separate candidate answers and their notes to the agent. The model now adds an additional generative large language model call that synthesizes those candidate answers and notes into a single newly generated combined answer with inline source citations.
+**Describe your career interests, whether you want to grow in your current role or prepare for a new one. Think of the aspects of your work that are most engaging, where you have the most opportunity to highlight your strengths and contribute your unique talents.**
 
-Material changes to the model during the pilot were not permitted under the terms of the original Provisional Approval. The combined answer was nonetheless shown to pilot users from the start of the pilot on 05/04/2026 without the required separate approval. The Special Purpose Validation Outcome Form, signed 05/19/2026, reiterated that the combined answer change specifically was not approved and required separate documentation and approval before deployment. Model Risk Governance (MRG) determined the change material, and the business line disabled the model through a backend feature flag on 06/15/2026 pending this review. This PA2 is scoped to the combined answer change and to continued, expanded pilot use.
+I am at my best when I am building something that sits at the intersection of technology and governance: automation tooling that makes AI adoption faster and more defensible, evaluation frameworks that hold up under regulatory scrutiny, or a team member's ability to do both. In H1 2026, the work that energized me most combined hands-on GenAI engineering with cross-functional impact: standing up the team's GenAI validation automation codebase (AI CoE Intake #1286), delivering the bank's first agentic AI Provisional Approval (Model-7409), leading the Lumenova and Nimbus Uno platform evaluations, and co-leading the first-line presentation series on GenAI streamlining and change management. What these have in common is that they bridge the gap between building AI capabilities and governing them responsibly, and that bridge is where I contribute the most.
 
-Validation reviewed the updated pilot performance for the combined answer output. Correctness is 72.7 percent on the deduplicated answered queries, which clears the 67 percent pilot threshold. Validation has no concerns that would prevent continued pilot use prior to a full validation and recommends an Approved with Restriction outcome through 11/01/2026. The comprehensive assessment will follow in the Initial Validation. Validation's recommendations on the change, including the corrections the model development team has committed to make before the pilot resumes, are documented in the Conclusion.
+What drains my energy has not changed: extended meetings with too many participants and navigating organizational politics. I manage both better than I did a year ago, but they remain areas I tolerate rather than enjoy.
 
-## Model Purpose and Usage
+My career interests are growing toward roles where I can apply this combination of technology and governance at a broader organizational scale. I see the bank investing heavily in AI platforms, guardrail tooling, and adoption enablement, and I believe my experience evaluating these platforms, building automation on top of them, and stress-testing them against MRM requirements positions me to contribute more broadly to how AI is adopted and governed across the organization. I want to continue deepening my GenAI and agentic AI expertise while expanding the scope and visibility of my impact beyond the validation function.
 
-The model assists sales agents in answering Global Treasury Management (GTM) and Money Movement Platform (MMP) questions using the bank's knowledge base articles. It is employee facing, and agents review the model's output before relaying information to a customer. The model purpose and usage are unchanged from the original Provisional Approval; refer to the PA1 report for the full description.
+---
 
-## Model Theory and Construction
+## Identify Development Priorities
 
-The retrieval augmented generation framework, embedding models, cache mechanism, gateway access, and foundation large language model are unchanged from the original Provisional Approval and are described in the PA1 report.
+**Given your career interests, where would you like to focus your development? Use the U.S. Bank Leadership Profile to help you identify where to prioritize your efforts.**
 
-The change under this review is the addition of a new generative large language model call that produces the combined answer. The up-to-four candidate answers and their notes produced by the approved process are passed to the foundation large language model (GPT-4o) in an additional call that generates a single combined answer, consolidating duplicative content and preserving inline source citations. This is a generation step rather than a deterministic concatenation: the combined answer is newly generated text produced by the model from the candidate answers and notes. When only one candidate answer is available, the model formats it directly without the synthesis call. When no answer can be grounded, the model indicates that it could not find an answer and prompts the agent to verify manually. Which output is presented, the combined answer or the four separate answers, is selected by a backend, code level toggle that is internal and not user facing. This output-selection toggle is distinct from the feature flag the business line used to disable the Query Agent pending this review.
+I want to focus on two areas:
 
-### Combined answer synthesis prompt
+**Digital and innovation first.** My technical depth is the foundation of my contributions, and I want to keep pushing it toward broader organizational impact. In H1 2026, I led three concurrent platform evaluations (Lumenova, Nimbus Uno, TrustWise), built the team's GenAI automation codebase through Phase 1, developed the DeepEval-backed evaluation and adversarial guardrail harness now used across multiple models, and authored the SR 2026-13a impact analysis that informed MRM's proportionality posture. In H2, I want to deepen my expertise in agentic AI evaluation frameworks and move the codebase into Phase 2, while continuing to translate technical depth into reusable tools and methodologies that scale beyond my individual work.
 
-The system prompt and instruction used for the combined answer generation call are reproduced below as provided by the model development team.
+**Collaboration and engagement.** This half pushed me significantly in both people leadership and cross-functional collaboration. I onboarded and now manage two offshore team members (Aditi, Tessa), coached a team member through a performance improvement plan, covered for a peer during extended leave, and served as the team escalation path during my manager's absence. On the cross-functional side, I co-led the first-line GenAI presentation series on streamlining and change management, represented Validation at the MRM Monitoring Steering Committee, and contributed to the MRG quarterly stakeholder meeting, all of which required building partnerships across AI CoE, Technology Oversight, MRG, and the business lines. In H2, I want to build on this by strengthening my cross-functional partnerships with first-line AI enablement and platform teams, becoming more deliberate about delegation, and developing my team members' ability to operate independently.
 
-System prompt, wrapped in Llama-2 style system tags:
+---
 
-```
-<|SYS|>
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-<</SYS>>
-```
+## Development Items
 
-Instruction:
+### Digital and Innovation First
 
-```
-Question: {query}
-Answers: {answers}
-The above HTML snippet contains multiple answers from a RAG system in response to the question.
-Task: Combine these answers into one cohesive paragraph with appropriate citations to answer the question.
-Output guidelines: Merge repetitive content smoothly. Return the answer as a valid HTML. Add inline <a> citations in parentheses immediately after the sentences they support.
-```
+**Additional Information:**
 
-### Validation analysis of the synthesis prompt
+- Build and advance the team's GenAI validation automation capabilities
+  - H1 progress: completed AI CoE Intake #1286 Phase 1 (topic modeling, synthetic data generation, LLM-as-a-Judge evaluation, GPT-5.1 migration). The codebase is in production use within the IT dev environment
+  - H2 focus: Phase 2 (DeepEval-backed agent and RAG evaluation framework), and secure recognition of production status
+- Deepen expertise in GenAI and agentic AI evaluation, with a focus on platform adoption and enablement
+  - H1 progress: delivered the bank's first agentic IVR Provisional Approval (Model-7409), recommended a DeepEval-based regression gate for pilot-period change management, and led the Lumenova and Nimbus Uno platform POC evaluations with measurable platform impact (my evaluation feedback drove vendor upgrades to prompt-injection detection and coherence-score methodology)
+  - H2 focus: complete the Agentic AI Framework Evaluation white paper (co-authored with Aditi), advance multi-turn guardrail testing, and begin the GenAI IV validation template work
+- Increase the organizational visibility and impact of what I build
+  - H1 progress: produced the automation-tooling slide for the AI CoE strategic-planning deck, positioning MRM-AI Validation as the lead internal automation initiative; authored the SR 2026-13a impact analysis that informed MRM's proportionality and streamline posture
+  - H2 focus: deliver Performance Testing training (November 2026), continue contributing to the GenAI Validation Automation Playbook, and explore opportunities to apply my platform evaluation and governance expertise more broadly across the organization
 
-Validation reviewed the synthesis prompt against standard prompt construction practices. The assessment is organized by practice below. These are recommendations for strengthening the prompt and do not, on their own, prevent the pilot from resuming.
+**Status:** In Progress
+**Completion Date:** 12/31/2026
 
-1. Role specification (persona). The prompt defines a generic persona, "a helpful, respectful and honest assistant." It is not scoped to the Global Treasury Management and Money Movement Platform domain or to the task of consolidating retrieved answers, so it does not set domain vocabulary or precision expectations.
-2. Explicit task description. The task is stated, to combine the answers into one cohesive paragraph with citations, but it does not state the downstream use, that the output is presented to a sales agent who relies on it, and it is described at a high level.
-3. Delimiters. The candidate answers are passed as a single HTML snippet in the Answers field with no delimiters separating one answer from another and no marker separating the instruction from the data. This contributes to the lack of per-answer traceability noted in the Risk Mitigation section.
-4. Constraints, positive and negative. The prompt includes positive constraints, to merge repetitive content, return valid HTML, and add inline citations, but no negative constraints. It does not instruct the model to use only the content of the provided answers, nor to avoid presenting an answer when the candidates contain none. The absence of these constraints is directly related to the combined answer behavior assessed in the Risk Mitigation section.
-5. Few-shot examples. The prompt contains no examples of an acceptable combined answer, so the model is not shown the intended structure, level of detail, or citation behavior.
-6. Output format specification. An output format is specified, a single valid HTML paragraph with inline anchor tag citations. The format is a prose paragraph rather than a structured, parseable format, and Validation observed that the citations render as empty parentheses in the non-HTML formats used for review.
-7. Enumeration of required content. The prompt does not enumerate what the combined answer must preserve from the inputs, for example that each distinct grounded fact be retained and that no fact be introduced that is not in the inputs. What is included is left to the model.
-8. Error handling and disambiguation. The prompt provides only generic safety handling, "if you don't know the answer, do not share false information." It does not handle the case where the provided answers contain no grounded answer, for example "I could not find a specific answer," and it does not disambiguate conflicting answers. This is the most material gap for this use case and is tied to the failed-article content reaching the combined output.
-9. Self-verification. The prompt does not ask the model to verify that the combined answer is supported by the provided answers or that the citations correspond to real sources.
+---
 
-Given that this is a low-risk model and that GPT-4o is an advanced large language model capable of producing a coherent combined answer from the candidate answers even with a minimal prompt, and given that the pilot results were within the correctness threshold, Validation has no concerns with the synthesis prompt for the pilot. However, Validation recommends that the prompt be strengthened, in particular by adding explicit handling for unanswered inputs (item 8) and a constraint to ground the combined answer only in the provided answers (item 4), by adding per-article delimiters to the input (item 3), and by adapting the Llama-2 chat formatting to the GPT-4o interface, since GPT-4o does not interpret the Llama-2 system tags as a control structure and the prompt appears carried over from the prior Llama-2 based implementation. These recommendations are consolidated in the Conclusion and will be assessed further during the Initial Validation.
+### Collaboration and Engagement
 
-## Development Data
+**Additional Information:**
 
-The development data and the retrieval corpus are unchanged from the original Provisional Approval; refer to the PA1 report. The pilot corpus comprises 526 knowledge base articles, the same set used for the original Provisional Approval and within the 800 article pilot limit. The combined answer change operates on the candidate answers already produced and does not alter the data sources or retrieval.
+- Lead model validation projects end to end, with growing scope and complexity
+  - H1 progress: I led five concurrent model engagements as primary validator, delivered four validations on time, and managed the Model-7306 material change escalation through MRG and MRO
+  - H2 focus: deliver the Model-7306 PA2 and Model-7468 IV, and lead Model-7158 IV kickoff
+- Develop people leadership capabilities
+  - H1 progress: designed and ran Aditi's onboarding, maintained Tessa's weekly status and quality review, coached Mehdi through his PIP, evaluated a candidate (Varsha), and served as escalation path during Xinyu's absence
+  - H2 focus: build Aditi's and Tessa's independence on their assigned models, develop delegation skills, and support onboarding if the team hires a replacement
+- Strengthen cross-functional partnerships, particularly with first-line AI teams
+  - H1 progress: collaborated with AI Technology Oversight, co-led the first-line GenAI streamlining and change management presentation series, represented Validation at the MRM Monitoring Steering Committee, contributed to MRG quarterly stakeholder meeting, and coordinated the OCC DDAI exam response
+  - H2 focus: deepen engagement with first-line AI enablement and platform teams on governance and adoption initiatives
 
-## Model Performance
+**Status:** In Progress
+**Completion Date:** 12/31/2026
 
-Validation reviewed the pilot performance data for the combined answer output. The pilot data comprises 72 deduplicated queries, of which 44 received a substantive answer and 28 returned no answer. Correctness is assessed on the 44 answered queries.
+---
 
-Based on the prior subject matter expert grading, 32 of the 44 answered queries were graded correct, a correctness rate of 72.7 percent. Validation conducted an independent review and reached a consistent result, classifying 29 correct, 11 incorrect, and 4 as requiring clarification, which is 72.5 percent of the 40 classifiable queries. Both results clear the 67 percent threshold.
+## Summary
 
-The model owner separately reported approximately 93.5 percent, reached by reclassifying 13 answered responses to not applicable and excluding them from the denominator. Validation's position is that a response that reaches the user and gives incorrect information is incorrect regardless of the underlying cause; the cause should be documented alongside the grade but does not remove the response from the denominator. Validation relies on the 72.7 percent rate, with the denominator stated above.
-
-Several queries in this set, including the healthcare use cases queries, are cases where the combined answer presented content drawn from candidates that the reflexion step did not pass. These are assessed in the Validation Commentary below, and their final grades depend on the row-level review of the affected cases. [TBD: confirm the final grades for these queries once the row-level review is complete.]
-
-To support the change, the subject matter expert graded both the combined answer and the four individual candidate answers on the same 82 pilot rows, which include duplicate queries. N/A denotes an answer slot that produced no answer, and for the combined and aggregate rows an abstention. The aggregate row applies a conservative rule across the four candidates, counting a row incorrect if any candidate is incorrect, N/A if all four are N/A, and correct otherwise.
-
-| Output | Correct | Incorrect | Partially correct | N/A |
-|---|---|---|---|---|
-| Candidate 1 | 35 (42.7%) | 1 (1.2%) | 0 | 46 (56.1%) |
-| Candidate 2 | 26 (31.7%) | 2 (2.4%) | 0 | 54 (65.9%) |
-| Candidate 3 | 20 (24.4%) | 1 (1.2%) | 0 | 61 (74.4%) |
-| Candidate 4 | 22 (26.8%) | 4 (4.9%) | 0 | 56 (68.3%) |
-| Combined answer | 45 (54.9%) | 3 (3.7%) | 1 (1.2%) | 33 (40.2%) |
-| Four-candidate aggregate | 44 (53.7%) | 7 (8.5%) | 0 | 31 (37.8%) |
-
-On the answered rows, the combined answer, 45 of 49, is comparable in correct rate to the four answer aggregate, 44 of 51, and has a lower incorrect share, and both clear the 67 percent threshold. This supports that the synthesis step does not degrade the four answer output and does not increase the number of incorrect answers presented to the agent. This grading applied a more lenient treatment of the no-answer cases than the deduplicated grading above, with fewer responses graded incorrect; Validation relies on the pairwise result for the relative comparison of the two outputs and retains the 72.7 percent deduplicated rate as the correctness measure. Ground truth reference answers to support the automated correctness metric are [TBD: pending from the model development team]; these are needed for the Initial Validation and are not a precondition for this provisional approval.
-
-### Validation Commentary on the Combined Answer
-
-The model owner and model development team state that the combined answer is synthesized from up to four candidate answers and their reflexion notes, with the reflexion step acting as a sanitizer that removes unsupported claims and preserves valid content. Per the PA2 form, where no definitive answer can be derived the system indicates this explicitly and continues to present the relevant source links, and the reflexion notes are retained when a per-article response is "I could not find a specific answer to your question in this article. Please verify manually," while "I don't know" entries are dropped.
-
-Validation independently reviewed the combined answer generation code and found that the reflexion notes passed into the synthesis step are collected only from articles whose per-article answer did not find an answer. As a result, the combined answer can present content carried from articles for which the model reported it could not find an answer, both when all per-article answers fail and when only some fail. Validation identified specific examples in the pilot data. In the VantagePoint query, all four per-article answers were "I could not find a specific answer," yet the combined answer presented a substantive description of the product. In a healthcare use cases query, three of the four per-article answers were "I could not find" and only one produced an answer, yet the combined answer presented use cases carried from the three articles that reported no answer. Presenting material from articles the model reported it could not answer overrides the per-article confidence signal. This is inconsistent with the statement that the model only provides an answer when it is confident of its containment and accuracy, and it can surface content that is not grounded in a successful retrieval. Validation also found that the source citations were not visible in the formats used for review and that the per-article inputs to the combined answer were not individually traceable.
-
-Validation quantified the extent of this behavior across the 82 pilot rows, using a large language model based judge (GPT-5.1) to compare each combined answer to the candidate answers and their notes. The rows fall into four categories by reflexion outcome:
-
-| Category | Description | Rows |
-|---|---|---|
-| A | At least one direct answer, no low confidence notes | 24 |
-| B | At least one direct answer and at least one reflexion-failed low confidence note | 27 |
-| C | All candidates failed the reflexion step, low confidence notes generated | 15 |
-| D | All candidates failed the reflexion step, no low confidence notes | 16 |
-
-The 42 rows in categories B and C carry at least one candidate that the reflexion step did not pass but that retained a low confidence note. On 28 of those 42, the combined answer still presented a substantive answer to the agent rather than abstaining. Cross-referencing the four combined answers the subject matter expert graded incorrect or partially correct against this analysis:
-
-| Query | SME assessment | Combined drew on reflexion-failed content | Root cause |
-|---|---|---|---|
-| 15077c49 | Partially correct | Yes | Failed-candidate content incorporated |
-| ee682b9c | Incorrect | Yes | Failed-candidate content incorporated |
-| a669cf60 | Incorrect | Yes | Failed-candidate content incorporated |
-| f6cc01d1 | Incorrect | No | Source knowledge base article missing required information |
-
-Three of the four trace to the combined answer drawing on content from candidates the reflexion step had not passed; the fourth is a gap in the source knowledge base article rather than the combined answer logic. On this evidence, the failed candidate content reaching the combined answer is the primary identified driver of the incorrect combined answers in the pilot data. Because these classifications were produced with a model based judge, Validation will corroborate a sample by manual review before relying on the counts. [TBD: complete manual corroboration of the model based judge classifications.]
-
-In response, the model development team acknowledged the behavior and agreed that an article that did not produce an answer should not contribute content to the combined answer. The team committed to correct the behavior so that content from such an article does not appear in the combined answer, while continuing to present the article links, to make the source citations visible in the review formats, and to add the per-article inputs with delimiters identifying each article. [TBD: confirm this correction is implemented prior to PA2 pilot production.]
-
-Given that this is a low-risk, employee facing model with agent review before any customer use, that the correctness rate clears the pilot threshold, and that the combined answer does not increase incorrect answers relative to the four answer output, Validation has no concerns with the combined answer behavior for the pilot, contingent on the correction being implemented and confirmed prior to pilot production and on Validation's row-level review confirming the affected cases. Correcting the behavior is expected to remove the primary identified source of the incorrect combined answers. [TBD: complete Validation's row-level spot-check of the no-answer and partial cases against the subject matter expert grading.] These recommendations are consolidated in the Conclusion.
-
-## Risk Mitigation
-
-The risk mitigations from the original Provisional Approval remain in effect and are unchanged: employee facing use with agent review before any customer relay, a limited group of trained and experienced agents, a curated set of pre approved knowledge base articles that contain no customer data with source links preserved, access through the bank's GenAI gateway providing authentication, logging, and content filtering, profanity filtering, and prompt injection controls. The combined answer change adds a synthesis step downstream of the already grounded candidate answers and does not alter these controls. The model's grounding control is the reflexion step, a verbal reinforcement step applied on the foundation model that grades each per-article answer. In the combined answer, the synthesis is performed on the per-article answers together with their reflexion notes. The model development team's position is that presenting the notes alongside a valid answer is intended, consistent with the phrase "answer along with notes" in the PA2 form. The separate behavior in which content from an article that did not produce an answer reaches the combined answer is a defect the model development team has agreed to correct, and is assessed under Model Performance.
-
-The following early engagement observations are provided for the model owner's consideration and are not formal validation conclusions. The combined answer was deployed before the required approval, which the business line has remediated by disabling the model pending this review. Some pilot knowledge base links return access errors or no longer exist, and the business line will communicate knowledge base article changes going forward. In one query, the combined answer was incorrect because the source knowledge base article did not contain the information needed to answer the question; this is a source content gap rather than a combined answer behavior, and the remediation is to revise or augment the source article.
-
-## Risk Management Groups Approvals
-
-The Fair and Responsible Banking review for the original model was completed on 01/15/2026 with a Moderate rating and a determination to accept the pilot. A Change EMA, number 6818852, has been submitted for the combined answer change and is pending review by Model Risk Governance and Fair and Responsible Banking. [TBD: confirm the outcome of the Change EMA review once complete.] [TBD: confirm whether a PRISM record is required or changes for this change; do not assume it is unchanged.] [TBD: confirm the MRG model risk rating for the model.]
-
-## Conclusion
-
-Validation reviewed the combined answer change and the updated pilot performance and held discussions with the model owner and the model development team. Based on Validation's preliminary review, the combined answer output performs within the pilot correctness threshold, and the controls from the original provisional approval remain in effect. Validation identified no immediate concerns that would prevent continued pilot use prior to completion of a full validation, contingent on the recommendations below that the model development team has committed to address before the pilot resumes and on the subject matter expert testing confirming the affected cases.
-
-Validation recommends an Approved with Restriction outcome, permitting pilot use of the model with the combined answer output from 07/06/2026 through 11/01/2026, with a restriction effective date of 11/01/2026. The pilot is restricted to up to 28 experienced agents initially, and up to 148 agents contingent on a correctness rate of 67 percent or higher, limited to Global Treasury Management and Money Movement Platform queries and to the pre approved knowledge base article set. No further changes to the model framework, output, or scope are permitted during the pilot; any subsequent change requires a new Provisional Approval or submission for Initial Validation prior to deployment.
-
-Validation recommends the following.
-
-**Before the pilot resumes:**
-
-- Correct the combined answer so that content from an article whose per-article answer did not produce an answer does not appear in the combined output. The model development team has committed to this correction; it is to be confirmed implemented prior to PA2 pilot production. [TBD: confirm implemented prior to PA2 pilot production.]
-- Make the source citations visible in the formats used for review and logging, and add the per-article inputs to the combined answer with delimiters identifying each article. The model development team has committed to this change.
-
-**During the pilot and before the Initial Validation:**
-
-- Update the PA2 documentation to describe the implemented mechanism, including that content from unanswered articles is excluded from the combined output, and reconcile the statements that the system maintains transparency when no answer is derived and that the model only answers when confident with the corrected behavior.
-- Correct the architecture description to reflect the implementation: the offline keyword extraction uses KeyBERT and HDBSCAN (node 1.4), and the runtime retrieval is an in-memory cosine similarity over stored embeddings rather than a vector database.
-- Strengthen the combined answer synthesis prompt, including explicit handling for unanswered inputs (so that an "I could not find" answer is recognized and excluded), a constraint to ground the combined answer only in the provided answers, per-answer delimiters in the input, and adaptation of the prompt formatting to the GPT-4o interface. These will be assessed further during the Initial Validation.
-- For the model owner's consideration: continue to communicate knowledge base article changes, given that some pilot links return access errors or no longer exist.
-
-The next validation activity is the Initial Validation, to be conducted against the documentation milestones the model owner has set out in the provisional approval request. The model owner should submit the complete Initial Validation documentation package, consisting of the Model Development Document, the Monitoring Plan Document, and the Implementation Framework and Testing Document, sufficiently in advance of the intended full production date to allow the Initial Validation to be completed before the pilot concludes on 11/01/2026.
+H1 2026 was a half of significant growth in both technical depth and cross-functional scope. I delivered four validations on time, built out the team's automation codebase, led three platform evaluations, co-led the first-line GenAI presentation series, and took on people management responsibilities that were not in my original goals. The thread connecting my strongest contributions is the intersection of technology and governance: building and evaluating AI capabilities that are both effective and defensible. In H2, my priorities are completing the in-progress Initial Validations, advancing the automation codebase to Phase 2, and expanding the organizational reach of my cross-functional partnerships and the tools I build.
